@@ -1,0 +1,38 @@
+// CREATE ACCOUNT OBJECTS
+
+// REQUEST OBJECT
+{
+    "headers": {
+        "Content-Type": "application/json",
+        "x-api-key": "YOUR_API_KEY"
+    },
+    "data": {
+        "customer_info": {
+            "email": "YOUR_EMAIL",
+            "password": "YOUR_PASSWORD",
+            "confirmPassword": "YOUR_PASSWORD",
+            "first_name": "YOUR_FIRST_NAME",
+            "last_name": "YOUR_LAST_NAME",
+            "type": "CUSTOMER",
+            "country_id": "COUNTRY_ID"
+        },
+        //OPTIONAL
+        "business_info":{ 
+            "name": "BUSINESS_NAME",
+            "description": "BUSINESS_DESCRIPTION",
+        }
+
+    }
+}
+
+// RESPONSE OBJECT
+
+{
+    "status": "SUCCESS",
+    "message": "Customer created successfully",
+    "data": {
+        "api_key": "YOUR_API_KEY",
+        "account_id": "ACCOUNT_ID",
+        "business_id": "BUSINESS_ID",
+    }
+}
