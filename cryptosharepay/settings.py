@@ -42,6 +42,8 @@ INSTALLED_APPS = [
     'accounts',
     'businesses',
     'api_keys',
+    'cryptocurrency',
+    'transactions',
 ]
 
 MIDDLEWARE = [

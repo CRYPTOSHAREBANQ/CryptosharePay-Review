@@ -10,3 +10,9 @@ class Api_Key(models.Model):
     business_id = models.ForeignKey(Business, on_delete=models.CASCADE, null=True)
     type = models.CharField(max_length=15)
     status = models.CharField(max_length=10)
+
+class Assets(models.Model):
+    api_key = models.ForeignKey(Api_Key, on_delete=models.CASCADE)
+    type = models.CharField(max_length=12)
+    amount = models.DecimalField(max_digits=20, decimal_places=8)
+    cryptocurrency_id = models.ForeignKey("cryptocurrency.Cryptocurrency", on_delete=models.PROTECT)
