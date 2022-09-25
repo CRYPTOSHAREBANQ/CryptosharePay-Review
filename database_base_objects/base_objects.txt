@@ -1,0 +1,294 @@
+
+from cryptocurrency.models import Cryptocurrency
+
+
+Network.objects.create(
+    network_id = "mainnet",
+    name = "Main Network"
+)
+
+Network.objects.create(
+    network_id = "testnet",
+    name = "Test Network"
+)
+
+Network.objects.create(
+    network_id = "ropsten",
+    name = "Ropsten Network"
+)
+
+Network.objects.create(
+    network_id = "goerli",
+    name = "Goerli Network"
+)
+
+Network.objects.create(
+    network_id = "mordor",
+    name = "Mordor Network"
+)
+
+
+
+
+
+Blockchain.objects.create(
+    blockchain_id = "bitcoin",
+    name = "Bitcoin"
+)
+
+Blockchain.objects.create(
+    blockchain_id = "bitcoin-cash",
+    name = "Bitcoin Cash"
+)
+
+Blockchain.objects.create(
+    blockchain_id = "litecoin",
+    name = "Litecoin"
+)
+
+Blockchain.objects.create(
+    blockchain_id = "dogecoin",
+    name = "Dogecoin"
+)
+
+Blockchain.objects.create(
+    blockchain_id = "dash",
+    name = "Dash"
+)
+
+Blockchain.objects.create(
+    blockchain_id = "ethereum",
+    name = "Ethereum"
+)
+
+Blockchain.objects.create(
+    blockchain_id = "ethereum-classic",
+    name = "Ethereum Classic"
+)
+
+Blockchain.objects.create(
+    blockchain_id = "xrp",
+    name = "XRP"
+)
+
+Blockchain.objects.create(
+    blockchain_id = "zcash",
+    name = "Zcash"
+)
+
+Blockchain.objects.create(
+    blockchain_id = "tron",
+    name = "Tron"
+)
+
+Cryptocurrency.objects.create(
+    blockchain_id = Blockchain.objects.get(blockchain_id="bitcoin"),
+    network_id = Network.objects.get(network_id="mainnet"),
+    type = "COIN",
+    name = "Bitcoin",
+    coingecko_name = "bitcoin",
+    symbol = "BTC",
+    exchange_rate = 0
+)
+
+Cryptocurrency.objects.create(
+    blockchain_id = Blockchain.objects.get(blockchain_id="bitcoin"),
+    network_id = Network.objects.get(network_id="testnet"),
+    type = "COIN",
+    name = "Bitcoin",
+    coingecko_name = "bitcoin",
+    symbol = "BTC",
+    exchange_rate = 0
+)
+
+#CREATE Bitcoin Cash
+Cryptocurrency.objects.create(
+    blockchain_id = Blockchain.objects.get(blockchain_id="bitcoin-cash"),
+    network_id = Network.objects.get(network_id="mainnet"),
+    type = "COIN",
+    name = "Bitcoin Cash",
+    coingecko_name = "bitcoin-cash",
+    symbol = "BCH",
+    exchange_rate = 0
+)
+
+Cryptocurrency.objects.create(
+    blockchain_id = Blockchain.objects.get(blockchain_id="bitcoin-cash"),
+    network_id = Network.objects.get(network_id="testnet"),
+    type = "COIN",
+    name = "Bitcoin Cash",
+    coingecko_name = "bitcoin-cash",
+    symbol = "BCH",
+    exchange_rate = 0
+)
+
+
+#CREATE LITECOIN
+Cryptocurrency.objects.create(
+    blockchain_id = Blockchain.objects.get(blockchain_id="litecoin"),
+    network_id = Network.objects.get(network_id="mainnet"),
+    type = "COIN",
+    name = "Litecoin",
+    coingecko_name = "litecoin",
+    symbol = "LTC",
+    exchange_rate = 0
+)
+
+Cryptocurrency.objects.create(
+    blockchain_id = Blockchain.objects.get(blockchain_id="litecoin"),
+    network_id = Network.objects.get(network_id="testnet"),
+    type = "COIN",
+    name = "Litecoin",
+    coingecko_name = "litecoin",
+    symbol = "LTC",
+    exchange_rate = 0
+)
+
+#CREATE DOGECOIN
+Cryptocurrency.objects.create(
+    blockchain_id = Blockchain.objects.get(blockchain_id="dogecoin"),
+    network_id = Network.objects.get(network_id="mainnet"),
+    type = "COIN",
+    name = "Dogecoin",
+    coingecko_name = "dogecoin",
+    symbol = "DOGE",
+    exchange_rate = 0
+)
+
+Cryptocurrency.objects.create(
+    blockchain_id = Blockchain.objects.get(blockchain_id="dogecoin"),
+    network_id = Network.objects.get(network_id="testnet"),
+    type = "COIN",
+    name = "Dogecoin",
+    coingecko_name = "dogecoin",
+    symbol = "DOGE",
+    exchange_rate = 0
+)
+
+
+#CREATE DASH
+Cryptocurrency.objects.create(
+    blockchain_id = Blockchain.objects.get(blockchain_id="dash"),
+    network_id = Network.objects.get(network_id="mainnet"),
+    type = "COIN",
+    name = "Dash",
+    coingecko_name = "dash",
+    symbol = "DASH",
+    exchange_rate = 0
+)
+
+Cryptocurrency.objects.create(
+    blockchain_id = Blockchain.objects.get(blockchain_id="dash"),
+    network_id = Network.objects.get(network_id="testnet"),
+    type = "COIN",
+    name = "Dash",
+    coingecko_name = "dash",
+    symbol = "DASH",
+    exchange_rate = 0
+)
+
+#CREATE ETHEREUM
+Cryptocurrency.objects.create(
+    blockchain_id = Blockchain.objects.get(blockchain_id="ethereum"),
+    network_id = Network.objects.get(network_id="mainnet"),
+    type = "COIN",
+    name = "Ethereum",
+    coingecko_name = "ethereum",
+    symbol = "ETH",
+    exchange_rate = 0
+)
+
+Cryptocurrency.objects.create(
+    blockchain_id = Blockchain.objects.get(blockchain_id="ethereum"),
+    network_id = Network.objects.get(network_id="goerli"),
+    type = "COIN",
+    name = "Ethereum",
+    coingecko_name = "ethereum",
+    symbol = "ETH",
+    exchange_rate = 0
+)
+
+
+#CREATE ETHEREUM CLASSIC
+Cryptocurrency.objects.create(
+    blockchain_id = Blockchain.objects.get(blockchain_id="ethereum-classic"),
+    network_id = Network.objects.get(network_id="mainnet"),
+    type = "COIN",
+    name = "Ethereum Classic",
+    coingecko_name = "ethereum-classic",
+    symbol = "ETC",
+    exchange_rate = 0
+)
+
+Cryptocurrency.objects.create(
+    blockchain_id = Blockchain.objects.get(blockchain_id="ethereum-classic"),
+    network_id = Network.objects.get(network_id="mordor"),
+    type = "COIN",
+    name = "Ethereum Classic",
+    coingecko_name = "ethereum-classic",
+    symbol = "ETC",
+    exchange_rate = 0
+)
+
+#CREATE XRP}
+Cryptocurrency.objects.create(
+    blockchain_id = Blockchain.objects.get(blockchain_id="xrp"),
+    network_id = Network.objects.get(network_id="mainnet"),
+    type = "COIN",
+    name = "XRP",
+    coingecko_name = "ripple",
+    symbol = "XRP",
+    exchange_rate = 0
+)
+
+Cryptocurrency.objects.create(
+    blockchain_id = Blockchain.objects.get(blockchain_id="xrp"),
+    network_id = Network.objects.get(network_id="testnet"),
+    type = "COIN",
+    name = "XRP",
+    coingecko_name = "ripple",
+    symbol = "XRP",
+    exchange_rate = 0
+)
+
+#CREATE zcash
+Cryptocurrency.objects.create(
+    blockchain_id = Blockchain.objects.get(blockchain_id="zcash"),
+    network_id = Network.objects.get(network_id="mainnet"),
+    type = "COIN",
+    name = "Zcash",
+    coingecko_name = "zcash",
+    symbol = "ZEC",
+    exchange_rate = 0
+)
+
+Cryptocurrency.objects.create(
+    blockchain_id = Blockchain.objects.get(blockchain_id="zcash"),
+    network_id = Network.objects.get(network_id="testnet"),
+    type = "COIN",
+    name = "Zcash",
+    coingecko_name = "zcash",
+    symbol = "ZEC",
+    exchange_rate = 0
+)
+
+#CREATE TRON
+Cryptocurrency.objects.create(
+    blockchain_id = Blockchain.objects.get(blockchain_id="tron"),
+    network_id = Network.objects.get(network_id="mainnet"),
+    type = "COIN",
+    name = "Tron",
+    coingecko_name = "tron",
+    symbol = "TRX",
+    exchange_rate = 0
+)
+
+Cryptocurrency.objects.create(
+    blockchain_id = Blockchain.objects.get(blockchain_id="tron"),
+    network_id = Network.objects.get(network_id="testnet"),
+    type = "COIN",
+    name = "Tron",
+    coingecko_name = "tron",
+    symbol = "TRX",
+    exchange_rate = 0
+)

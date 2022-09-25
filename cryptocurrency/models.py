@@ -19,6 +19,7 @@ class Cryptocurrency(models.Model):
     network_id = models.ForeignKey(Network, on_delete=models.PROTECT, null=True)
     type = models.CharField(max_length=8)
     name = models.CharField(max_length=50)
+    coingecko_name = models.CharField(max_length=50, null=True)
     symbol = models.CharField(max_length=10)
     exchange_rate = models.DecimalField(max_digits=20, decimal_places=8)
 

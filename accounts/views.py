@@ -30,7 +30,25 @@ class CreateAccount(APIView):
         business_info = data.get("business_info", None)
 
         if User.objects.filter(email = customer_info["email"]).exists():
-            return Response({'error': 'Email already exists'}, status=400)
+            return Response(
+                {
+                "status": "ERROR",
+                "message": "Email already exists"
+                }, status=400)
+        
+        if customer_info["password"] != customer_info["confirm_password"]:
+            return Response(
+                {
+                "status": "ERROR",
+                "message": "Passwords do not match"
+                }, status=400)
+
+        if Country.objects.filter(country_id = data['country_id']).exists():
+            return Response(
+                {
+                "status": "ERROR",
+                "message": "Country Code does not exist"
+                }, status=400)
 
         new_user = User.objects.create_user(
             username = data['email'], 
@@ -39,10 +57,6 @@ class CreateAccount(APIView):
             first_name = data['first_name'],
             last_name = data['last_name']
             )
-
-
-        if Country.objects.filter(country_id=data['country_id']).exists():
-            return Response({'error': 'Country Code does not exist'}, status=400)
 
         new_account = Account.objects.create(
             type = "CUSTOMER", 
