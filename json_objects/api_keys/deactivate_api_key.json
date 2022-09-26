@@ -17,7 +17,7 @@
 
 {
     "status": "SUCCESS",
-    "message": "API Key activated successfully",
+    "message": "API Key deactivated successfully",
     "data": {
         "customer_id": "YOUR-CUSTOMER-ID",
         "api_keys": [
