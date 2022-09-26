@@ -82,7 +82,7 @@ class CreateAccount(APIView):
             user_id = new_account,
             business_id = new_business if business_info else None,
             type = "TEST",
-            status = "ACTIVE"
+            status = "INACTIVE"
             )
 
         
