@@ -22,4 +22,6 @@ urlpatterns = [
     path('v1/businesses/', include('businesses.urls', namespace='businesses')),
     path('v1/api_keys/', include('api_keys.urls', namespace='api_keys')),
     path('v1/cryptocurrency/', include('cryptocurrency.urls', namespace='cryptocurrency')),
+    path('v1/digital_currency/', include('digital_currency.urls', namespace='digital_currency')),
+
 ]

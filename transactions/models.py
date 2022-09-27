@@ -3,19 +3,16 @@ from django.db import models
 import uuid
 from api_keys.models import Api_Key
 from cryptocurrency.models import Cryptocurrency, Address
+from digital_currency.models import Digital_Currency
 # Create your models here.
 
-class Fiat_Currency(models.Model):
-    fiat_currency_id = models.CharField(max_length=4, primary_key=True)
-    fiat_currency_name = models.CharField(max_length=50)
-    exchange_rate = models.DecimalField(max_digits=8, decimal_places=2)
 
 class Transaction(models.Model):
     transaction_id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     api_key = models.ForeignKey(Api_Key, on_delete=models.CASCADE)
     type = models.CharField(max_length=12)
-    fiat_currency_id = models.ForeignKey(Fiat_Currency, on_delete=models.PROTECT, null=True)
-    fiat_currency_amount = models.DecimalField(max_digits=14, decimal_places=2, null=True)
+    digital_currency_id = models.ForeignKey(Digital_Currency, on_delete=models.PROTECT, null=True)
+    digital_currency_amount = models.DecimalField(max_digits=14, decimal_places=2, null=True)
     address_id = models.ForeignKey(Address, on_delete=models.PROTECT, null=True)
     address_refund = models.CharField(max_length=100, null=True)
     creation_datetime = models.DateTimeField(auto_now_add=True)
