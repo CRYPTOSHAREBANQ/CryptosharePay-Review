@@ -16,9 +16,12 @@ class Transaction(models.Model):
     address_id = models.ForeignKey(Address, on_delete=models.PROTECT, null=True)
     address_refund = models.CharField(max_length=100, null=True)
     creation_datetime = models.DateTimeField(auto_now_add=True)
+    state = models.CharField(max_length=15, null=True)
+    status = models.CharField(max_length=15, null=True)
 
 class Transaction_Ins(models.Model):
     transaction_ins_id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    external_transaction_id = models.CharField(max_length=100, null=True)
     amount = models.DecimalField(max_digits=20, decimal_places=8)
     address_id = models.ForeignKey(Address, on_delete=models.PROTECT)
     creation_datetime = models.DateTimeField(auto_now_add=True)
@@ -28,6 +31,7 @@ class Transaction_Ins(models.Model):
 
 class Transaction_Outs(models.Model):
     transaction_ins_id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    external_transaction_id = models.CharField(max_length=100, null=True)
     amount = models.DecimalField(max_digits=20, decimal_places=8)
     address_id = models.ForeignKey(Address, on_delete=models.PROTECT)
     address_out = models.CharField(max_length=100)
@@ -37,7 +41,7 @@ class Transaction_Outs(models.Model):
     status = models.CharField(max_length=15)
 
 class Transaction_Book(models.Model):
-    registry_id = models.IntegerField(primary_key=True)
+    registry_id = models.AutoField(primary_key=True)
     type = models.CharField(max_length=5)
     transaction_id = models.ForeignKey(Transaction, on_delete=models.PROTECT)
     transaction_ins_id = models.ForeignKey(Transaction_Ins, on_delete=models.PROTECT, null=True)

@@ -45,6 +45,7 @@ INSTALLED_APPS = [
     'cryptocurrency',
     'transactions',
     'digital_currency',
+    'webhooks',
 ]
 
 MIDDLEWARE = [
