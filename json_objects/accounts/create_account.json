@@ -9,7 +9,7 @@
         "customer_info": {
             "email": "YOUR_EMAIL",
             "password": "YOUR_PASSWORD",
-            "confirmPassword": "YOUR_PASSWORD",
+            "confirm_password": "YOUR_PASSWORD",
             "first_name": "YOUR_FIRST_NAME",
             "last_name": "YOUR_LAST_NAME",
             "type": "CUSTOMER",

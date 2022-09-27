@@ -15,51 +15,38 @@ import secrets
 
 class CreateApiKey(APIView):
     def post(self, request):
-        data = request.data
+        data = request.data["data"]
         headers = request.headers
 
         customer_id = headers.get("X-Customer-Id", None)
         business_id = data.get("business_id", None)
         api_key_type = data.get("type", None)
 
-        # <<<---- Starts Verification ---->>>
-        # <<<---- Starts Verification ---->>>
-        # <<<---- Starts Verification ---->>>
+        API_KEY_TYPES = {"TEST", "PRODUCTION"}
 
-
-        if not customer_id:
-            return Response(
-                {
-                "status": "ERROR",
-                "message": "X-Customer-Id not found"
-                }, status=400)
-
-        user_object = auth.authenticate(
-            username = data["email"],
-            password = data["password"]
-        )
-
-        if not user_object:
-            return Response(
-                {
-                "status": "ERROR",
-                "message": "Invalid credentials"
-                }, status=400)
-
-        # <<<---- Ends Verification ---->>>
-        # <<<---- Ends Verification ---->>>
-        # <<<---- Ends Verification ---->>>
-
-
+        # business_object = None
         if Business.objects.filter(business_id = business_id).exists():
             business_object = Business.objects.get(business_id = business_id)
 
-        #VERIFY IF BUSINESS ALREADY HAS API KEY
-        if Api_Key.objects.filter(business_id = business_object, type = api_key_type).exists():
+        if not api_key_type in API_KEY_TYPES:
             return Response(
                 {
                 "status": "ERROR",
-                "message": "Business already has an API Key"
+                "message": "Invalid API Key Type"
+                }, status=400)
+
+        user_object = User.objects.get(username = data["email"])
+
+        account_object = Account.objects.get(email = user_object)
+
+        ### MISING TO VERIFY IF BUSINESS ALREADY HAS AN API KEY ###
+
+        #VERIFY IF USER ALREADY HAS API KEY
+        if Api_Key.objects.filter(user_id = account_object, type = api_key_type).exists():
+            return Response(
+                {
+                "status": "ERROR",
+                "message": "User already has an API Key"
                 }, status=400)
             
 
@@ -68,8 +55,6 @@ class CreateApiKey(APIView):
             api_key = "tsk_" + new_generated_key
         elif api_key_type == "PRODUCTION":
             api_key = "psk_" + new_generated_key
-
-        account_object = Account.objects.get(user_id = user_object)
 
         new_api_key = Api_Key.objects.create(
             api_key = api_key,
@@ -87,7 +72,7 @@ class CreateApiKey(APIView):
                 "api_keys": [
                     {
                         "api_key": new_api_key.api_key,
-                        "business_id": new_api_key.business_id.business_id if business_object else None,
+                        "business_id": new_api_key.business_id.business_id if business_id else None,
                         "type": api_key_type,
                         "status": "INACTIVE",
                     }
@@ -99,30 +84,15 @@ class CreateApiKey(APIView):
 
 
 class GetApiKeys(APIView):
-    def post(self, request):
-        data = request.data
+    def get(self, request):
+        data = request.data["data"]
         headers = request.headers
 
         customer_id = headers.get("X-Customer-Id", None)
 
-        if not customer_id:
-            return Response(
-                {
-                "status": "ERROR",
-                "message": "X-Customer-Id not found"
-                }, status=400)
-
-        user_object = auth.authenticate(
-            username = data["email"],
-            password = data["password"]
+        user_object = User.objects.get(
+            username = data["email"]
         )
-
-        if not user_object:
-            return Response(
-                {
-                "status": "ERROR",
-                "message": "Invalid credentials"
-                }, status=400)
 
         account_object = Account.objects.get(email = user_object)
 
@@ -133,7 +103,7 @@ class GetApiKeys(APIView):
         for api_key_object in api_key_objects:
             api_keys.append({
                 "api_key": api_key_object.api_key,
-                "business_id": api_key_object.business_id.business_id,
+                "business_id": api_key_object.business_id.business_id if api_key_object.business_id else None,
                 "type": api_key_object.type,
                 "status": api_key_object.status
             })
@@ -152,31 +122,23 @@ class GetApiKeys(APIView):
 
 class ActivateApiKey(APIView):
     def post(self, request):
-        data = request.data
+        data = request.data["data"]
         headers = request.headers
 
         customer_id = headers.get("X-Customer-Id", None)
 
-        if not customer_id:
-            return Response(
-                {
-                "status": "ERROR",
-                "message": "X-Customer-Id not found"
-                }, status=400)
-
-        user_object = auth.authenticate(
-            username = data["email"],
-            password = data["password"]
+        user_object = User.objects.get(
+            username = data["email"]
         )
 
-        if not user_object:
+        account_object = Account.objects.get(email = user_object)
+
+        if not Api_Key.objects.filter(api_key = data["api_key"], user_id = account_object).exists():
             return Response(
                 {
                 "status": "ERROR",
-                "message": "Invalid credentials"
+                "message": "Invalid API Key"
                 }, status=400)
-
-        account_object = Account.objects.get(email = user_object)
 
         api_key_object = Api_Key.objects.get(
             api_key = data["api_key"], 
@@ -202,31 +164,23 @@ class ActivateApiKey(APIView):
 
 class DeactivateApiKey(APIView):
     def post(self, request):
-        data = request.data
+        data = request.data["data"]
         headers = request.headers
 
         customer_id = headers.get("X-Customer-Id", None)
 
-        if not customer_id:
-            return Response(
-                {
-                "status": "ERROR",
-                "message": "X-Customer-Id not found"
-                }, status=400)
-
-        user_object = auth.authenticate(
-            username = data["email"],
-            password = data["password"]
+        user_object = User.objects.get(
+            username = data["email"]
         )
 
-        if not user_object:
+        account_object = Account.objects.get(email = user_object)
+
+        if not Api_Key.objects.filter(api_key = data["api_key"], user_id = account_object).exists():
             return Response(
                 {
                 "status": "ERROR",
-                "message": "Invalid credentials"
+                "message": "Invalid API Key"
                 }, status=400)
-
-        account_object = Account.objects.get(email = user_object)
 
         api_key_object = Api_Key.objects.get(
             api_key = data["api_key"], 
@@ -249,3 +203,5 @@ class DeactivateApiKey(APIView):
         }
 
         return Response(response_object, status=200)
+
+#MISSING LINK TO API KEY TO BUSINESS

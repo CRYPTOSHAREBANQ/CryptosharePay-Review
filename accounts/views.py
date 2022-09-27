@@ -1,5 +1,4 @@
 from django.shortcuts import render
-from django.contrib import auth
 from django.contrib.auth.models import User
 from django.views import View
 from django.views.decorators.csrf import csrf_exempt
@@ -24,7 +23,7 @@ import secrets
 class CreateAccount(APIView):
     def post(self, request):
         # print(request.data, request.headers)
-        data = request.data
+        data = request.data["data"]
 
         customer_info = data["customer_info"]
         business_info = data.get("business_info", None)
@@ -43,28 +42,28 @@ class CreateAccount(APIView):
                 "message": "Passwords do not match"
                 }, status=400)
 
-        if Country.objects.filter(country_id = data['country_id']).exists():
+        if not Country.objects.filter(country_id = customer_info["country_id"]).exists():
             return Response(
                 {
                 "status": "ERROR",
-                "message": "Country Code does not exist"
+                "message": "Country ID does not exist"
                 }, status=400)
 
         new_user = User.objects.create_user(
-            username = data['email'], 
-            password = data['password'], 
-            email = data['email'],
-            first_name = data['first_name'],
-            last_name = data['last_name']
+            username = customer_info['email'], 
+            password = customer_info['password'], 
+            email = customer_info['email'],
+            first_name = customer_info['first_name'],
+            last_name = customer_info['last_name']
             )
 
         new_account = Account.objects.create(
             type = "CUSTOMER", 
             email = new_user, 
-            first_name = data['first_name'], 
-            last_name = data['last_name'], 
+            first_name = customer_info['first_name'], 
+            last_name = customer_info['last_name'], 
             country_id = Country.objects.get(
-                country_id=data['country_id']
+                country_id=customer_info['country_id']
                 )
             )
 
@@ -91,7 +90,7 @@ class CreateAccount(APIView):
             "message": "Customer created successfully",
             "data": {
                 "api_key": new_api_key.api_key,
-                "account_id": new_account.user_id,
+                "customer_id": new_account.user_id,
                 "business_id": new_business.business_id if business_info else None
             }
         }
