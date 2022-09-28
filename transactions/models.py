@@ -15,6 +15,8 @@ class Transaction(models.Model):
     digital_currency_amount = models.DecimalField(max_digits=14, decimal_places=2, null=True)
     address_id = models.ForeignKey(Address, on_delete=models.PROTECT, null=True)
     address_refund = models.CharField(max_length=100, null=True)
+    client_email = models.EmailField(max_length = 254, null=True)
+    client_phone = models.CharField(max_length=20, null=True)
     creation_datetime = models.DateTimeField(auto_now_add=True)
     state = models.CharField(max_length=15, null=True)
     status = models.CharField(max_length=15, null=True)

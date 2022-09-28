@@ -69,14 +69,12 @@ class CreateApiKey(APIView):
             "message": "API Key Created successfully",
             "data": {
                 "customer_id": customer_id,
-                "api_keys": [
-                    {
-                        "api_key": new_api_key.api_key,
-                        "business_id": new_api_key.business_id.business_id if business_id else None,
-                        "type": api_key_type,
-                        "status": "INACTIVE",
-                    }
-                ]
+                "api_key": {
+                    "api_key": new_api_key.api_key,
+                    "business_id": new_api_key.business_id.business_id if business_id else None,
+                    "type": api_key_type,
+                    "status": "INACTIVE",
+                }
             }
         }
         

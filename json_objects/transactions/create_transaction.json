@@ -1,0 +1,33 @@
+// CREATE TRANSACTION OBJECTS
+
+// REQUEST OBJECT
+{
+    "headers": {
+        "Content-Type": "application/json",
+        "X-API-Key": "YOUR-CUSTOMER-ID",
+    },
+    "data": {
+        "description": "YOUR-TRANSACTION-DESCRIPTION",
+        "digital_currency_code": "DIGITAL-CURRENCY-CODE",
+        "digital_currency_amount": "DIGITAL-CURRENCY-AMOUNT",
+        "cryptocurrency_code": "CRYPTOCURRENCY-CODE",
+        "customer_email": "CUSTOMER-EMAIL",
+        "customer_phone": "CUSTOMER-PHONE",
+    }
+}
+
+// RESPONSE OBJECT
+
+{
+    "status": "SUCCESS",
+    "message": "Transaction created successfully",
+    "data": {
+        "transaction_id": "YOUR-TRANSACTION-ID",
+        "cryptocurrency_code": "CRYPTOCURRENCY-CODE",
+        "deposit_crypto_address": "DEPOSIT-CRYPTO-ADDRESS",
+        "deposit_crypto_amount": "DEPOSIT-CRYPTO-AMOUNT",
+        "deposit_expires_at": "DEPOSIT-EXPIRATION-DATE",
+        "creation_timestamp": "CREATION-TIMESTAMP",
+        "payment_url": "PAYMENT-URL",
+    }
+}

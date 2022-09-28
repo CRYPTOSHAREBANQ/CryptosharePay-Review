@@ -17,16 +17,14 @@
 
 {
     "status": "SUCCESS",
-    "message": "API Key Created successfully",
+    "message": "Transaction created successfully",
     "data": {
         "customer_id": "YOUR-CUSTOMER-ID",
-        "api_keys": [
-            {
-                "api_key": "YOUR-API-KEY",
-                "business_id": "YOUR-BUSINESS-ID",
-                "type": "YOUR-KEY-TYPE",
-                "status": "YOUR-KEY-STATUS",
-            }
-        ]
+        "api_key": {
+            "api_key": "YOUR-API-KEY",
+            "business_id": "YOUR-BUSINESS-ID",
+            "type": "YOUR-KEY-TYPE",
+            "status": "YOUR-KEY-STATUS",
+        }
     }
 }
