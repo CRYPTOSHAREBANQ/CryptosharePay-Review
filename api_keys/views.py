@@ -85,13 +85,14 @@ class CreateApiKey(APIView):
 
 class GetApiKeys(APIView):
     def get(self, request):
-        data = request.data["data"]
+        # data = request.data["data"]
         headers = request.headers
 
         customer_id = headers.get("X-Customer-Id", None)
+        email = headers.get("X-Email", None)
 
         user_object = User.objects.get(
-            username = data["email"]
+            username = email
         )
 
         account_object = Account.objects.get(email = user_object)
@@ -126,9 +127,11 @@ class ActivateApiKey(APIView):
         headers = request.headers
 
         customer_id = headers.get("X-Customer-Id", None)
+        email = headers.get("X-Email", None)
+
 
         user_object = User.objects.get(
-            username = data["email"]
+            username = email
         )
 
         account_object = Account.objects.get(email = user_object)
@@ -168,9 +171,10 @@ class DeactivateApiKey(APIView):
         headers = request.headers
 
         customer_id = headers.get("X-Customer-Id", None)
+        email = headers.get("X-Email", None)
 
         user_object = User.objects.get(
-            username = data["email"]
+            username = email
         )
 
         account_object = Account.objects.get(email = user_object)

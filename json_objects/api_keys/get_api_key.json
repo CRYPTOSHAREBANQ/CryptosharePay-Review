@@ -5,10 +5,8 @@
     "headers": {
         "Content-Type": "application/json",
         "X-Customer-Id": "YOUR-CUSTOMER-ID",
-    },
-    "data": {
-        "email": "YOUR-EMAIL",
-        "password": "YOUR-PASSWORD"
+        "X-Email": "YOUR-EMAIL",
+        "X-Password": "YOUR-PASSWORD"
     }
 }
 

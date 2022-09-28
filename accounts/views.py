@@ -28,6 +28,20 @@ class CreateAccount(APIView):
         customer_info = data["customer_info"]
         business_info = data.get("business_info", None)
 
+        if not Country.objects.filter(country_id = customer_info["country_id"]).exists():
+            return Response(
+                {
+                "status": "ERROR",
+                "message": "Country ID does not exist"
+                }, status=400)
+
+        if Country.objects.get(country_id = customer_info["country_id"]).status == "BLOCK":
+            return Response(
+                {
+                "status": "ERROR",
+                "message": "Your country doesnt need to create an account, please go to: [INSERT LINK HERE]"
+                }, status=400)
+
         if User.objects.filter(email = customer_info["email"]).exists():
             return Response(
                 {
@@ -42,12 +56,7 @@ class CreateAccount(APIView):
                 "message": "Passwords do not match"
                 }, status=400)
 
-        if not Country.objects.filter(country_id = customer_info["country_id"]).exists():
-            return Response(
-                {
-                "status": "ERROR",
-                "message": "Country ID does not exist"
-                }, status=400)
+        
 
         new_user = User.objects.create_user(
             username = customer_info['email'], 

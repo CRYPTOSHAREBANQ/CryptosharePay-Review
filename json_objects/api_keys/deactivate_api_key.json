@@ -5,10 +5,10 @@
     "headers": {
         "Content-Type": "application/json",
         "X-Customer-Id": "YOUR-CUSTOMER-ID",
+        "X-Email": "YOUR-EMAIL",
+        "X-Password": "YOUR-PASSWORD"
     },
     "data": {
-        "email": "YOUR-EMAIL",
-        "password": "YOUR-PASSWORD",
         "api_key": "YOUR-API-KEY"
     }
 }

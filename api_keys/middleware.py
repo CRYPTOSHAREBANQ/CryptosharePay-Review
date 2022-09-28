@@ -17,9 +17,12 @@ class API_Key_Verification:
         # Code to be executed for each request/response after
         # the view is called.
         
-        data = json.loads(request.body.decode("utf-8"))
-        data = data["data"]
-
+        try:
+            data = json.loads(request.body.decode("utf-8"))
+            data = data["data"]
+        except:
+            print("EMPTY BODY")
+            
         headers = request.META
 
         path_info = headers.get("PATH_INFO", None)
@@ -29,6 +32,11 @@ class API_Key_Verification:
         ### API KEYS ###
         if "v1/api_keys/" in path_info:
             customer_id = headers.get("HTTP_X_CUSTOMER_ID", None)
+            email = headers.get("HTTP_X_EMAIL", None)
+            password = headers.get("HTTP_X_PASSWORD", None)
+
+
+
             if not customer_id:
                 return HttpResponse(
                     str({
@@ -51,9 +59,6 @@ class API_Key_Verification:
                     "status": "ERROR",
                     "message": "Invalid X-Customer-Id"
                     }), status=400)
-
-            email = data["email"]
-            password = data["password"]
 
             user_object = auth.authenticate(
                 username = email,
