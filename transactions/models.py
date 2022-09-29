@@ -16,7 +16,7 @@ class Transaction(models.Model):
 
     transaction_id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     api_key = models.ForeignKey(Api_Key, on_delete=models.CASCADE)
-    type = models.CharField(max_length=12)
+    type = models.CharField(max_length=20)
     description = models.CharField(max_length=100, null=True)
     digital_currency_id = models.ForeignKey(Digital_Currency, on_delete=models.PROTECT, null=True)
     digital_currency_amount = models.DecimalField(max_digits=14, decimal_places=2, null=True)
@@ -27,8 +27,8 @@ class Transaction(models.Model):
     client_phone = models.CharField(max_length=20, null=True)
     creation_datetime = models.DateTimeField(auto_now_add=True)
     expiration_datetime = models.DateTimeField(default=set_expiration_datetime(), null= True)
-    state = models.CharField(max_length=15, null=True)
-    status = models.CharField(max_length=15, null=True)
+    state = models.CharField(max_length=20, null=True)
+    status = models.CharField(max_length=20, null=True)
 
 class Transaction_Ins(models.Model):
     transaction_ins_id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)

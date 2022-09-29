@@ -3,6 +3,7 @@ from django.contrib.auth.models import User
 from django.views import View
 from django.views.decorators.csrf import csrf_exempt
 from django.utils.decorators import method_decorator
+from decimal import Decimal
 
 from accounts.models import Account, Country
 from businesses.models import Business
@@ -32,7 +33,7 @@ class CreateTransaction(APIView):
         description = data["description"]
         digital_currency_code = data["digital_currency_code"]
         digital_currency_amount = data["digital_currency_amount"]
-        cryptocurrency_code = data["digital_currency_amount"]
+        cryptocurrency_code = data["cryptocurrency_code"]
         cryptocurrency_blockchain = data["cryptocurrency_blockchain"]
         customer_email = data["digital_currency_amount"]
         customer_phone = data.get("customer_phone", None)
@@ -79,6 +80,7 @@ class CreateTransaction(APIView):
 
         digital_currency_object =  Digital_Currency.objects.get(digital_currency_id = digital_currency_code)
 
+        print(api_key_object.type, cryptocurrency_code)
         network_object = Network.objects.get(network_id = CRYPTOCURRENCY_NETWORKS[api_key_object.type][cryptocurrency_code])
         blockchain_object = Blockchain.objects.get(blockchain_id = cryptocurrency_blockchain)
 
@@ -88,6 +90,7 @@ class CreateTransaction(APIView):
             symbol = cryptocurrency_code
         )
 
+        print(cryptocurrency_object.__dict__)
         # GENERATE ADDRESS
         cryptoapis_utils = CryptoApisUtils()
         address_object, error = cryptoapis_utils.generate_address(cryptocurrency_object, api_key_object)
@@ -104,9 +107,10 @@ class CreateTransaction(APIView):
         - PAYMENT_REQUEST
         """
 
-        digital_currency_amount_usd = digital_currency_amount / digital_currency_object.exchange_rate 
+        digital_currency_amount_usd = Decimal(digital_currency_amount) / digital_currency_object.exchange_rate 
 
-        cryptocurrency_amount = digital_currency_amount_usd / cryptocurrency_object.exchange_rate
+        # cryptocurrency_amount = digital_currency_amount_usd / cryptocurrency_object.exchange_rate
+        cryptocurrency_amount = digital_currency_amount_usd / Decimal(41.44)
 
         # MISSING REFUND ADDRESS
         new_transaction = Transaction.objects.create(
@@ -134,7 +138,7 @@ class CreateTransaction(APIView):
                     "cryptocurrency_code": cryptocurrency_code,
                     "deposit_crypto_address": address_object.address,
                     "deposit_crypto_amount": cryptocurrency_amount,
-                    "deposit_expires_at": new_transaction.expiration_datetime.timestamp(),
+                    "expiration_timestamp": new_transaction.expiration_datetime.timestamp(),
                     "creation_timestamp": new_transaction.creation_datetime.timestamp(),
                     "payment_url": "NOT_AVAILABLE"
                 }

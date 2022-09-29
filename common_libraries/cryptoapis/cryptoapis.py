@@ -10,10 +10,10 @@ class CryptoApis:
         self.RECEIVE_CALLBACK_ON = 4
         self.HEADERS = {
         'Content-Type': "application/json",
-        'X-API-Key': os.environ['CRYPTOAPIS_API_KEY']
+        'X-API-Key': "72b793e11a85dd231d46fc3a3f73d274a834b475"
         }
-        self.WALLET_ID = os.environ['CRYPTOAPIS_WALLET_ID']
-        self.CALLBACK_SECRET_KEY = os.environ['CRYPTOAPIS_CALLBACK_SECRET_KEY']
+        self.WALLET_ID = "628364e2c09ab200073d70c5"
+        self.CALLBACK_SECRET_KEY = "CryptoApisCS"
         
     def get_confirmed_transactions(self, blockchain, network):
 
@@ -61,13 +61,13 @@ class CryptoApis:
         
         return request["data"]["item"]["isValid"]
     
-    def generate_deposit_address(self, blockchain, network, counter):
+    def generate_deposit_address(self, blockchain, network, counter, address_type):
         url = self.BASE +  f"/wallet-as-a-service/wallets/{self.WALLET_ID}/{blockchain}/{network}/addresses"
         data = {
                 "context": "",
                 "data": {
                         "item": {
-                                "label": f"cryptosharepay|{blockchain}|{network}|{counter}"
+                                "label": f"cryptosharepay|{address_type}|{blockchain}|{network}|{counter}"
                                 }
                 }
             }
@@ -84,7 +84,7 @@ class CryptoApis:
                         "address": address,
                         "allowDuplicates": False,
                         "callbackSecretKey": self.CALLBACK_SECRET_KEY,
-                        "callbackURL": "https://www.cryptoshareapp.com/atm/ConfirmedCoinTransactions/"
+                        "callbackURL": "https://www.cryptoshareapp.com/atm/TestReceiver/"
                     }
                 }
             }

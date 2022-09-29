@@ -47,14 +47,15 @@ class CryptoApisUtils:
                 deposit_address = cryptoapis_client.generate_deposit_address(
                     cryptocurrency_object.blockchain_id.blockchain_id, 
                     cryptocurrency_object.network_id.network_id, 
-                    number_of_addresses
+                    number_of_addresses,
+                    api_key_object.type
                 )
             except:
                 error = "Error generating address. Please try again later."
                 return None, error
 
             new_address = Address.objects.create(
-                address_id = f"cryptosharepay|{cryptocurrency_object.blockchain_id.blockchain_id}|{cryptocurrency_object.network_id.network_id}|{number_of_addresses}",
+                address_id = f"cryptosharepay|{api_key_object.type}|{cryptocurrency_object.blockchain_id.blockchain_id}|{cryptocurrency_object.network_id.network_id}|{number_of_addresses}",
                 address = deposit_address,
                 api_key = api_key_object,
                 cryptocurrency_id = cryptocurrency_object,
@@ -70,7 +71,7 @@ class CryptoApisUtils:
                 error = "Error generating address, please contact support"
                 return None, error
             
-            print(new_subscription)
+            print(deposit_address, new_subscription)
             #GENERATE COIN SUBSCRIPTION
             new_subscription_object = Address_Subscription.objects.create(
                 subscription_id = new_subscription["referenceId"],

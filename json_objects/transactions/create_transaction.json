@@ -28,7 +28,7 @@
         "cryptocurrency_amount": "CRYPTOCURRENCY-AMOUNT",
         "deposit_crypto_address": "DEPOSIT-CRYPTO-ADDRESS",
         "deposit_crypto_amount": "DEPOSIT-CRYPTO-AMOUNT",
-        "deposit_expires_at": "DEPOSIT-EXPIRATION-DATE",
+        "expiration_timestamp": "DEPOSIT-EXPIRATION-DATE",
         "creation_timestamp": "CREATION-TIMESTAMP",
         "payment_url": "PAYMENT-URL",
     }

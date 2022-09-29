@@ -32,7 +32,7 @@ class Address_Subscription(models.Model):
     callback_url = models.URLField(max_length=200)
 
 class Address(models.Model):
-    address_id = models.CharField(max_length=21, primary_key=True)
+    address_id = models.CharField(max_length=60, primary_key=True)
     address = models.CharField(max_length=100)
     api_key = models.ForeignKey(Api_Key, on_delete=models.SET_NULL, null=True)
     cryptocurrency_id = models.ForeignKey(Cryptocurrency, on_delete=models.SET_NULL, null=True)
