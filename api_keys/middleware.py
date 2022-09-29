@@ -16,12 +16,6 @@ class API_Key_Verification:
 
         # Code to be executed for each request/response after
         # the view is called.
-        
-        try:
-            data = json.loads(request.body.decode("utf-8"))
-            data = data["data"]
-        except:
-            print("EMPTY BODY")
             
         headers = request.META
 
@@ -31,6 +25,12 @@ class API_Key_Verification:
         ### API KEYS ###
         ### API KEYS ###
         if "v1/api_keys/" in path_info:
+            try:
+                data = json.loads(request.body.decode("utf-8"))
+                data = data["data"]
+            except:
+                print("EMPTY BODY")
+
             customer_id = headers.get("HTTP_X_CUSTOMER_ID", None)
             email = headers.get("HTTP_X_EMAIL", None)
             password = headers.get("HTTP_X_PASSWORD", None)

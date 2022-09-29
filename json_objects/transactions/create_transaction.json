@@ -11,6 +11,7 @@
         "digital_currency_code": "DIGITAL-CURRENCY-CODE",
         "digital_currency_amount": "DIGITAL-CURRENCY-AMOUNT",
         "cryptocurrency_code": "CRYPTOCURRENCY-CODE",
+        "cryptocurrency_blockchain": "CRYPTOCURRENCY-BLOCKCHAIN",
         "customer_email": "CUSTOMER-EMAIL",
         "customer_phone": "CUSTOMER-PHONE",
     }
@@ -24,6 +25,7 @@
     "data": {
         "transaction_id": "YOUR-TRANSACTION-ID",
         "cryptocurrency_code": "CRYPTOCURRENCY-CODE",
+        "cryptocurrency_amount": "CRYPTOCURRENCY-AMOUNT",
         "deposit_crypto_address": "DEPOSIT-CRYPTO-ADDRESS",
         "deposit_crypto_amount": "DEPOSIT-CRYPTO-AMOUNT",
         "deposit_expires_at": "DEPOSIT-EXPIRATION-DATE",

@@ -133,6 +133,7 @@ class ActivateApiKey(APIView):
         )
 
         account_object = Account.objects.get(email = user_object)
+        
 
         if not Api_Key.objects.filter(api_key = data["api_key"], user_id = account_object).exists():
             return Response(

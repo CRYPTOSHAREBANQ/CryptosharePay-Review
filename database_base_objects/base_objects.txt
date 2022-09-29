@@ -230,7 +230,7 @@ Cryptocurrency.objects.create(
     exchange_rate = 0
 )
 
-#CREATE XRP}
+#CREATE XRP
 Cryptocurrency.objects.create(
     blockchain_id = Blockchain.objects.get(blockchain_id="xrp"),
     network_id = Network.objects.get(network_id="mainnet"),

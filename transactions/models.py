@@ -4,20 +4,29 @@ import uuid
 from api_keys.models import Api_Key
 from cryptocurrency.models import Cryptocurrency, Address
 from digital_currency.models import Digital_Currency
+
+from django.utils import timezone
+from datetime import datetime, timedelta
 # Create your models here.
 
 
 class Transaction(models.Model):
+    def set_expiration_datetime():
+        return timezone.now()+timedelta(days=2)
+
     transaction_id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     api_key = models.ForeignKey(Api_Key, on_delete=models.CASCADE)
     type = models.CharField(max_length=12)
+    description = models.CharField(max_length=100, null=True)
     digital_currency_id = models.ForeignKey(Digital_Currency, on_delete=models.PROTECT, null=True)
     digital_currency_amount = models.DecimalField(max_digits=14, decimal_places=2, null=True)
+    cryptocurrency_amount = models.DecimalField(max_digits=20, decimal_places=8, null=True)
     address_id = models.ForeignKey(Address, on_delete=models.PROTECT, null=True)
     address_refund = models.CharField(max_length=100, null=True)
     client_email = models.EmailField(max_length = 254, null=True)
     client_phone = models.CharField(max_length=20, null=True)
     creation_datetime = models.DateTimeField(auto_now_add=True)
+    expiration_datetime = models.DateTimeField(default=set_expiration_datetime(), null= True)
     state = models.CharField(max_length=15, null=True)
     status = models.CharField(max_length=15, null=True)
 
