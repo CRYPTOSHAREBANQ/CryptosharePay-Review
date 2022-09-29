@@ -4,7 +4,7 @@
 {
     "headers": {
         "Content-Type": "application/json",
-        "X-API-Key": "YOUR-CUSTOMER-ID",
+        "X-API-Key": "YOUR-API-KEY",
     },
     "data": {
         "description": "YOUR-TRANSACTION-DESCRIPTION",
