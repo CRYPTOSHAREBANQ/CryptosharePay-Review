@@ -22,33 +22,14 @@ class CreateApiKey(APIView):
         business_id = data.get("business_id", None)
         api_key_type = data.get("type", None)
 
-        API_KEY_TYPES = {"TEST", "PRODUCTION"}
-
         # business_object = None
         if Business.objects.filter(business_id = business_id).exists():
             business_object = Business.objects.get(business_id = business_id)
 
-        if not api_key_type in API_KEY_TYPES:
-            return Response(
-                {
-                "status": "ERROR",
-                "message": "Invalid API Key Type"
-                }, status=400)
-
         user_object = User.objects.get(username = data["email"])
-
         account_object = Account.objects.get(email = user_object)
 
-        ### MISING TO VERIFY IF BUSINESS ALREADY HAS AN API KEY ###
-
-        #VERIFY IF USER ALREADY HAS API KEY
-        if Api_Key.objects.filter(user_id = account_object, type = api_key_type).exists():
-            return Response(
-                {
-                "status": "ERROR",
-                "message": "User already has an API Key"
-                }, status=400)
-            
+        ### MISING TO VERIFY IF BUSINESS ALREADY HAS AN API KEY ###            
 
         new_generated_key = secrets.token_hex(16)
         if api_key_type == "TEST":
@@ -94,11 +75,9 @@ class GetApiKeys(APIView):
         )
 
         account_object = Account.objects.get(email = user_object)
-
         api_key_objects = Api_Key.objects.filter(user_id = account_object)
 
         api_keys = []
-
         for api_key_object in api_key_objects:
             api_keys.append({
                 "api_key": api_key_object.api_key,
@@ -106,7 +85,6 @@ class GetApiKeys(APIView):
                 "type": api_key_object.type,
                 "status": api_key_object.status
             })
-
 
         response_object = {
             "status": "SUCCESS",
@@ -127,21 +105,11 @@ class ActivateApiKey(APIView):
         customer_id = headers.get("X-Customer-Id", None)
         email = headers.get("X-Email", None)
 
-
         user_object = User.objects.get(
             username = email
         )
 
         account_object = Account.objects.get(email = user_object)
-        
-
-        if not Api_Key.objects.filter(api_key = data["api_key"], user_id = account_object).exists():
-            return Response(
-                {
-                "status": "ERROR",
-                "message": "Invalid API Key"
-                }, status=400)
-
         api_key_object = Api_Key.objects.get(
             api_key = data["api_key"], 
             user_id = account_object
@@ -177,14 +145,6 @@ class DeactivateApiKey(APIView):
         )
 
         account_object = Account.objects.get(email = user_object)
-
-        if not Api_Key.objects.filter(api_key = data["api_key"], user_id = account_object).exists():
-            return Response(
-                {
-                "status": "ERROR",
-                "message": "Invalid API Key"
-                }, status=400)
-
         api_key_object = Api_Key.objects.get(
             api_key = data["api_key"], 
             user_id = account_object
