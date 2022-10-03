@@ -1,0 +1,28 @@
+// GET API KEY OBJECTS
+
+// REQUEST OBJECT
+{
+    "headers": {
+        "Content-Type": "application/json",
+        "X-API-Key": "YOUR-API-KEY",
+    }
+}
+
+// RESPONSE OBJECT
+
+{
+    "status": "SUCCESS",
+    "message": "Cryptocurrencies retrieved successfully",
+    "data": {
+        "cryptocurrencies": [
+            {
+                "code": "CRYPTOCURRENCY-CODE",
+                "name": "CRYPTOCURRENCY-NAME",
+                "type": "CRYPTOCURRENCY-TYPE",
+                "blockchain": "CRYPTOCURRENCY-BLOCKCHAIN",
+                "network": "CRYPTOCURRENCY-NETWORK"
+            },
+            ...
+        ]
+    }
+}
