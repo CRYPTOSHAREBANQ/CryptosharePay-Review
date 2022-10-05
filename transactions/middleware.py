@@ -3,11 +3,11 @@ from importlib.resources import path
 from django.http import HttpResponse, Http404
 from django.contrib import auth
 from accounts.models import Account
-from api_keys.models import Api_Key
+from api_keys.models import ApiKey
 from uuid import UUID
 
 from cryptocurrency.models import Blockchain, Cryptocurrency
-from digital_currency.models import Digital_Currency
+from digital_currency.models import DigitalCurrency
 
 import json
 
@@ -54,7 +54,7 @@ class Transaction_Verification:
                         "message": "digital_currency_code not found"
                         }), status=400)
                 else:
-                    if not Digital_Currency.objects.filter(digital_currency_id = digital_currency_code).exists():
+                    if not DigitalCurrency.objects.filter(digital_currency_id = digital_currency_code).exists():
                         return HttpResponse(
                             str({
                             "status": "ERROR",

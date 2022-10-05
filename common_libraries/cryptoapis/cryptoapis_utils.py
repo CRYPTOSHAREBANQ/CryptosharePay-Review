@@ -1,5 +1,5 @@
 # from atm_functions.models import Cryptocurrency, Address
-from cryptocurrency.models import Address, Address_Subscription, Cryptocurrency
+from cryptocurrency.models import Address, AddressSubscription, Cryptocurrency
 
 from django.utils import timezone
 from datetime import timedelta

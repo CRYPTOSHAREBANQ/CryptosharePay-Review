@@ -1,9 +1,9 @@
 from django.db import models
 
 import uuid
-from api_keys.models import Api_Key
+from api_keys.models import ApiKey
 from cryptocurrency.models import Cryptocurrency, Address
-from digital_currency.models import Digital_Currency
+from digital_currency.models import DigitalCurrency
 
 from django.utils import timezone
 from datetime import datetime, timedelta
@@ -15,10 +15,10 @@ class Transaction(models.Model):
         return timezone.now()+timedelta(days=2)
 
     transaction_id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    api_key = models.ForeignKey(Api_Key, on_delete=models.CASCADE)
+    api_key = models.ForeignKey(ApiKey, on_delete=models.CASCADE)
     type = models.CharField(max_length=20)
     description = models.CharField(max_length=100, null=True)
-    digital_currency_id = models.ForeignKey(Digital_Currency, on_delete=models.PROTECT, null=True)
+    digital_currency_id = models.ForeignKey(DigitalCurrency, on_delete=models.PROTECT, null=True)
     digital_currency_amount = models.DecimalField(max_digits=14, decimal_places=2, null=True)
     cryptocurrency_amount = models.DecimalField(max_digits=20, decimal_places=8, null=True)
     address_id = models.ForeignKey(Address, on_delete=models.PROTECT, null=True)
@@ -30,7 +30,7 @@ class Transaction(models.Model):
     state = models.CharField(max_length=20, null=True)
     status = models.CharField(max_length=20, null=True)
 
-class Transaction_Ins(models.Model):
+class TransactionIns(models.Model):
     transaction_ins_id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     external_transaction_id = models.CharField(max_length=100, null=True)
     amount = models.DecimalField(max_digits=20, decimal_places=8)
@@ -40,7 +40,7 @@ class Transaction_Ins(models.Model):
     state = models.CharField(max_length=15)
     status = models.CharField(max_length=15)
 
-class Transaction_Outs(models.Model):
+class TransactionOuts(models.Model):
     transaction_ins_id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     external_transaction_id = models.CharField(max_length=100, null=True)
     amount = models.DecimalField(max_digits=20, decimal_places=8)
@@ -51,9 +51,9 @@ class Transaction_Outs(models.Model):
     state = models.CharField(max_length=15)
     status = models.CharField(max_length=15)
 
-class Transaction_Book(models.Model):
+class TransactionBook(models.Model):
     registry_id = models.AutoField(primary_key=True)
     type = models.CharField(max_length=5)
     transaction_id = models.ForeignKey(Transaction, on_delete=models.PROTECT)
-    transaction_ins_id = models.ForeignKey(Transaction_Ins, on_delete=models.PROTECT, null=True)
-    transaction_outs_id = models.ForeignKey(Transaction_Outs, on_delete=models.PROTECT, null=True)
+    transaction_ins_id = models.ForeignKey(TransactionIns, on_delete=models.PROTECT, null=True)
+    transaction_outs_id = models.ForeignKey(TransactionOuts, on_delete=models.PROTECT, null=True)

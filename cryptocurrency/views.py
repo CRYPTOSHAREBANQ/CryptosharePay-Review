@@ -1,8 +1,8 @@
 from django.shortcuts import render
 
-from .serializers import CryptocurrenciesSerializer, CryptocurrencySerializer
+from .serializers import CryptocurrenciesSerializer, CryptocurrencySerializer, BlockchainsSerializer, NetworksSerializer
 
-from cryptocurrency.models import Cryptocurrency
+from cryptocurrency.models import Blockchain, Cryptocurrency, Network
 
 from rest_framework.views import APIView
 from rest_framework.decorators import api_view
@@ -44,6 +44,38 @@ class GetCryptocurrency(APIView):
             "message": "Cryptocurrency retrieved successfully",
             "data": {
                 "cryptocurrency": serializer.data if serializer else None
+            }
+        }
+
+        return Response(response_object, status=200)
+
+class GetBlockchains(APIView):
+    def get(self, request):
+        blockchains = Blockchain.objects.all()
+
+        serializer = BlockchainsSerializer(blockchains, many=True)
+
+        response_object = {
+            "status": "SUCCESS",
+            "message": "Blockchains retrieved successfully",
+            "data": {
+                "blockchains": serializer.data
+            }
+        }
+
+        return Response(response_object, status=200)
+
+class GetNetworks(APIView):
+    def get(self, request):
+        networks = Network.objects.all()
+
+        serializer = NetworksSerializer(networks, many=True)
+
+        response_object = {
+            "status": "SUCCESS",
+            "message": "Networks retrieved successfully",
+            "data": {
+                "networks": serializer.data
             }
         }
 

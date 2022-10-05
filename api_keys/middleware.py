@@ -3,7 +3,7 @@ from importlib.resources import path
 from django.http import HttpResponse, Http404
 from django.contrib import auth
 from accounts.models import Account
-from api_keys.models import Api_Key
+from api_keys.models import ApiKey
 from uuid import UUID
 
 import json
@@ -117,7 +117,7 @@ class API_Key_Verification:
                         }), status=400)
 
                 #VERIFY IF USER ALREADY HAS API KEY
-                if Api_Key.objects.filter(user_id = account_object, type = api_key_type).exists():
+                if ApiKey.objects.filter(user_id = account_object, type = api_key_type).exists():
                     return HttpResponse(
                         str({
                         "status": "ERROR",
@@ -142,7 +142,7 @@ class API_Key_Verification:
             else:
                 api_key = data.get("api_key", None)
 
-                if not api_key or not Api_Key.objects.filter(api_key = api_key, user_id = account_object).exists():
+                if not api_key or not ApiKey.objects.filter(api_key = api_key, user_id = account_object).exists():
                     return HttpResponse(
                         str({
                         "status": "ERROR",
@@ -168,7 +168,7 @@ class API_Key_Verification:
         elif "v1/transactions/" in path_info:
             api_key = headers.get("HTTP_X_API_KEY", None)
 
-            if not api_key or not Api_Key.objects.filter(api_key = api_key).exists():
+            if not api_key or not ApiKey.objects.filter(api_key = api_key).exists():
                 return HttpResponse(
                     str({
                     "status": "ERROR",
