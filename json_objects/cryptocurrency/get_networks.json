@@ -1,0 +1,25 @@
+// GET NETWORKS OBJECTS
+
+// REQUEST OBJECT
+{
+    "headers": {
+        "Content-Type": "application/json",
+        "X-API-Key": "YOUR-API-KEY",
+    }
+}
+
+// RESPONSE OBJECT
+
+{
+    "status": "SUCCESS",
+    "message": "Networks retrieved successfully",
+    "data": {
+        "networks": [
+            {
+                "network_id": "NETWORK-ID",
+                "name": "NETWORK-NAME"
+            },
+            ...
+        ]
+    }
+}

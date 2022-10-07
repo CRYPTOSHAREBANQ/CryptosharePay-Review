@@ -1,4 +1,4 @@
-// GET API KEY OBJECTS
+// GET CRYPTOCURRENCIES OBJECTS
 
 // REQUEST OBJECT
 {
@@ -12,7 +12,7 @@
 
 {
     "status": "SUCCESS",
-    "message": "Cryptocurrencies retrieved successfully",
+    "message": "Cryptocurrency retrieved successfully",
     "data": {
         "cryptocurrencies": [
             {

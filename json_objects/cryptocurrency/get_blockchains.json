@@ -1,0 +1,25 @@
+// GET BLOCKCHAIN OBJECTS
+
+// REQUEST OBJECT
+{
+    "headers": {
+        "Content-Type": "application/json",
+        "X-API-Key": "YOUR-API-KEY",
+    }
+}
+
+// RESPONSE OBJECT
+
+{
+    "status": "SUCCESS",
+    "message": "Blockchains retrieved successfully",
+    "data": {
+        "blockchains": [
+            {
+                "blockchain_id": "BLOCKCHAIN-ID",
+                "name": "NETWORK-NAME"
+            },
+            ...
+        ]
+    }
+}

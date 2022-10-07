@@ -34,7 +34,7 @@ class CreateTransaction(APIView):
         digital_currency_code = data["digital_currency_code"]
         digital_currency_amount = data["digital_currency_amount"]
         cryptocurrency_code = data["cryptocurrency_code"]
-        cryptocurrency_blockchain = data["cryptocurrency_blockchain"]
+        cryptocurrency_blockchain_id = data["cryptocurrency_blockchain_id"]
         customer_email = data.get("customer_email", None)
         customer_phone = data.get("customer_phone", None)
 
@@ -82,7 +82,7 @@ class CreateTransaction(APIView):
 
         # print(api_key_object.type, cryptocurrency_code)
         network_object = Network.objects.get(network_id = CRYPTOCURRENCY_NETWORKS[api_key_object.type][cryptocurrency_code])
-        blockchain_object = Blockchain.objects.get(blockchain_id = cryptocurrency_blockchain)
+        blockchain_object = Blockchain.objects.get(blockchain_id = cryptocurrency_blockchain_id)
 
         cryptocurrency_object = Cryptocurrency.objects.filter(
             blockchain_id = blockchain_object,
