@@ -38,8 +38,6 @@ class GetCryptocurrency(APIView):
         else:
             serializer = None
 
-        print(request.session.get('code', None), "codex")
-
         response_object = {
             "status": "SUCCESS",
             "message": "Cryptocurrency retrieved successfully",

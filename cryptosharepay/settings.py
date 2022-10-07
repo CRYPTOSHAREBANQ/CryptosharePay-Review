@@ -58,7 +58,9 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'api_keys.middleware.APIKeyVerification',
     'cryptocurrency.middleware.CryptocurrencyVerification',
+    'digital_currency.middleware.DigitalCurrencyVerification',
     'transactions.middleware.TransactionVerification',
+    # DigitalCurrencyVerification
 ]
 
 ROOT_URLCONF = 'cryptosharepay.urls'

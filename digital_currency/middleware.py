@@ -8,9 +8,9 @@ from uuid import UUID
 
 import json
 
-from cryptocurrency.models import Cryptocurrency
+from digital_currency.models import DigitalCurrency
 
-class CryptocurrencyVerification:
+class DigitalCurrencyVerification:
     def __init__(self, get_response):
         self.get_response = get_response
         # One-time configuration and initialization.
@@ -25,24 +25,22 @@ class CryptocurrencyVerification:
         path_info = headers.get("PATH_INFO", None)
 
 
-        if "v1/cryptocurrency/" in path_info:
+        if "v1/digital-currency/" in path_info:
 
-            if "get-cryptocurrency/" in path_info:
+            if "get-digital-currency/" in path_info:
 
                 # GET URL PARAMETERS FROM URL PATH
-                # ['v1', 'cryptocurrency', 'get-cryptocurrency', 'CRYPTOCURRENCY_CODE', 'CRYPTOCURRENCY_NETWORK']
+                # ['v1', 'digital-currency', 'get-digital-currency', 'DIGITAL_CURRENCY_CODE']
                 url_path = path_info.split("/")[1:-1]
                 # print(path_info)
                 
-                cryptocurrency_code = url_path[3]
-                network = url_path[4]
+                digital_currency_code = url_path[3]
 
-                print(cryptocurrency_code)
-                if not cryptocurrency_code or not Cryptocurrency.objects.filter(symbol = cryptocurrency_code, network_id__network_id = network).exists():
+                if not digital_currency_code or not DigitalCurrency.objects.filter(digital_currency_id = digital_currency_code).exists():
                     return HttpResponse(
                         str({
                         "status": "ERROR",
-                        "message": "Cryptocurrency not found"
+                        "message": "Digital currency not found"
                         }), status=400)
 
             pass
