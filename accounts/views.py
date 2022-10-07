@@ -6,7 +6,7 @@ from django.utils.decorators import method_decorator
 
 from accounts.models import Account, Country
 from businesses.models import Business
-from api_keys.models import Api_Key
+from api_keys.models import ApiKey
 
 # from rest_framework import Response
 from rest_framework.views import APIView
@@ -85,7 +85,7 @@ class CreateAccount(APIView):
 
         new_generated_key = secrets.token_hex(16)
 
-        new_api_key = Api_Key.objects.create(
+        new_api_key = ApiKey.objects.create(
             api_key = "tsk_" + new_generated_key,
             user_id = new_account,
             business_id = new_business if business_info else None,

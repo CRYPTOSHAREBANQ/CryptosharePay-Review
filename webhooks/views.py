@@ -1,7 +1,7 @@
 from django.http import HttpResponse
 from django.shortcuts import render
 import json
-from transactions.models import Transaction, Transaction_Book ,Transaction_Ins
+from transactions.models import Transaction, TransactionBook ,TransactionIns
 from cryptocurrency.models import Address, Blockchain, Cryptocurrency, Network
 
 
@@ -43,7 +43,7 @@ def cryptoapis_confirmed_coin_transactions(request):
     )
     
 
-    new_transaction_in = Transaction_Ins.objects.create(
+    new_transaction_in = TransactionIns.objects.create(
         external_transaction_id = response_data["transactionId"],
         amount = response_data["amount"],
         address_id = receiving_address_object,
@@ -57,7 +57,7 @@ def cryptoapis_confirmed_coin_transactions(request):
         status = "PENDING"
     )
 
-    new_transaction_book_registry = Transaction_Book.objects.create(
+    new_transaction_book_registry = TransactionBook.objects.create(
         type = "IN",
         transaction_id = main_transaction,
         transaction_ins_id = new_transaction_in

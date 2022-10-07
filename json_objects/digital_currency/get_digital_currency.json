@@ -1,0 +1,23 @@
+// GET DIGITAL CURRENCY OBJECTS
+
+// REQUEST OBJECT
+{
+    "headers": {
+        "Content-Type": "application/json",
+        "X-API-Key": "YOUR-API-KEY",
+    }
+}
+
+// RESPONSE OBJECT
+
+{
+    "status": "SUCCESS",
+    "message": "Cryptocurrencies retrieved successfully",
+    "data": {
+        "digital_currency": {
+            "code": "DIGITAL-CURRENCY-CODE",
+            "name": "DIGITAL-CURRENCY-NAME",
+            "exchange_rate": 0.0
+        }
+    }
+}

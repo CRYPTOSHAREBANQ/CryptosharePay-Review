@@ -1,7 +1,7 @@
 from django.db import models
 
 import uuid
-from api_keys.models import Api_Key
+from api_keys.models import ApiKey
 
 # Create your models here.
 
@@ -23,7 +23,7 @@ class Cryptocurrency(models.Model):
     symbol = models.CharField(max_length=10)
     exchange_rate = models.DecimalField(max_digits=20, decimal_places=8)
 
-class Address_Subscription(models.Model):
+class AddressSubscription(models.Model):
     subscription_id = models.CharField(max_length=36, primary_key=True)
     event = models.CharField(max_length=40)
     blockchain_id = models.ForeignKey(Blockchain, on_delete=models.PROTECT, null=True)
@@ -34,8 +34,8 @@ class Address_Subscription(models.Model):
 class Address(models.Model):
     address_id = models.CharField(max_length=60, primary_key=True)
     address = models.CharField(max_length=100)
-    api_key = models.ForeignKey(Api_Key, on_delete=models.SET_NULL, null=True)
+    api_key = models.ForeignKey(ApiKey, on_delete=models.SET_NULL, null=True)
     cryptocurrency_id = models.ForeignKey(Cryptocurrency, on_delete=models.SET_NULL, null=True)
-    subscription_id = models.ForeignKey(Address_Subscription, on_delete=models.SET_NULL, null=True)
+    subscription_id = models.ForeignKey(AddressSubscription, on_delete=models.SET_NULL, null=True)
     status = models.CharField(max_length=15)
     

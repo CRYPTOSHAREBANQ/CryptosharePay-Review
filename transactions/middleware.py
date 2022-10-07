@@ -3,15 +3,15 @@ from importlib.resources import path
 from django.http import HttpResponse, Http404
 from django.contrib import auth
 from accounts.models import Account
-from api_keys.models import Api_Key
+from api_keys.models import ApiKey
 from uuid import UUID
 
 from cryptocurrency.models import Blockchain, Cryptocurrency
-from digital_currency.models import Digital_Currency
+from digital_currency.models import DigitalCurrency
 
 import json
 
-class Transaction_Verification:
+class TransactionVerification:
     def __init__(self, get_response):
         self.get_response = get_response
         # One-time configuration and initialization.
@@ -22,14 +22,16 @@ class Transaction_Verification:
 
         path_info = headers.get("PATH_INFO", None)
 
-        try:
-            data = json.loads(request.body.decode("utf-8"))
-            data = data["data"]
-        except:
-            data = None
+        # try:
+        #     data = json.loads(request.body.decode("utf-8"))
+        #     data = data["data"]
+        # except:
+        #     data = None
         
 
         if "v1/transactions/" in path_info:
+            data = json.loads(request.body.decode("utf-8"))
+            data = data["data"]
 
             if "create-transaction/" in path_info:
 
@@ -37,7 +39,7 @@ class Transaction_Verification:
                 digital_currency_code = data.get("digital_currency_code", None)
                 digital_currency_amount = data.get("digital_currency_amount", None)
                 cryptocurrency_code = data.get("cryptocurrency_code", None)
-                cryptocurrency_blockchain = data.get("cryptocurrency_blockchain", None)
+                cryptocurrency_blockchain_id = data.get("cryptocurrency_blockchain_id", None)
 
                 if description:
                     if len(description) > 100:
@@ -54,7 +56,7 @@ class Transaction_Verification:
                         "message": "digital_currency_code not found"
                         }), status=400)
                 else:
-                    if not Digital_Currency.objects.filter(digital_currency_id = digital_currency_code).exists():
+                    if not DigitalCurrency.objects.filter(digital_currency_id = digital_currency_code).exists():
                         return HttpResponse(
                             str({
                             "status": "ERROR",
@@ -96,18 +98,18 @@ class Transaction_Verification:
                             "message": "Invalid cryptocurrency_code"
                             }), status=400)
 
-                if not cryptocurrency_blockchain:
+                if not cryptocurrency_blockchain_id:
                     return HttpResponse(
                         str({
                         "status": "ERROR",
-                        "message": "cryptocurrency_blockchain not found"
+                        "message": "cryptocurrency_blockchain_id not found"
                         }), status=400)
                 else:
-                    if not Blockchain.objects.filter(blockchain_id = cryptocurrency_blockchain).exists():
+                    if not Blockchain.objects.filter(blockchain_id = cryptocurrency_blockchain_id).exists():
                         return HttpResponse(
                             str({
                             "status": "ERROR",
-                            "message": "Invalid cryptocurrency_blockchain"
+                            "message": "Invalid cryptocurrency_blockchain_id"
                             }), status=400)
 
 

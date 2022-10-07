@@ -3,12 +3,12 @@ from importlib.resources import path
 from django.http import HttpResponse, Http404
 from django.contrib import auth
 from accounts.models import Account
-from api_keys.models import Api_Key
+from api_keys.models import ApiKey
 from uuid import UUID
 
 import json
 
-class API_Key_Verification:
+class APIKeyVerification:
     def __init__(self, get_response):
         self.get_response = get_response
         # One-time configuration and initialization.
@@ -100,8 +100,8 @@ class API_Key_Verification:
             ### <------ CREDENTIALS VERIFICATION ------> ###
 
 
-            ### ENDPOINTS ###
-            ### ENDPOINTS ###
+            ### <------ ENDPOINTS ------> ###
+            ### <------ ENDPOINTS ------> ###
 
             if "create-api-key/" in path_info:
 
@@ -117,7 +117,7 @@ class API_Key_Verification:
                         }), status=400)
 
                 #VERIFY IF USER ALREADY HAS API KEY
-                if Api_Key.objects.filter(user_id = account_object, type = api_key_type).exists():
+                if ApiKey.objects.filter(user_id = account_object, type = api_key_type).exists():
                     return HttpResponse(
                         str({
                         "status": "ERROR",
@@ -142,47 +142,78 @@ class API_Key_Verification:
             else:
                 api_key = data.get("api_key", None)
 
-                if not api_key or not Api_Key.objects.filter(api_key = api_key, user_id = account_object).exists():
+                if not api_key or not ApiKey.objects.filter(api_key = api_key, user_id = account_object).exists():
                     return HttpResponse(
                         str({
                         "status": "ERROR",
                         "message": "Invalid API Key"
                         }), status=400)
 
-            ### ENDPOINTS ###
-            ### ENDPOINTS ###
+            ### <------ ENDPOINTS ------> ###
+            ### <------ ENDPOINTS ------> ###
 
-
-        elif "v1/accounts/" in path_info:
-            pass
+        # elif "v1/accounts/" in path_info:
+        #     api_key = headers.get("HTTP_X_API_KEY", None)
+        #     api_key_verification = self.verify_api_key(api_key)
+        #     if api_key_verification:
+        #         return api_key_verification
+            
+        #     pass
         
-        elif "v1/businesses/" in path_info:
-            pass
+        # elif "v1/businesses/" in path_info:
+        #     api_key = headers.get("HTTP_X_API_KEY", None)
+        #     api_key_verification = self.verify_api_key(api_key)
+        #     if api_key_verification:
+        #         return api_key_verification
+        #     pass
 
-        elif "v1/cryptocurrency/" in path_info:
-            pass
+        # elif "v1/cryptocurrency/" in path_info:
+        #     api_key = headers.get("HTTP_X_API_KEY", None)
+        #     api_key_verification = self.verify_api_key(api_key)
+        #     if api_key_verification:
+        #         return api_key_verification
+        #     pass
         
-        elif "v1/digital-currency/" in path_info:
-            pass
+        # elif "v1/digital-currency/" in path_info:
+        #     api_key = headers.get("HTTP_X_API_KEY", None)
+        #     api_key_verification = self.verify_api_key(api_key)
+        #     if api_key_verification:
+        #         return api_key_verification
+        #     pass
 
-        elif "v1/transactions/" in path_info:
-            api_key = headers.get("HTTP_X_API_KEY", None)
-
-            if not api_key or not Api_Key.objects.filter(api_key = api_key).exists():
-                return HttpResponse(
-                    str({
-                    "status": "ERROR",
-                    "message": "Invalid API Key"
-                    }), status=400)
+        # elif "v1/transactions/" in path_info:
+        #     api_key = headers.get("HTTP_X_API_KEY", None)
+        #     api_key_verification = self.verify_api_key(api_key)
+        #     if api_key_verification:
+        #         return api_key_verification
 
         else:
-            print(path_info)
-
-
-            
-
+            api_key = headers.get("HTTP_X_API_KEY", None)
+            api_key_verification = self.verify_api_key(api_key)
+            if api_key_verification:
+                return api_key_verification
+            # print(path_info)        
 
         # print(headers)
+
+        ### DO NOT REMOVE ###
+        ### DO NOT REMOVE ###
+        ### DO NOT REMOVE ###
+
         response = self.get_response(request)
 
         return response
+
+        ### DO NOT REMOVE ###
+        ### DO NOT REMOVE ###
+        ### DO NOT REMOVE ###
+
+    def verify_api_key(self, api_key):
+        if not api_key or not ApiKey.objects.filter(api_key = api_key).exists():
+            return HttpResponse(
+                str({
+                "status": "ERROR",
+                "message": "Invalid API Key"
+                }), status=400)
+        else:
+            return None

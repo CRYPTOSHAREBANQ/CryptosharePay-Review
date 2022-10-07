@@ -7,7 +7,7 @@ from rest_framework.views import APIView
 from rest_framework.response  import Response
 from rest_framework import status
 
-from api_keys.models import Api_Key
+from api_keys.models import ApiKey
 from accounts.models import Account
 from businesses.models import Business
 
@@ -37,7 +37,7 @@ class CreateApiKey(APIView):
         elif api_key_type == "PRODUCTION":
             api_key = "psk_" + new_generated_key
 
-        new_api_key = Api_Key.objects.create(
+        new_api_key = ApiKey.objects.create(
             api_key = api_key,
             user_id = account_object,
             business_id = business_object if business_id else None,
@@ -75,7 +75,7 @@ class GetApiKeys(APIView):
         )
 
         account_object = Account.objects.get(email = user_object)
-        api_key_objects = Api_Key.objects.filter(user_id = account_object)
+        api_key_objects = ApiKey.objects.filter(user_id = account_object)
 
         api_keys = []
         for api_key_object in api_key_objects:
@@ -110,7 +110,7 @@ class ActivateApiKey(APIView):
         )
 
         account_object = Account.objects.get(email = user_object)
-        api_key_object = Api_Key.objects.get(
+        api_key_object = ApiKey.objects.get(
             api_key = data["api_key"], 
             user_id = account_object
             )
@@ -145,7 +145,7 @@ class DeactivateApiKey(APIView):
         )
 
         account_object = Account.objects.get(email = user_object)
-        api_key_object = Api_Key.objects.get(
+        api_key_object = ApiKey.objects.get(
             api_key = data["api_key"], 
             user_id = account_object
             )

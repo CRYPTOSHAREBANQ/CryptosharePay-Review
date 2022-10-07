@@ -7,10 +7,10 @@ from decimal import Decimal
 
 from accounts.models import Account, Country
 from businesses.models import Business
-from api_keys.models import Api_Key
+from api_keys.models import ApiKey
 from cryptocurrency.models import Cryptocurrency, Blockchain, Network
-from transactions.models import Transaction, Transaction_Book, Transaction_Ins, Transaction_Outs
-from digital_currency.models import Digital_Currency
+from transactions.models import Transaction, TransactionBook, TransactionIns, TransactionOuts
+from digital_currency.models import DigitalCurrency
 
 # from rest_framework import Response
 from rest_framework.views import APIView
@@ -34,7 +34,7 @@ class CreateTransaction(APIView):
         digital_currency_code = data["digital_currency_code"]
         digital_currency_amount = data["digital_currency_amount"]
         cryptocurrency_code = data["cryptocurrency_code"]
-        cryptocurrency_blockchain = data["cryptocurrency_blockchain"]
+        cryptocurrency_blockchain_id = data["cryptocurrency_blockchain_id"]
         customer_email = data.get("customer_email", None)
         customer_phone = data.get("customer_phone", None)
 
@@ -76,13 +76,13 @@ class CreateTransaction(APIView):
         
         """
 
-        api_key_object = Api_Key.objects.get(api_key = api_key)
+        api_key_object = ApiKey.objects.get(api_key = api_key)
 
-        digital_currency_object =  Digital_Currency.objects.get(digital_currency_id = digital_currency_code)
+        digital_currency_object =  DigitalCurrency.objects.get(digital_currency_id = digital_currency_code)
 
         # print(api_key_object.type, cryptocurrency_code)
         network_object = Network.objects.get(network_id = CRYPTOCURRENCY_NETWORKS[api_key_object.type][cryptocurrency_code])
-        blockchain_object = Blockchain.objects.get(blockchain_id = cryptocurrency_blockchain)
+        blockchain_object = Blockchain.objects.get(blockchain_id = cryptocurrency_blockchain_id)
 
         cryptocurrency_object = Cryptocurrency.objects.filter(
             blockchain_id = blockchain_object,
