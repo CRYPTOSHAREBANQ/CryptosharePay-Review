@@ -136,7 +136,7 @@ class APIKeyVerification:
                             "message": "Invalid business_id"
                             }), status=400)
 
-            if "get-api-keys/" in path_info:
+            if "all/" in path_info:
                 pass
                 
             else:
