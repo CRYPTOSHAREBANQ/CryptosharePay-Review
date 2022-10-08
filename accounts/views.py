@@ -64,7 +64,7 @@ class CreateAccount(APIView):
             email = customer_info['email'],
             first_name = customer_info['first_name'],
             last_name = customer_info['last_name']
-            )
+        )
 
         new_account = Account.objects.create(
             type = "CUSTOMER", 
@@ -74,7 +74,7 @@ class CreateAccount(APIView):
             country_id = Country.objects.get(
                 country_id=customer_info['country_id']
                 )
-            )
+        )
 
         if business_info:
             new_business = Business.objects.create(
@@ -91,7 +91,7 @@ class CreateAccount(APIView):
             business_id = new_business if business_info else None,
             type = "TEST",
             status = "INACTIVE"
-            )
+        )
 
         
         response_object = {
@@ -128,3 +128,15 @@ class EmailHasAccount(APIView):
                     "email_is_available": True
                 }
                 }, status=200)
+
+class GetAPIKeyNoAccount(APIView):
+    def get(self, request):
+        data = request.data["data"]
+        headers = request.headers
+
+
+        email = headers["email"]
+
+        
+
+        pass
