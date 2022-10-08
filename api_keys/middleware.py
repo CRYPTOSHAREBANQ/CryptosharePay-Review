@@ -152,13 +152,8 @@ class APIKeyVerification:
             ### <------ ENDPOINTS ------> ###
             ### <------ ENDPOINTS ------> ###
 
-        # elif "v1/accounts/" in path_info:
-        #     api_key = headers.get("HTTP_X_API_KEY", None)
-        #     api_key_verification = self.verify_api_key(api_key)
-        #     if api_key_verification:
-        #         return api_key_verification
-            
-        #     pass
+        elif "v1/accounts/" in path_info:            
+            pass
         
         # elif "v1/businesses/" in path_info:
         #     api_key = headers.get("HTTP_X_API_KEY", None)

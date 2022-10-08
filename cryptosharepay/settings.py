@@ -59,8 +59,7 @@ MIDDLEWARE = [
     'api_keys.middleware.APIKeyVerification',
     'cryptocurrency.middleware.CryptocurrencyVerification',
     'digital_currency.middleware.DigitalCurrencyVerification',
-    'transactions.middleware.TransactionVerification',
-    # DigitalCurrencyVerification
+    'transactions.middleware.TransactionVerification'
 ]
 
 ROOT_URLCONF = 'cryptosharepay.urls'
