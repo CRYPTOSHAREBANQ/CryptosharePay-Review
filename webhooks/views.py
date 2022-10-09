@@ -1,8 +1,13 @@
 from django.http import HttpResponse
 from django.shortcuts import render
+
 import json
+from decimal import Decimal
+
+
 from transactions.models import Transaction, TransactionBook ,TransactionIns
 from cryptocurrency.models import Address, Blockchain, Cryptocurrency, Network
+from api_keys.models import Assets
 
 
 # Create your views here.
@@ -28,6 +33,8 @@ def cryptoapis_confirmed_coin_transactions(request):
 
     receiving_blockchain = Blockchain.objects.get(blockchain_id = response_data["blockchain"])
     receiving_network = Network.objects.get(network_id = response_data["network"])
+
+    ### <---------- STARTS MAIN TRANSACTION PROCESS ----------> ###
 
 
     receiving_cryptocurrency = Cryptocurrency.objects.get(
@@ -56,6 +63,8 @@ def cryptoapis_confirmed_coin_transactions(request):
         state = "OPEN",
         status = "PENDING"
     )
+    main_transaction.cryptocurrency_amount_received += Decimal(response_data["amount"])
+    main_transaction.save()
 
     new_transaction_book_registry = TransactionBook.objects.create(
         type = "IN",
@@ -63,13 +72,35 @@ def cryptoapis_confirmed_coin_transactions(request):
         transaction_ins_id = new_transaction_in
     )
 
+    ### <---------- END MAIN TRANSACTION PROCESS ----------> ###
+
+
     ### <---------- MISSING CODE HERE ----------> ###
 
     # MISSING TO VERIFY IF THE TRANSACTION IS COMPLETE
 
-    # MISSING TO CLOSE THE TRANSACTION IF IT IS COMPLETE
+    api_key_object = main_transaction.api_key
 
-    # MISSING TO CREDIT ASSETS TO THE USER ACCOUNT
+    if main_transaction.cryptocurrency_amount_received >= main_transaction.cryptocurrency_amount:
+        main_transaction.state = "COMPLETE"
+        main_transaction.status = "CONFIRMED"
+        main_transaction.save()
+
+        asset_object = Assets.objects.filter(api_key = api_key_object, cryptocurrency_id = receiving_cryptocurrency)
+        if asset_object.exists():
+            asset_object = asset_object.first()
+            asset_object.amount += main_transaction.cryptocurrency_amount_received
+            asset_object.save()
+        else:
+            new_asset_object = Assets.objects.create(
+                api_key = api_key_object,
+                type = receiving_cryptocurrency.type,
+                amount = main_transaction.cryptocurrency_amount_received,
+                cryptocurrency_id = receiving_cryptocurrency
+            )
+        
+
+        # MISSING TO SEND THE CONFIRMATION EMAIL TO THE USER
 
     ### <---------- MISSING CODE HERE ----------> ###
 

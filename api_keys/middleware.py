@@ -1,5 +1,4 @@
 from decimal import Decimal
-from importlib.resources import path
 from django.http import HttpResponse, Http404
 from django.contrib import auth
 from accounts.models import Account

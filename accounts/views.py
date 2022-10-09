@@ -105,38 +105,3 @@ class CreateAccount(APIView):
         }
 
         return Response(response_object, status=status.HTTP_200_OK)
-
-class EmailHasAccount(APIView):
-    def post(self, request):
-        data = request.data["data"]
-
-        if User.objects.filter(email = data["email"]).exists():
-            return Response(
-                {
-                "status": "SUCCESS",
-                "message": "Email already exists",
-                "data": {
-                    "email_is_available": False
-                }
-                }, status=200)
-        else:
-            return Response(
-                {
-                "status": "SUCCESS",
-                "message": "Email is available",
-                "data": {
-                    "email_is_available": True
-                }
-                }, status=200)
-
-class GetAPIKeyNoAccount(APIView):
-    def get(self, request):
-        data = request.data["data"]
-        headers = request.headers
-
-
-        email = headers["email"]
-
-        
-
-        pass

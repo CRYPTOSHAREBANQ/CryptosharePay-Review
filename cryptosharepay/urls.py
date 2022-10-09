@@ -25,5 +25,6 @@ urlpatterns = [
     path('v1/digital-currency/', include('digital_currency.urls', namespace='digital_currency')),
     path('v1/transactions/', include('transactions.urls', namespace='transactions')),
 
+    path('protected/', include('protected.urls', namespace='protected')),
 
 ]
