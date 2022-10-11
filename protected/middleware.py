@@ -1,0 +1,50 @@
+from decimal import Decimal
+from importlib.resources import path
+from django.http import HttpResponse, Http404
+from django.contrib import auth
+from accounts.models import Account
+from api_keys.models import ApiKey
+from uuid import UUID
+
+import json
+
+from cryptocurrency.models import Cryptocurrency
+
+class ProtectedVerification:
+    def __init__(self, get_response):
+        self.get_response = get_response
+        # One-time configuration and initialization.
+
+    def __call__(self, request):
+        # response = self.get_response(request)
+
+        # Code to be executed for each request/response after
+        # the view is called.
+        headers = request.META
+
+        path_info = headers.get("PATH_INFO", None)
+
+
+        if "protected/" in path_info:
+
+            if "accounts/email-has-account/" in path_info:
+                pass
+
+            elif "api-keys/api-key-no-account/" in path_info:
+                pass
+
+
+            pass
+        
+
+        ### DO NOT REMOVE ###
+        ### DO NOT REMOVE ###
+        ### DO NOT REMOVE ###
+
+        response = self.get_response(request)
+
+        return response
+
+        ### DO NOT REMOVE ###
+        ### DO NOT REMOVE ###
+        ### DO NOT REMOVE ###

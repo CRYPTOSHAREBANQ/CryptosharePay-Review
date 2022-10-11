@@ -46,6 +46,7 @@ INSTALLED_APPS = [
     'transactions',
     'digital_currency',
     'webhooks',
+    'protected',
 ]
 
 MIDDLEWARE = [
@@ -56,11 +57,11 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'protected.middleware.ProtectedVerification',
     'api_keys.middleware.APIKeyVerification',
     'cryptocurrency.middleware.CryptocurrencyVerification',
     'digital_currency.middleware.DigitalCurrencyVerification',
     'transactions.middleware.TransactionVerification',
-    # DigitalCurrencyVerification
 ]
 
 ROOT_URLCONF = 'cryptosharepay.urls'

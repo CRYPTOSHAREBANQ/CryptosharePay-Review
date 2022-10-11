@@ -1,0 +1,21 @@
+// EMAIL HAS ACCOUNT OBJECTS
+
+// REQUEST OBJECT
+{
+    "headers": {
+        "Content-Type": "application/json",
+    },
+    "data": {
+        "email": "EMAIL-TO-CHECK"
+    }
+}
+
+// RESPONSE OBJECT
+
+{
+    "status": "SUCCESS",
+    "message": "Email succesfully checked",
+    "data": {
+        "email_is_available": true/false
+    }
+}

@@ -64,7 +64,7 @@ class CreateAccount(APIView):
             email = customer_info['email'],
             first_name = customer_info['first_name'],
             last_name = customer_info['last_name']
-            )
+        )
 
         new_account = Account.objects.create(
             type = "CUSTOMER", 
@@ -74,7 +74,7 @@ class CreateAccount(APIView):
             country_id = Country.objects.get(
                 country_id=customer_info['country_id']
                 )
-            )
+        )
 
         if business_info:
             new_business = Business.objects.create(
@@ -91,7 +91,7 @@ class CreateAccount(APIView):
             business_id = new_business if business_info else None,
             type = "TEST",
             status = "INACTIVE"
-            )
+        )
 
         
         response_object = {
@@ -105,4 +105,3 @@ class CreateAccount(APIView):
         }
 
         return Response(response_object, status=status.HTTP_200_OK)
-
