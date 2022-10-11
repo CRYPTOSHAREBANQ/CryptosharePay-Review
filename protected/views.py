@@ -53,7 +53,6 @@ class EmailHasAccount(APIView):
 
 class GetAPIKeyNoAccount(APIView):
     def get(self, request, type):
-        data = request.data["data"]
         headers = request.headers
 
 
