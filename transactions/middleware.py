@@ -30,8 +30,11 @@ class TransactionVerification:
         
 
         if "v1/transactions/" in path_info:
-            data = json.loads(request.body.decode("utf-8"))
-            data = data["data"]
+            try:
+                data = json.loads(request.body.decode("utf-8"))
+                data = data["data"]
+            except:
+                data = None
 
             if "create-transaction/" in path_info:
 
