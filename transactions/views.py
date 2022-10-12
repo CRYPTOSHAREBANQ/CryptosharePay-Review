@@ -12,7 +12,7 @@ from cryptocurrency.models import Cryptocurrency, Blockchain, Network
 from transactions.models import Transaction, TransactionBook, TransactionIns, TransactionOuts
 from digital_currency.models import DigitalCurrency
 
-from transactions.serializers import TransactionsSerializer
+from transactions.serializers import TransactionSerializer, TransactionsSerializer
 
 # from rest_framework import Response
 from rest_framework.views import APIView
@@ -160,7 +160,6 @@ class GetTransactions(APIView):
         headers = request.headers
 
         api_key = headers.get("X-API-Key", None)
-
         api_key_object = ApiKey.objects.get(api_key = api_key)
 
         transactions = Transaction.objects.filter(api_key = api_key_object)
@@ -176,3 +175,32 @@ class GetTransactions(APIView):
         }
 
         return Response(response_object, status = 200)
+
+class GetTransaction(APIView):
+    def get(self, request, transaction_id):
+        headers = request.headers
+
+        api_key = headers.get("X-API-Key", None)
+        api_key_object = ApiKey.objects.get(api_key = api_key)
+
+        transaction = Transaction.objects.filter(api_key = api_key_object, transaction_id = transaction_id)
+
+        if not transaction.exists():
+            return Response(
+                str({
+                "status": "ERROR",
+                "message": "Transaction not found"
+                }), status=404)
+
+        serializer = TransactionSerializer(transaction.first())
+
+        response_object = {
+            "status": "SUCCESS",
+            "message": "Transaction retrieved successfully",
+            "data": {
+                "transaction": serializer.data
+            }
+        }
+
+        return Response(response_object, status = 200)
+        
