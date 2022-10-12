@@ -46,7 +46,7 @@ class TransactionOuts(models.Model):
     external_transaction_id = models.CharField(max_length=100, null=True)
     amount = models.DecimalField(max_digits=20, decimal_places=8)
     address_id = models.ForeignKey(Address, on_delete=models.PROTECT)
-    address_out = models.CharField(max_length=100)
+    address_out = models.CharField(max_length=100, null= True)
     creation_datetime = models.DateTimeField(auto_now_add=True)
     completed_datetime = models.DateTimeField(null=True)
     state = models.CharField(max_length=15)

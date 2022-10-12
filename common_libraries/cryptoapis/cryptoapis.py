@@ -1,3 +1,4 @@
+from tkinter import S
 import requests
 import json
 import time
@@ -7,6 +8,7 @@ class CryptoApis:
     def __init__(self):
         self.BASE = "https://rest.cryptoapis.io/v2"
         self.querystring = {"limit":20,"offset":0}
+        self.CALLBACK_BASE_URL = "https://c13ll85et1.execute-api.us-east-1.amazonaws.com/webhooks"
         self.RECEIVE_CALLBACK_ON = 4
         self.HEADERS = {
         'Content-Type': "application/json",
@@ -84,7 +86,7 @@ class CryptoApis:
                         "address": address,
                         "allowDuplicates": False,
                         "callbackSecretKey": self.CALLBACK_SECRET_KEY,
-                        "callbackURL": "https://www.cryptoshareapp.com/atm/TestReceiver/"
+                        "callbackURL": f"{self.CALLBACK_BASE_URL}/cryptoapis/subscriptions/ConfirmedCoinTransactions/"
                     }
                 }
             }
@@ -92,68 +94,68 @@ class CryptoApis:
 
         return request["data"]["item"]
     
-    def generate_token_subscription(self, blockchain, network, address):
-        url = self.BASE +  f"/blockchain-events/{blockchain}/{network}/subscriptions/address-tokens-transactions-confirmed"
-        data = {
-                "context": "",
-                "data": {
-                    "item": {
-                        "address": address,
-                        "allowDuplicates": False,
-                        "callbackSecretKey": self.CALLBACK_SECRET_KEY,
-                        "callbackUrl": "https://www.cryptoshareapp.com/atm/ConfirmedTokenTransactions/",
-                        "receiveCallbackOn": self.RECEIVE_CALLBACK_ON
-                    }
-                }
-            }
-        request = requests.post(url, headers=self.HEADERS, json=data).json()
+    # def generate_token_subscription(self, blockchain, network, address):
+    #     url = self.BASE +  f"/blockchain-events/{blockchain}/{network}/subscriptions/address-tokens-transactions-confirmed"
+    #     data = {
+    #             "context": "",
+    #             "data": {
+    #                 "item": {
+    #                     "address": address,
+    #                     "allowDuplicates": False,
+    #                     "callbackSecretKey": self.CALLBACK_SECRET_KEY,
+    #                     "callbackUrl": f"{self.CALLBACK_BASE_URL}/atm/ConfirmedTokenTransactions/",
+    #                     "receiveCallbackOn": self.RECEIVE_CALLBACK_ON
+    #                 }
+    #             }
+    #         }
+    #     request = requests.post(url, headers=self.HEADERS, json=data).json()
 
-        return request["data"]["item"]["referenceId"]
+    #     return request["data"]["item"]["referenceId"]
     
-    def generate_coins_transaction_from_wallet(self, blockchain, network, address, amount, data = ""):
-        url = self.BASE + f"/wallet-as-a-service/wallets/{self.WALLET_ID}/{blockchain}/{network}/transaction-requests"
-        data = {
-                "context": "",
-                "data": {
-                    "item": {
-                        "callbackSecretKey": self.CALLBACK_SECRET_KEY,
-                        "callbackUrl": "https://www.cryptoshareapp.com/atm/ConfirmationsCoinTransactions/",
-                        "feePriority": "standard",
-                        "note": data,
-                        "prepareStrategy": "optimize-size",
-                        "recipients": [
-                            {
-                                "address": address,
-                                "amount": amount
-                            }
-                        ]
-                    }
-                }
-            }
+    # def generate_coins_transaction_from_wallet(self, blockchain, network, address, amount, data = ""):
+    #     url = self.BASE + f"/wallet-as-a-service/wallets/{self.WALLET_ID}/{blockchain}/{network}/transaction-requests"
+    #     data = {
+    #             "context": "",
+    #             "data": {
+    #                 "item": {
+    #                     "callbackSecretKey": self.CALLBACK_SECRET_KEY,
+    #                     "callbackUrl": f"{self.CALLBACK_BASE_URL}/atm/ConfirmationsCoinTransactions/",
+    #                     "feePriority": "standard",
+    #                     "note": data,
+    #                     "prepareStrategy": "optimize-size",
+    #                     "recipients": [
+    #                         {
+    #                             "address": address,
+    #                             "amount": amount
+    #                         }
+    #                     ]
+    #                 }
+    #             }
+    #         }
 
-        request = requests.post(url, headers=self.HEADERS, json=data).json()
+    #     request = requests.post(url, headers=self.HEADERS, json=data).json()
 
-        return request["data"]["item"]
+    #     return request["data"]["item"]
 
-    def generate_coins_transaction_from_address(self, blockchain, network, sending_address, recipient_address, amount):
-        url = self.BASE + f"/wallet-as-a-service/wallets/{self.WALLET_ID}/{blockchain}/{network}/addresses/{sending_address}/transaction-requests"
-        data = {
-                "context": "",
-                "data": {
-                    "item": {
-                        "amount": amount,
-                        "callbackSecretKey": "yourSecretString",
-                        "callbackUrl": "https://www.cryptoshareapp.com/atm/ConfirmationsCoinTransactions/",
-                        "feePriority": "standard",
-                        "note": "",
-                        "recipientAddress": recipient_address
-                    }
-                }
-            }
+    # def generate_coins_transaction_from_address(self, blockchain, network, sending_address, recipient_address, amount):
+    #     url = self.BASE + f"/wallet-as-a-service/wallets/{self.WALLET_ID}/{blockchain}/{network}/addresses/{sending_address}/transaction-requests"
+    #     data = {
+    #             "context": "",
+    #             "data": {
+    #                 "item": {
+    #                     "amount": amount,
+    #                     "callbackSecretKey": "yourSecretString",
+    #                     "callbackUrl": f"{self.CALLBACK_BASE_URL}/atm/ConfirmationsCoinTransactions/",
+    #                     "feePriority": "standard",
+    #                     "note": "",
+    #                     "recipientAddress": recipient_address
+    #                 }
+    #             }
+    #         }
         
-        request = requests.post(url, headers=self.HEADERS, json=data).json()
+    #     request = requests.post(url, headers=self.HEADERS, json=data).json()
 
-        return request["data"]["item"]
+    #     return request["data"]["item"]
         
                             
         

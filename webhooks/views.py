@@ -1,11 +1,12 @@
 from django.http import HttpResponse
 from django.shortcuts import render
+from django.utils import timezone
 
 import json
 from decimal import Decimal
 
 
-from transactions.models import Transaction, TransactionBook ,TransactionIns
+from transactions.models import Transaction, TransactionBook ,TransactionIns, TransactionOuts
 from cryptocurrency.models import Address, Blockchain, Cryptocurrency, Network
 from api_keys.models import Assets
 
@@ -36,71 +37,80 @@ def cryptoapis_confirmed_coin_transactions(request):
 
     ### <---------- STARTS MAIN TRANSACTION PROCESS ----------> ###
 
-
-    receiving_cryptocurrency = Cryptocurrency.objects.get(
+    transaction_cryptocurrency = Cryptocurrency.objects.get(
         blockchain_id = receiving_blockchain,
         network_id = receiving_network,
         symbol = response_data["unit"]
     )
 
-    receiving_address = response_data["address"]
-    receiving_address_object = Address.objects.get(
-        address = receiving_address,
-        cryptocurrency_id = receiving_cryptocurrency
-    )
-    
-
-    new_transaction_in = TransactionIns.objects.create(
-        external_transaction_id = response_data["transactionId"],
-        amount = response_data["amount"],
-        address_id = receiving_address_object,
-        state = "COMPLETE",
-        status = "CONFIRMED",
+    transaction_address = response_data["address"]
+    transaction_address_object = Address.objects.get(
+        address = transaction_address,
+        cryptocurrency_id = transaction_cryptocurrency
     )
 
-    main_transaction = Transaction.objects.get(
-        address_id = receiving_address_object,
-        state = "OPEN",
-        status = "PENDING"
-    )
-    main_transaction.cryptocurrency_amount_received += Decimal(response_data["amount"])
-    main_transaction.save()
+    if response_data["direction"] == "incoming":
 
-    new_transaction_book_registry = TransactionBook.objects.create(
-        type = "IN",
-        transaction_id = main_transaction,
-        transaction_ins_id = new_transaction_in
-    )
+        new_transaction_in = TransactionIns.objects.create(
+            external_transaction_id = response_data["transactionId"],
+            amount = response_data["amount"],
+            address_id = transaction_address_object,
+            completed_datetime = timezone.now(),
+            state = "COMPLETE",
+            status = "CONFIRMED",
+        )
 
-    ### <---------- END MAIN TRANSACTION PROCESS ----------> ###
+        main_transaction = Transaction.objects.get(
+            address_id = transaction_address_object,
+            state = "OPEN",
+            status = "PENDING"
+        )
 
-
-    ### <---------- MISSING CODE HERE ----------> ###
-
-    # MISSING TO VERIFY IF THE TRANSACTION IS COMPLETE
-
-    api_key_object = main_transaction.api_key
-
-    if main_transaction.cryptocurrency_amount_received >= main_transaction.cryptocurrency_amount:
-        main_transaction.state = "COMPLETE"
-        main_transaction.status = "CONFIRMED"
+        main_transaction.cryptocurrency_amount_received += Decimal(response_data["amount"])
         main_transaction.save()
 
-        asset_object = Assets.objects.filter(api_key = api_key_object, cryptocurrency_id = receiving_cryptocurrency)
-        if asset_object.exists():
-            asset_object = asset_object.first()
-            asset_object.amount += main_transaction.cryptocurrency_amount_received
-            asset_object.save()
-        else:
-            new_asset_object = Assets.objects.create(
-                api_key = api_key_object,
-                type = receiving_cryptocurrency.type,
-                amount = main_transaction.cryptocurrency_amount_received,
-                cryptocurrency_id = receiving_cryptocurrency
-            )
-        
+        new_transaction_book_registry = TransactionBook.objects.create(
+            type = "IN",
+            transaction_id = main_transaction,
+            transaction_ins_id = new_transaction_in
+        )
 
-        # MISSING TO SEND THE CONFIRMATION EMAIL TO THE USER
+        ### <---------- END MAIN TRANSACTION PROCESS ----------> ###
+
+
+        ### <---------- MISSING CODE HERE ----------> ###
+
+        api_key_object = main_transaction.api_key
+
+        if main_transaction.cryptocurrency_amount_received >= main_transaction.cryptocurrency_amount:
+            main_transaction.state = "COMPLETE"
+            main_transaction.status = "CONFIRMED"
+            main_transaction.save()
+
+            asset_object = Assets.objects.filter(api_key = api_key_object, cryptocurrency_id = transaction_cryptocurrency)
+            if asset_object.exists():
+                asset_object = asset_object.first()
+                asset_object.amount += main_transaction.cryptocurrency_amount_received
+                asset_object.save()
+            else:
+                new_asset_object = Assets.objects.create(
+                    api_key = api_key_object,
+                    type = transaction_cryptocurrency.type,
+                    amount = main_transaction.cryptocurrency_amount_received,
+                    cryptocurrency_id = transaction_cryptocurrency
+                )
+            
+
+            # MISSING TO SEND THE CONFIRMATION EMAIL TO THE USER
+    elif response_data["direction"] == "outgoing":
+        new_transaction_in = TransactionOuts.objects.create(
+            external_transaction_id = response_data["transactionId"],
+            amount = response_data["amount"],
+            address_id = transaction_address_object,
+            completed_datetime = timezone.now(),
+            state = "COMPLETE",
+            status = "CONFIRMED",
+        )
 
     ### <---------- MISSING CODE HERE ----------> ###
 
