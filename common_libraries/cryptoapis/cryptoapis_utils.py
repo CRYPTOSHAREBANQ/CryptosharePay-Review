@@ -73,7 +73,7 @@ class CryptoApisUtils:
             
             print(deposit_address, new_subscription)
             #GENERATE COIN SUBSCRIPTION
-            new_subscription_object = Address_Subscription.objects.create(
+            new_subscription_object = AddressSubscription.objects.create(
                 subscription_id = new_subscription["referenceId"],
                 event = new_subscription["eventType"],
                 blockchain_id = cryptocurrency_object.blockchain_id,
