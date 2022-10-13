@@ -36,7 +36,7 @@ class TransactionVerification:
             except:
                 data = None
 
-            if "create-transaction/" in path_info:
+            if "create/" in path_info:
 
                 description = data.get("description", None)
                 digital_currency_code = data.get("digital_currency_code", None)
