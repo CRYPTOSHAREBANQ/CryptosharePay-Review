@@ -12,8 +12,8 @@
         "digital_currency_amount": "DIGITAL-CURRENCY-AMOUNT",
         "cryptocurrency_code": "CRYPTOCURRENCY-CODE",
         "cryptocurrency_blockchain_id": "CRYPTOCURRENCY-BLOCKCHAIN-ID",
-        "customer_email": "CUSTOMER-EMAIL",
-        "customer_phone": "CUSTOMER-PHONE",
+        "customer_email": "CUSTOMER-EMAIL", //OPTIONAL
+        "customer_phone": "CUSTOMER-PHONE", //OPTIONAL
     }
 }
 
