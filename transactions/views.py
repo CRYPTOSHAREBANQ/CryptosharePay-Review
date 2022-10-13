@@ -203,4 +203,26 @@ class GetTransaction(APIView):
         }
 
         return Response(response_object, status = 200)
+
+class FilterTransactions(APIView):
+    def get(self, request):
+        headers = request.headers
         
+        transaction_type = request.query_params.get("type", None).upper()
+        
+        api_key = headers.get("X-API-Key", None)
+        api_key_object = ApiKey.objects.get(api_key = api_key)
+
+        transactions = Transaction.objects.filter(api_key = api_key_object, type = transaction_type)
+
+        serializer = TransactionsSerializer(transactions, many=True)
+
+        response_object = {
+            "status": "SUCCESS",
+            "message": "Transactions retrieved successfully",
+            "data": {
+                "transactions": serializer.data
+            }
+        }
+
+        return Response(response_object, status = 200)
