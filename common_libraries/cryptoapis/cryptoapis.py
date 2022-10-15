@@ -7,7 +7,7 @@ class CryptoApis:
     def __init__(self):
         self.BASE = "https://rest.cryptoapis.io/v2"
         self.querystring = {"limit":20,"offset":0}
-        self.CALLBACK_BASE_URL = "https://c13ll85et1.execute-api.us-east-1.amazonaws.com/webhooks"
+        self.CALLBACK_BASE_URL = "https://cryptoapis.cryptosharepay.com/v1/webhooks"
         self.RECEIVE_CALLBACK_ON = 4
         self.HEADERS = {
         'Content-Type': "application/json",

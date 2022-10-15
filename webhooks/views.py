@@ -100,6 +100,11 @@ def cryptoapis_confirmed_coin_transactions(request):
                     cryptocurrency_id = transaction_cryptocurrency
                 )
             
+            # MAKE ADDRESS AVAILABLE
+
+            transaction_address_object.api_key = None
+            transaction_address_object.status = "AVAILABLE"
+            transaction_address_object.save()
 
             # MISSING TO SEND THE CONFIRMATION EMAIL TO THE USER
     elif response_data["direction"] == "outgoing":

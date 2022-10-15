@@ -102,7 +102,7 @@ class APIKeyVerification:
             ### <------ ENDPOINTS ------> ###
             ### <------ ENDPOINTS ------> ###
 
-            if "create-api-key/" in path_info:
+            if "create/" in path_info:
 
                 #VERIFY API-KEY TYPE
                 API_KEY_TYPES = {"TEST", "PRODUCTION"}

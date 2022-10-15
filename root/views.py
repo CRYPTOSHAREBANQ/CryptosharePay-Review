@@ -17,4 +17,4 @@ class Ping(APIView):
 
 def cryptoapis_verification(request):
 
-    return HttpResponse("cryptoapis-cb-94e7e1b0d5c6f9b449ef0cea3371a4dc02f215518cc95fd8bc07825a54811d33")
+    return HttpResponse("cryptoapis-cb-8eed1de04dc9ecb0cea21afb0351d0cefa6417c4e7a221747c6aa36c53854448")
