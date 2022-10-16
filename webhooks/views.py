@@ -61,11 +61,14 @@ def cryptoapis_confirmed_coin_transactions(request):
             status = "CONFIRMED",
         )
 
-        main_transaction = Transaction.objects.get(
-            address_id = transaction_address_object,
-            state = "PENDING",
-            status = "WAITING_FOR_DEPOSIT"
-        )
+        try:
+            main_transaction = Transaction.objects.get(
+                address_id = transaction_address_object,
+                state = "PENDING",
+                status = "WAITING_FOR_DEPOSIT"
+            )
+        except:
+            return HttpResponse(status=200)
 
         main_transaction.cryptocurrency_amount_received += Decimal(response_data["amount"])
         main_transaction.save()
