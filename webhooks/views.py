@@ -1,6 +1,7 @@
 from django.http import HttpResponse
 from django.shortcuts import render
 from django.utils import timezone
+from django.views.decorators.csrf import csrf_exempt
 
 import json
 from decimal import Decimal
@@ -13,8 +14,8 @@ from assets.models import Asset
 
 # Create your views here.
 
+@csrf_exempt
 def cryptoapis_confirmed_coin_transactions(request):
-    pass
 
     if ("Transfer-Encoding" in request.headers) and (request.headers["Transfer-Encoding"] == "chunked"):
         request_reader = request.META.get('wsgi.input')
@@ -62,8 +63,8 @@ def cryptoapis_confirmed_coin_transactions(request):
 
         main_transaction = Transaction.objects.get(
             address_id = transaction_address_object,
-            state = "OPEN",
-            status = "PENDING"
+            state = "PENDING",
+            status = "WAITING_FOR_DEPOSIT"
         )
 
         main_transaction.cryptocurrency_amount_received += Decimal(response_data["amount"])

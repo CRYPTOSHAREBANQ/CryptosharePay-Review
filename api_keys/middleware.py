@@ -183,7 +183,8 @@ class APIKeyVerification:
 
         else:
             print(path_info)
-            if not "ping/" in path_info and not "cryptoapisverifydomain/" in path_info:
+            allowed_endpoints = ["ping/", "cryptoapisverifydomain/", "/webhooks/cryptoapis/subscriptions/ConfirmedCoinTransactions/"]
+            if path_info in allowed_endpoints:
                 api_key = headers.get("HTTP_X_API_KEY", None)
                 api_key_verification = self.verify_api_key(api_key)
                 if api_key_verification:
