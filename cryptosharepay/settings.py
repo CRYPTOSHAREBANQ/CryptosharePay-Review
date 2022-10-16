@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     'accounts',
     'businesses',
     'api_keys',
+    'assets',
     'cryptocurrency',
     'transactions',
     'digital_currency',

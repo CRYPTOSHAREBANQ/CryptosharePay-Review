@@ -8,7 +8,7 @@ from decimal import Decimal
 
 from transactions.models import Transaction, TransactionBook ,TransactionIns, TransactionOuts
 from cryptocurrency.models import Address, Blockchain, Cryptocurrency, Network
-from api_keys.models import Assets
+from assets.models import Asset
 
 
 # Create your views here.
@@ -87,13 +87,13 @@ def cryptoapis_confirmed_coin_transactions(request):
             main_transaction.status = "CONFIRMED"
             main_transaction.save()
 
-            asset_object = Assets.objects.filter(api_key = api_key_object, cryptocurrency_id = transaction_cryptocurrency)
+            asset_object = Asset.objects.filter(api_key = api_key_object, cryptocurrency_id = transaction_cryptocurrency)
             if asset_object.exists():
                 asset_object = asset_object.first()
                 asset_object.amount += main_transaction.cryptocurrency_amount_received
                 asset_object.save()
             else:
-                new_asset_object = Assets.objects.create(
+                new_asset_object = Asset.objects.create(
                     api_key = api_key_object,
                     type = transaction_cryptocurrency.type,
                     amount = main_transaction.cryptocurrency_amount_received,

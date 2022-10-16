@@ -25,9 +25,7 @@ urlpatterns = [
     path('v1/cryptocurrency/', include('cryptocurrency.urls', namespace='cryptocurrency')),
     path('v1/digital-currency/', include('digital_currency.urls', namespace='digital_currency')),
     path('v1/transactions/', include('transactions.urls', namespace='transactions')),
-
+    path('v1/assets/', include('assets.urls', namespace='assets')),
     path('v1/webhooks/', include('webhooks.urls', namespace='webhooks')),
     path('v1/protected/', include('protected.urls', namespace='protected')),
-
-
 ]
