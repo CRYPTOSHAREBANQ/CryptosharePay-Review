@@ -1,0 +1,27 @@
+// CREATE TRANSACTION OBJECTS
+
+// REQUEST OBJECT
+{
+    "headers": {
+        "Content-Type": "application/json",
+        "X-API-Key": "YOUR-API-KEY",
+    },
+    "data": {
+        "cryptocurrency_code": "CRYPTOCURRENCY-CODE",
+        "cryptocurrency_blockchain_id": "CRYPTOCURRENCY-BLOCKCHAIN-ID",
+        "cryptocurrency_amount": "CRYPTOCURRENCY-AMOUNT",
+        "withdrawal_address": "WITHDRAWAL-ADDRESS"
+    }
+}
+
+// RESPONSE OBJECT
+
+{
+    "status": "SUCCESS",
+    "message": "Transaction created successfully",
+    "data": {
+        "transaction_id": "YOUR-TRANSACTION-ID",
+        "cryptocurrency_code": "CRYPTOCURRENCY-CODE",
+        "cryptocurrency_amount": "CRYPTOCURRENCY-AMOUNT"
+    }
+}

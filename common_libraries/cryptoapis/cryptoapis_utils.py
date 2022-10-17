@@ -39,7 +39,7 @@ class CryptoApisUtils:
             new_address.save()
 
         elif available_addresses.count() == 0:
-            cryptoapis_client = CryptoApis()
+            cryptoapis_client = CryptoApis(cryptocurrency_object.network_id.network_id)
 
             number_of_addresses = Address.objects.filter(cryptocurrency_id = cryptocurrency_object).count()
 

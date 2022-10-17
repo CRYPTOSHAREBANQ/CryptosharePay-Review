@@ -86,6 +86,17 @@ def cryptoapis_confirmed_coin_transactions(request):
 
         api_key_object = main_transaction.api_key
 
+        ### TAX TAX TAX ###
+        ### TAX TAX TAX ###
+        
+        COMISSION_RATE = Decimal(0.015)
+        REAL_RECEIVING_PERCENTAGE = Decimal(1) - COMISSION_RATE
+        receiving_amount = main_transaction.cryptocurrency_amount_received * REAL_RECEIVING_PERCENTAGE
+
+        ### TAX TAX TAX ###
+        ### TAX TAX TAX ###
+
+
         if main_transaction.cryptocurrency_amount_received >= main_transaction.cryptocurrency_amount:
             main_transaction.state = "COMPLETE"
             main_transaction.status = "CONFIRMED"
@@ -94,13 +105,13 @@ def cryptoapis_confirmed_coin_transactions(request):
             asset_object = Asset.objects.filter(api_key = api_key_object, cryptocurrency_id = transaction_cryptocurrency)
             if asset_object.exists():
                 asset_object = asset_object.first()
-                asset_object.amount += main_transaction.cryptocurrency_amount_received
+                asset_object.amount += receiving_amount
                 asset_object.save()
             else:
                 new_asset_object = Asset.objects.create(
                     api_key = api_key_object,
                     type = transaction_cryptocurrency.type,
-                    amount = main_transaction.cryptocurrency_amount_received,
+                    amount = receiving_amount,
                     cryptocurrency_id = transaction_cryptocurrency
                 )
             

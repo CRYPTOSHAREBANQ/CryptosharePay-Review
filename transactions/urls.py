@@ -1,13 +1,23 @@
 from django.urls import path
-from . import views
+from transactions.payments import views as payments_views
+from transactions.withdrawals import views as withdrawals_views
+# from . import views
 
 app_name = "transactions"
 
 urlpatterns = [
-    path("payments/create/", views.CreateTransaction.as_view(), name="CreateTransaction"),
-    path("payments/all/", views.GetTransactions.as_view(), name="GetAllTransactions"),
-    path("payments/filter/", views.FilterTransactions.as_view(), name="FilterTransactions"),
-    path("payments/<str:transaction_id>/", views.GetTransaction.as_view(), name="GetTransaction"),
 
+    ### <----- PAYMENTS -----> ###
+    ### <----- PAYMENTS -----> ###
+
+    path("payments/create/", payments_views.CreateTransaction.as_view(), name="CreateTransaction"),
+    path("payments/all/", payments_views.GetTransactions.as_view(), name="GetAllTransactions"),
+    path("payments/filter/", payments_views.FilterTransactions.as_view(), name="FilterTransactions"),
+    path("payments/<str:transaction_id>/", payments_views.GetTransaction.as_view(), name="GetTransaction"),
+
+    ### <----- WITHDRAWALS -----> ###
+    ### <----- WITHDRAWALS -----> ###
+
+    path("withdrawals/create/", withdrawals_views.CreateWithdrawal.as_view(), name="CreateWithdrawal"),
 
 ]
