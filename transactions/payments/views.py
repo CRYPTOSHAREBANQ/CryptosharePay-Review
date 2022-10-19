@@ -21,6 +21,7 @@ from rest_framework.response  import Response
 from rest_framework import status
 
 from common_libraries.cryptoapis.cryptoapis_utils import CryptoApisUtils
+from common_libraries.object_responses.object_responses import GenericCORSResponse
 
 
 class CreateTransaction(APIView):
@@ -106,11 +107,19 @@ class CreateTransaction(APIView):
         cryptoapis_utils = CryptoApisUtils()
         address_object, error = cryptoapis_utils.generate_address(cryptocurrency_object, api_key_object)
         if error is not None:
-            return Response(
-                {
-                "status": "ERROR",
-                "message": error
-                }, status=400)
+            # return Response(
+            #     {
+            #     "status": "ERROR",
+            #     "message": error
+            #     }, status=400)
+
+            return GenericCORSResponse(
+                response = {
+                    "status": "ERROR",
+                    "message": error
+                    },
+                status = 400).get_response()
+
 
         """
         TRANSACTION TYPES
@@ -138,22 +147,24 @@ class CreateTransaction(APIView):
             status = "WAITING_FOR_DEPOSIT"
         )
 
+        response_object = {
+            "status": "SUCCESS",
+            "message": "Transaction created successfully",
+            "data": {
+                "transaction_id": new_transaction.transaction_id,
+                "cryptocurrency_code": cryptocurrency_code,
+                "deposit_crypto_address": address_object.address,
+                "deposit_crypto_amount": cryptocurrency_amount,
+                "expiration_timestamp": new_transaction.expiration_datetime.timestamp(),
+                "creation_timestamp": new_transaction.creation_datetime.timestamp(),
+                "payment_url": "NOT_AVAILABLE"
+            }
+        }
 
-
-        return Response(
-            {
-                "status": "SUCCESS",
-                "message": "Transaction created successfully",
-                "data": {
-                    "transaction_id": new_transaction.transaction_id,
-                    "cryptocurrency_code": cryptocurrency_code,
-                    "deposit_crypto_address": address_object.address,
-                    "deposit_crypto_amount": cryptocurrency_amount,
-                    "expiration_timestamp": new_transaction.expiration_datetime.timestamp(),
-                    "creation_timestamp": new_transaction.creation_datetime.timestamp(),
-                    "payment_url": "NOT_AVAILABLE"
-                }
-            }, status = 200)
+        return GenericCORSResponse(
+            response = response_object,
+            status = 200
+        ).get_response()
 
 class GetTransactions(APIView):
     def get(self, request):
@@ -174,7 +185,10 @@ class GetTransactions(APIView):
             }
         }
 
-        return Response(response_object, status = 200)
+        return GenericCORSResponse(
+            response = response_object,
+            status = 200
+        ).get_response()
 
 class GetTransaction(APIView):
     def get(self, request, transaction_id):
@@ -225,4 +239,7 @@ class FilterTransactions(APIView):
             }
         }
 
-        return Response(response_object, status = 200)
+        return GenericCORSResponse(
+            response = response_object,
+            status = 200
+        ).get_response()
