@@ -67,7 +67,7 @@ class GetAPIKeyNoAccount(APIView):
 
         user = User.objects.get(email = email)
 
-        account = Account.objects.filter(email = user, type = "PAYMENT_LINKS")
+        account = Account.objects.filter(email = user, type = "NO_ACCOUNT")
 
         if not account.exists():
             return Response(
