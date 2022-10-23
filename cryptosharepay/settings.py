@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'rest_framework',
+    'corsheaders',
     'root',
     'accounts',
     'businesses',
@@ -59,11 +60,38 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
     'protected.middleware.ProtectedVerification',
     'api_keys.middleware.APIKeyVerification',
     'cryptocurrency.middleware.CryptocurrencyVerification',
     'digital_currency.middleware.DigitalCurrencyVerification',
     'transactions.middleware.TransactionVerification',
+]
+
+CORS_ORIGIN_ALLOW_ALL = True
+
+CORS_ALLOW_HEADERS = [
+'accept',
+'accept-encoding',
+'authorization',
+'content-type',
+'dnt',
+'origin',
+'user-agent',
+'x-csrftoken',
+'X-API-Key',
+'X-Customer-Id',
+'X-Email',
+'X-Password'
+]
+
+CORS_ALLOW_METHODS = [
+# 'DELETE',
+'GET',
+'OPTIONS',
+# 'PATCH',
+'POST',
+# 'PUT',
 ]
 
 ROOT_URLCONF = 'cryptosharepay.urls'

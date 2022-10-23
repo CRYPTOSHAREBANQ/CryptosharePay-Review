@@ -62,6 +62,31 @@ class CryptoApisUtils:
                 status = "IN_USE"
             )
 
+            # try:
+            #     new_subscription = cryptoapis_client.generate_coin_subscription(cryptocurrency_object.blockchain_id.blockchain_id, cryptocurrency_object.network_id.network_id, deposit_address)
+            # except:
+            #     new_address.api_key = None
+            #     new_address.status = "AVAILABLE"
+            #     new_address.save()
+            #     error = "Error generating address, please contact support"
+            #     return None, error
+            
+            # # print(deposit_address, new_subscription)
+            # #GENERATE COIN SUBSCRIPTION
+            # new_subscription_object = AddressSubscription.objects.create(
+            #     subscription_id = new_subscription["referenceId"],
+            #     event = new_subscription["eventType"],
+            #     blockchain_id = cryptocurrency_object.blockchain_id,
+            #     network_id = cryptocurrency_object.network_id,
+            #     callback_url = new_subscription["callbackUrl"]
+            # )
+
+            # new_address.subscription_id = new_subscription_object
+            # new_address.save()
+
+        if new_address.subscription_id is None:
+            cryptoapis_client = CryptoApis(cryptocurrency_object.network_id.network_id)
+
             try:
                 new_subscription = cryptoapis_client.generate_coin_subscription(cryptocurrency_object.blockchain_id.blockchain_id, cryptocurrency_object.network_id.network_id, deposit_address)
             except:
@@ -70,9 +95,7 @@ class CryptoApisUtils:
                 new_address.save()
                 error = "Error generating address, please contact support"
                 return None, error
-            
-            print(deposit_address, new_subscription)
-            #GENERATE COIN SUBSCRIPTION
+
             new_subscription_object = AddressSubscription.objects.create(
                 subscription_id = new_subscription["referenceId"],
                 event = new_subscription["eventType"],
@@ -97,7 +120,29 @@ class CryptoApisUtils:
         #             newAddress.save()
         #             error = "Error generating address for ERC-20 Tokens, please contact support"
         #             return None, error
+    
+    def release_address(self, address_object):
+        address_object.status = "AVAILABLE"
+        address_object.api_key = None
+        address_object.save()
+
+        address_subscription = address_object.subscription_id
+
+        try:
+            cryptoapis_client = CryptoApis(network = address_subscription.network_id.network_id)
+            cryptoapis_client.delete_blockchain_subscription(
+                    address_subscription.blockchain_id.blockchain_id,
+                    address_subscription.network_id.network_id,
+                    address_subscription.subscription_id
+                )
+
+            address_subscription.delete()
+        except:
+            error = "Error releasing address. Please try again later."
+            return error
         
+        return None
+
 
 
 def get_currencies_exchange_rate():

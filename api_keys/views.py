@@ -26,7 +26,7 @@ class CreateApiKey(APIView):
         if Business.objects.filter(business_id = business_id).exists():
             business_object = Business.objects.get(business_id = business_id)
 
-        user_object = User.objects.get(username = data["email"])
+        user_object = User.objects.get(username = headers["X-Email"])
         account_object = Account.objects.get(email = user_object)
 
         ### MISING TO VERIFY IF BUSINESS ALREADY HAS AN API KEY ###            

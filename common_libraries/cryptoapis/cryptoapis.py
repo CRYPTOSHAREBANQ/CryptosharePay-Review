@@ -101,6 +101,14 @@ class CryptoApis:
 
         return request["data"]["item"]
     
+    def delete_blockchain_subscription(self, blockchain, network, reference_id):
+        url = self.BASE +  f"/blockchain-events/{blockchain}/{network}/subscriptions/{reference_id}"
+
+        request = requests.delete(url, headers=self.HEADERS).json()
+
+        return request["data"]["item"]
+
+
     # def generate_token_subscription(self, blockchain, network, address):
     #     url = self.BASE +  f"/blockchain-events/{blockchain}/{network}/subscriptions/address-tokens-transactions-confirmed"
     #     data = {

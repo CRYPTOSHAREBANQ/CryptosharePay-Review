@@ -243,3 +243,82 @@ class FilterTransactions(APIView):
             response = response_object,
             status = 200
         ).get_response()
+
+class CancelTransaction(APIView):
+    def post(self, request):
+        headers = request.headers
+        data = request.data["data"]
+
+        api_key = headers.get("X-API-Key", None)
+        api_key_object = ApiKey.objects.get(api_key = api_key)
+
+        transaction_id = data["transaction_id"]
+        
+        transaction = Transaction.objects.get(api_key = api_key_object, transaction_id = transaction_id)
+        # transaction = Transaction.objects.filter(api_key = api_key_object, transaction_id = transaction_id)
+        
+        # if not transaction:
+        #     response_object = {
+        #         "status": "ERROR",
+        #         "message": "Transaction not found"
+        #     }
+
+        #     return Response(response_object, status=200)
+
+        transaction_address_object = transaction.address_id
+
+        cryptoapis_utils = CryptoApisUtils()
+        error = cryptoapis_utils.release_address(transaction_address_object)
+        if error is not None:
+            response_object = {
+                "status": "ERROR",
+                "message": error
+            }
+
+            return Response(response_object, status=200)
+
+        transaction.state = "CANCELLED"
+        transaction.status = "CANCELLED"
+        transaction.save()
+
+        response_object = {
+            "status": "SUCCESS",
+            "message": f"Transaction {transaction_id} cancelled successfully"
+        }
+
+        return Response(response_object, status=200)
+
+class CompleteTransaction(APIView):
+    def post(self, request):
+        headers = request.headers
+        data = request.data["data"]
+
+        api_key = headers.get("X-API-Key", None)
+        api_key_object = ApiKey.objects.get(api_key = api_key)
+
+        transaction_id = data["transaction_id"]
+
+        transaction = Transaction.objects.get(api_key = api_key_object, transaction_id = transaction_id)
+
+        transaction_address_object = transaction.address_id
+
+        cryptoapis_utils = CryptoApisUtils()
+        error = cryptoapis_utils.release_address(transaction_address_object)
+        if error is not None:
+            response_object = {
+                "status": "ERROR",
+                "message": error
+            }
+
+        transaction.state = "COMPLETE"
+        transaction.status = "COMPLETED"
+        transaction.save()
+
+        response_object = {
+            "status": "SUCCESS",
+            "message": f"Transaction {transaction_id} completed successfully"
+        }
+
+        return Response(response_object, status=200)
+
+

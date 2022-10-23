@@ -9,7 +9,8 @@
         "X-Password": "YOUR-PASSWORD"
     },
     "data": {
-        "type": "API-KEY-TYPE"
+        "type": "API-KEY-TYPE",
+        "business_id": "BUSINESS-ID" //OPTIONAL
     }
 }
 

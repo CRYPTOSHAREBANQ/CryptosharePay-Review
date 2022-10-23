@@ -103,7 +103,6 @@ class APIKeyVerification:
             ### <------ ENDPOINTS ------> ###
 
             if "create/" in path_info:
-
                 #VERIFY API-KEY TYPE
                 API_KEY_TYPES = {"TEST", "PRODUCTION"}
 
@@ -135,7 +134,7 @@ class APIKeyVerification:
                             "message": "Invalid business_id"
                             }), status=400)
 
-            if "all/" in path_info:
+            elif "all/" in path_info:
                 pass
                 
             else:

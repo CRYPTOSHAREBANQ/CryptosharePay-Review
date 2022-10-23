@@ -67,7 +67,7 @@ class CreateAccount(APIView):
         )
 
         new_account = Account.objects.create(
-            type = "CUSTOMER", 
+            type = customer_info["type"], 
             email = new_user, 
             first_name = customer_info['first_name'], 
             last_name = customer_info['last_name'], 
@@ -85,12 +85,21 @@ class CreateAccount(APIView):
 
         new_generated_key = secrets.token_hex(16)
 
+        api_key_prefix = "tsk_"
+        api_key_type = "TEST"
+        api_key_status = "INACTIVE"
+
+        if customer_info["type"] == "NO_ACCOUNT":
+            api_key_prefix = "psk_"
+            api_key_type = "PRODUCTION"
+            api_key_status = "ACTIVE"
+
         new_api_key = ApiKey.objects.create(
-            api_key = "tsk_" + new_generated_key,
+            api_key = api_key_prefix + new_generated_key,
             user_id = new_account,
             business_id = new_business if business_info else None,
-            type = "TEST",
-            status = "INACTIVE"
+            type = api_key_type,
+            status = api_key_status
         )
 
         

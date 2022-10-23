@@ -11,6 +11,11 @@ from transactions.models import Transaction, TransactionBook ,TransactionIns, Tr
 from cryptocurrency.models import Address, Blockchain, Cryptocurrency, Network
 from assets.models import Asset
 
+from common_libraries.cryptoapis.cryptoapis_utils import CryptoApisUtils
+from common_libraries.cryptoapis.cryptoapis import CryptoApis
+
+from rest_framework.response  import Response
+
 
 # Create your views here.
 
@@ -81,9 +86,6 @@ def cryptoapis_confirmed_coin_transactions(request):
 
         ### <---------- END MAIN TRANSACTION PROCESS ----------> ###
 
-
-        ### <---------- MISSING CODE HERE ----------> ###
-
         api_key_object = main_transaction.api_key
 
         ### TAX TAX TAX ###
@@ -99,7 +101,7 @@ def cryptoapis_confirmed_coin_transactions(request):
 
         if main_transaction.cryptocurrency_amount_received >= main_transaction.cryptocurrency_amount:
             main_transaction.state = "COMPLETE"
-            main_transaction.status = "CONFIRMED"
+            main_transaction.status = "COMPLETED"
             main_transaction.save()
 
             asset_object = Asset.objects.filter(api_key = api_key_object, cryptocurrency_id = transaction_cryptocurrency)
@@ -116,10 +118,16 @@ def cryptoapis_confirmed_coin_transactions(request):
                 )
             
             # MAKE ADDRESS AVAILABLE
+            cryptoapis_utils = CryptoApisUtils()
+            error = cryptoapis_utils.release_address(transaction_address_object)
+            if error is not None:
+                response_object = {
+                    "status": "ERROR",
+                    "message": error
+                }
 
-            transaction_address_object.api_key = None
-            transaction_address_object.status = "AVAILABLE"
-            transaction_address_object.save()
+            return Response(response_object, status=500)
+
 
             # MISSING TO SEND THE CONFIRMATION EMAIL TO THE USER
     elif response_data["direction"] == "outgoing":
@@ -131,7 +139,5 @@ def cryptoapis_confirmed_coin_transactions(request):
             state = "COMPLETE",
             status = "CONFIRMED",
         )
-
-    ### <---------- MISSING CODE HERE ----------> ###
 
     return HttpResponse(status=200)

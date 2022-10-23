@@ -9,6 +9,7 @@ djangorestframework = "*"
 requests = "*"
 psycopg2-binary = "*"
 gunicorn = "*"
+django-cors-headers = "*"
 
 [dev-packages]
 

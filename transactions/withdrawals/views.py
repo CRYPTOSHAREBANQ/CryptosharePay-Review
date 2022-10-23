@@ -61,7 +61,7 @@ class CreateWithdrawal(APIView):
                 "message": "Insufficient funds"
                 }, status=400)
 
-        cryptoapis_client = CryptoApis(cryptocurrency_object.network_id.network_id)
+        cryptoapis_client = CryptoApis(network = cryptocurrency_object.network_id.network_id)
 
         if cryptocurrency_code in wallet_currencies:
             try:
