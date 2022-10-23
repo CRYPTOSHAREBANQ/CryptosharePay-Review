@@ -12,6 +12,7 @@ urlpatterns = [
 
     path("payments/create/", payments_views.CreateTransaction.as_view(), name="CreateTransaction"),
     path("payments/cancel/", payments_views.CancelTransaction.as_view(), name="CancelTransaction"),
+    path("payments/complete/", payments_views.CompleteTransaction.as_view(), name="CancelTransaction"),
     path("payments/all/", payments_views.GetTransactions.as_view(), name="GetAllTransactions"),
     path("payments/filter/", payments_views.FilterTransactions.as_view(), name="FilterTransactions"),
     path("payments/<str:transaction_id>/", payments_views.GetTransaction.as_view(), name="GetTransaction"),
