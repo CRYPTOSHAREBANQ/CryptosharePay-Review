@@ -88,7 +88,7 @@ class CryptoApisUtils:
             cryptoapis_client = CryptoApis(cryptocurrency_object.network_id.network_id)
 
             try:
-                new_subscription = cryptoapis_client.generate_coin_subscription(cryptocurrency_object.blockchain_id.blockchain_id, cryptocurrency_object.network_id.network_id, deposit_address)
+                new_subscription = cryptoapis_client.generate_coin_subscription(cryptocurrency_object.blockchain_id.blockchain_id, cryptocurrency_object.network_id.network_id, new_address.address)
             except:
                 new_address.api_key = None
                 new_address.status = "AVAILABLE"
