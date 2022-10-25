@@ -23,6 +23,7 @@ class Transaction(models.Model):
     cryptocurrency_amount = models.DecimalField(max_digits=20, decimal_places=8, null=True)
     cryptocurrency_amount_received = models.DecimalField(max_digits=20, decimal_places=8, default=0, null=True)
     address_id = models.ForeignKey(Address, on_delete=models.PROTECT, null=True)
+    withdrawal_address = models.CharField(max_length=100, null=True)
     address_refund = models.CharField(max_length=100, null=True)
     client_email = models.EmailField(max_length = 254, null=True)
     client_phone = models.CharField(max_length=20, null=True)

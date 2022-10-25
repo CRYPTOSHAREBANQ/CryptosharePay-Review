@@ -38,6 +38,7 @@ class CreateTransaction(APIView):
         digital_currency_amount = data["digital_currency_amount"]
         cryptocurrency_code = data["cryptocurrency_code"]
         cryptocurrency_blockchain_id = data["cryptocurrency_blockchain_id"]
+        withdrawal_address = data.get("withdrawal_address", None)
         customer_email = data.get("customer_email", None)
         customer_phone = data.get("customer_phone", None)
 
@@ -93,12 +94,20 @@ class CreateTransaction(APIView):
             symbol = cryptocurrency_code
         )
 
+        if cryptocurrency_object.cryptoapis_type == "ADDRESS":
+            if not withdrawal_address:
+                return Response(
+                {
+                    "status": "ERROR",
+                    "error": "Missing withdrawal address"
+                }, status = 400)
+
         if not cryptocurrency_object.exists():
             return Response(
-                str({
-                "status": "ERROR",
-                "message": "Invalid cryptocurrency_code"
-                }), status=400)
+                {
+                    "status": "ERROR",
+                    "message": "Invalid cryptocurrency_code"
+                }, status=400)
         else:
             cryptocurrency_object = cryptocurrency_object.first()
 
@@ -201,10 +210,10 @@ class GetTransaction(APIView):
 
         if not transaction.exists():
             return Response(
-                str({
+                {
                 "status": "ERROR",
                 "message": "Transaction not found"
-                }), status=404)
+                }, status=404)
 
         serializer = TransactionSerializer(transaction.first())
 

@@ -29,20 +29,20 @@ class CreateWithdrawal(APIView):
         cryptocurrency_amount = data["cryptocurrency_amount"]
         withdrawal_address = data["withdrawal_address"]
 
-        wallet_currencies = {
-                            "LTC": True,
-                            "DASH": True,
-                            "ZEC": True,
-                            "BCH": True,
-                            "BTC": True,
-                            "DOGE": True
+        wallet_blockchains = {
+                            "litecoin",
+                            "dash",
+                            "zcash",
+                            "bitcoin-cash",
+                            "bitcoin",
+                            "dogecoin"
         }
 
-        address_currencies = {
-                            "XRP": True,
-                            "ETH": True,
-                            "USDC": True,
-                            "USDT": True
+        address_blockchains = {
+                            "xrp",
+                            "ethereum",
+                            "ethereum-classic",
+                            "tron"
         }
 
 
@@ -63,7 +63,7 @@ class CreateWithdrawal(APIView):
 
         cryptoapis_client = CryptoApis(network = cryptocurrency_object.network_id.network_id)
 
-        if cryptocurrency_code in wallet_currencies:
+        if cryptocurrency_object.cryptoapis_type == "WALLET":
             try:
                 transaction_response = cryptoapis_client.generate_coins_transaction_from_wallet(
                     cryptocurrency_object.blockchain_id.blockchain_id,
@@ -82,7 +82,7 @@ class CreateWithdrawal(APIView):
             return Response(
                 {
                 "status": "ERROR",
-                "message": "Withdrawals are not currently supported for this currency"
+                "message": "Withdrawals are not currently supported for this cryptocurrency"
                 }, status=400)
         
             # cryptoapis_client.generate_coins_transaction_from_address(
