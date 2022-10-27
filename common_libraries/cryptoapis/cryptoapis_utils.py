@@ -62,28 +62,6 @@ class CryptoApisUtils:
                 status = "IN_USE"
             )
 
-            # try:
-            #     new_subscription = cryptoapis_client.generate_coin_subscription(cryptocurrency_object.blockchain_id.blockchain_id, cryptocurrency_object.network_id.network_id, deposit_address)
-            # except:
-            #     new_address.api_key = None
-            #     new_address.status = "AVAILABLE"
-            #     new_address.save()
-            #     error = "Error generating address, please contact support"
-            #     return None, error
-            
-            # # print(deposit_address, new_subscription)
-            # #GENERATE COIN SUBSCRIPTION
-            # new_subscription_object = AddressSubscription.objects.create(
-            #     subscription_id = new_subscription["referenceId"],
-            #     event = new_subscription["eventType"],
-            #     blockchain_id = cryptocurrency_object.blockchain_id,
-            #     network_id = cryptocurrency_object.network_id,
-            #     callback_url = new_subscription["callbackUrl"]
-            # )
-
-            # new_address.subscription_id = new_subscription_object
-            # new_address.save()
-
         if new_address.subscription_id is None:
             cryptoapis_client = CryptoApis(cryptocurrency_object.network_id.network_id)
 
@@ -142,6 +120,34 @@ class CryptoApisUtils:
             return error
         
         return None
+    
+    def withdraw_transaction_funds(self, main_transaction, transaction_cryptocurrency, receiving_amount):
+        if main_transaction.withdrawal_address:
+            cryptoapis_client = CryptoApis(network = transaction_cryptocurrency.network_id.network_id)
+
+            try:
+                if transaction_cryptocurrency.cryptoapis_type == "WALLET":
+                    transaction_response = cryptoapis_client.generate_coins_transaction_from_wallet(
+                        transaction_cryptocurrency.blockchain_id.blockchain_id,
+                        transaction_cryptocurrency.network_id.network_id,
+                        main_transaction.withdrawal_address,
+                        main_transaction.cryptocurrency_amount
+                    )
+                elif transaction_cryptocurrency.cryptoapis_type == "ADDRESS":
+                    transaction_response = cryptoapis_client.generate_coins_transaction_from_address(
+                        transaction_cryptocurrency.blockchain_id.blockchain_id, 
+                        transaction_cryptocurrency.network_id.network_id,
+                        transaction_cryptocurrency.address_id.address, 
+                        main_transaction.withdrawal_address, 
+                        receiving_amount
+                    )
+
+            except:
+                error = "Error generating withdrawal"
+                return error
+        
+        return None
+                
 
 
 

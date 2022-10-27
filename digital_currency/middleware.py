@@ -41,7 +41,7 @@ class DigitalCurrencyVerification:
                         str({
                         "status": "ERROR",
                         "message": "Digital currency not found"
-                        }), status=400)
+                        }), status=409)
 
             pass
         

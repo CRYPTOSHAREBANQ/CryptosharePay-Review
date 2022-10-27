@@ -63,7 +63,7 @@ class GetAPIKeyNoAccount(APIView):
                 {
                 "status": "ERROR",
                 "message": "Invalid email"
-                }, status=400)
+                }, status=409)
 
         user = User.objects.get(email = email)
 
@@ -74,7 +74,7 @@ class GetAPIKeyNoAccount(APIView):
                 {
                 "status": "ERROR",
                 "message": "Invalid email, user has an official account"
-                }, status=400)
+                }, status=409)
 
         account = account.first()
         
@@ -84,7 +84,7 @@ class GetAPIKeyNoAccount(APIView):
                 {
                 "status": "ERROR",
                 "message": "API Key does not exist"
-                }, status=400)
+                }, status=409)
 
 
         api_key_object = ApiKey.objects.get(

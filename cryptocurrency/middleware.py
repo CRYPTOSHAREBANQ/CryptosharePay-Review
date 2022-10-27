@@ -43,7 +43,7 @@ class CryptocurrencyVerification:
                         str({
                         "status": "ERROR",
                         "message": "Cryptocurrency not found"
-                        }), status=400)
+                        }), status=409)
 
             pass
         

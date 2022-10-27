@@ -22,6 +22,8 @@ from rest_framework import status
 
 from common_libraries.cryptoapis.cryptoapis_utils import CryptoApisUtils
 from common_libraries.object_responses.object_responses import GenericCORSResponse
+from common_libraries.constants.comissions import REAL_RECEIVING_PERCENTAGE
+from common_libraries.transactions.transactions_utils import TransactionUtils
 
 
 class CreateTransaction(APIView):
@@ -107,7 +109,7 @@ class CreateTransaction(APIView):
                 {
                     "status": "ERROR",
                     "message": "Invalid cryptocurrency_code"
-                }, status=400)
+                }, status=409)
         else:
             cryptocurrency_object = cryptocurrency_object.first()
 
@@ -116,12 +118,6 @@ class CreateTransaction(APIView):
         cryptoapis_utils = CryptoApisUtils()
         address_object, error = cryptoapis_utils.generate_address(cryptocurrency_object, api_key_object)
         if error is not None:
-            # return Response(
-            #     {
-            #     "status": "ERROR",
-            #     "message": error
-            #     }, status=400)
-
             return GenericCORSResponse(
                 response = {
                     "status": "ERROR",
@@ -213,7 +209,7 @@ class GetTransaction(APIView):
                 {
                 "status": "ERROR",
                 "message": "Transaction not found"
-                }, status=404)
+                }, status=409)
 
         serializer = TransactionSerializer(transaction.first())
 
@@ -309,19 +305,15 @@ class CompleteTransaction(APIView):
 
         transaction = Transaction.objects.get(api_key = api_key_object, transaction_id = transaction_id)
 
-        transaction_address_object = transaction.address_id
-
-        cryptoapis_utils = CryptoApisUtils()
-        error = cryptoapis_utils.release_address(transaction_address_object)
+        transaction_utils = TransactionUtils()
+        error = transaction_utils.complete_transaction(transaction, api_key_object)
         if error is not None:
             response_object = {
                 "status": "ERROR",
                 "message": error
             }
+            return Response(response_object, status=503)
 
-        transaction.state = "COMPLETE"
-        transaction.status = "COMPLETED"
-        transaction.save()
 
         response_object = {
             "status": "SUCCESS",

@@ -33,28 +33,28 @@ class CreateAccount(APIView):
                 {
                 "status": "ERROR",
                 "message": "Country ID does not exist"
-                }, status=400)
+                }, status=409)
 
         if Country.objects.get(country_id = customer_info["country_id"]).status == "BLOCK":
             return Response(
                 {
                 "status": "ERROR",
                 "message": "Your country doesnt need to create an account, please go to: [INSERT LINK HERE]"
-                }, status=400)
+                }, status=409)
 
         if User.objects.filter(email = customer_info["email"]).exists():
             return Response(
                 {
                 "status": "ERROR",
                 "message": "Email already exists"
-                }, status=400)
+                }, status=409)
         
         if customer_info["password"] != customer_info["confirm_password"]:
             return Response(
                 {
                 "status": "ERROR",
                 "message": "Passwords do not match"
-                }, status=400)
+                }, status=409)
 
         
 

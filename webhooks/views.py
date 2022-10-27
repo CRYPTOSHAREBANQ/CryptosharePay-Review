@@ -12,7 +12,9 @@ from cryptocurrency.models import Address, Blockchain, Cryptocurrency, Network
 from assets.models import Asset
 
 from common_libraries.cryptoapis.cryptoapis_utils import CryptoApisUtils
+from common_libraries.transactions.transactions_utils import TransactionUtils
 from common_libraries.cryptoapis.cryptoapis import CryptoApis
+from common_libraries.constants.comissions import REAL_RECEIVING_PERCENTAGE
 
 from rest_framework.response  import Response
 
@@ -90,81 +92,17 @@ def cryptoapis_confirmed_coin_transactions(request):
 
         api_key_object = main_transaction.api_key
 
-
-
-
         if main_transaction.cryptocurrency_amount_received >= main_transaction.cryptocurrency_amount:
-            ### TAX TAX TAX ###
-            ### TAX TAX TAX ###
-            
-            COMISSION_RATE = Decimal(0.015)
-            REAL_RECEIVING_PERCENTAGE = Decimal(1) - COMISSION_RATE
-            receiving_amount = main_transaction.cryptocurrency_amount_received * REAL_RECEIVING_PERCENTAGE
 
-            ### TAX TAX TAX ###
-            ### TAX TAX TAX ###
+            transaction_utils = TransactionUtils()
 
-
-            main_transaction.state = "COMPLETE"
-            main_transaction.status = "COMPLETED"
-            main_transaction.save()
-
-            asset_object = Asset.objects.filter(api_key = api_key_object, cryptocurrency_id = transaction_cryptocurrency)
-            if asset_object.exists():
-                asset_object = asset_object.first()
-                asset_object.amount += receiving_amount
-                asset_object.save()
-            else:
-                asset_object = Asset.objects.create(
-                    api_key = api_key_object,
-                    type = transaction_cryptocurrency.type,
-                    amount = receiving_amount,
-                    cryptocurrency_id = transaction_cryptocurrency
-                )
-            
-            # MAKE ADDRESS AVAILABLE
-            cryptoapis_utils = CryptoApisUtils()
-            error = cryptoapis_utils.release_address(transaction_address_object)
+            error = transaction_utils.complete_transaction(main_transaction, api_key_object)
             if error is not None:
                 response_object = {
                     "status": "ERROR",
                     "message": error
                 }
-                return Response(response_object, status=500)
-
-
-            # IF WITHDRAWAL ADDRESS WAS SPECIFIED
-            if main_transaction.withdrawal_address:
-                cryptoapis_client = CryptoApis(network = transaction_cryptocurrency.network_id.network_id)
-
-                try:
-                    if transaction_cryptocurrency.cryptoapis_type == "WALLET":
-                        transaction_response = cryptoapis_client.generate_coins_transaction_from_wallet(
-                            transaction_cryptocurrency.blockchain_id.blockchain_id,
-                            transaction_cryptocurrency.network_id.network_id,
-                            main_transaction.withdrawal_address,
-                            main_transaction.cryptocurrency_amount
-                        )
-                    elif transaction_cryptocurrency.cryptoapis_type == "ADDRESS":
-                        transaction_response = cryptoapis_client.generate_coins_transaction_from_address(
-                            transaction_cryptocurrency.blockchain_id.blockchain_id, 
-                            transaction_cryptocurrency.network_id.network_id,
-                            transaction_cryptocurrency.address_id.address, 
-                            main_transaction.withdrawal_address, 
-                            receiving_amount
-                        )
-
-                    asset_object.amount -= receiving_amount
-                    asset_object.save()
-
-                except:
-                    return Response(
-                        {
-                        "status": "ERROR",
-                        "message": "Error generating withdrawal"
-                        }, status=400)
-
-
+                return Response(response_object, status=503)
 
             # MISSING TO SEND THE CONFIRMATION EMAIL TO THE USER
     elif response_data["direction"] == "outgoing":

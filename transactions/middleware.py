@@ -50,28 +50,28 @@ class TransactionVerification:
                             str({
                             "status": "ERROR",
                             "message": "Description max length is 100 characters"
-                            }), status=400)
+                            }), status=409)
 
                 if not digital_currency_code:
                     return HttpResponse(
                         str({
                         "status": "ERROR",
                         "message": "digital_currency_code not found"
-                        }), status=400)
+                        }), status=409)
                 else:
                     if not DigitalCurrency.objects.filter(digital_currency_id = digital_currency_code).exists():
                         return HttpResponse(
                             str({
                             "status": "ERROR",
                             "message": "Invalid digital_currency_code"
-                            }), status=400)
+                            }), status=409)
                 
                 if not digital_currency_amount:
                     return HttpResponse(
                         str({
                         "status": "ERROR",
                         "message": "digital_currency_amount not found"
-                        }), status=400)
+                        }), status=409)
                 else:
                     try:
                         digital_currency_amount = Decimal(digital_currency_amount)
@@ -80,14 +80,14 @@ class TransactionVerification:
                             str({
                             "status": "ERROR",
                             "message": "Invalid digital_currency_amount"
-                            }), status=400)
+                            }), status=409)
 
                 if not cryptocurrency_code:
                     return HttpResponse(
                         str({
                         "status": "ERROR",
                         "message": "cryptocurrency_code not found"
-                        }), status=400)
+                        }), status=409)
                 else:
                     # Cryptocurrency.objects.get(
                     #     blockchain_id = blockchain_object,
@@ -99,21 +99,21 @@ class TransactionVerification:
                             str({
                             "status": "ERROR",
                             "message": "Invalid cryptocurrency_code"
-                            }), status=400)
+                            }), status=409)
 
                 if not cryptocurrency_blockchain_id:
                     return HttpResponse(
                         str({
                         "status": "ERROR",
                         "message": "cryptocurrency_blockchain_id not found"
-                        }), status=400)
+                        }), status=409)
                 else:
                     if not Blockchain.objects.filter(blockchain_id = cryptocurrency_blockchain_id).exists():
                         return HttpResponse(
                             str({
                             "status": "ERROR",
                             "message": "Invalid cryptocurrency_blockchain_id"
-                            }), status=400)
+                            }), status=409)
 
 
 

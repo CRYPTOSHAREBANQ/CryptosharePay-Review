@@ -59,7 +59,7 @@ class CreateWithdrawal(APIView):
                 {
                 "status": "ERROR",
                 "message": "Insufficient funds"
-                }, status=400)
+                }, status=402)
 
         cryptoapis_client = CryptoApis(network = cryptocurrency_object.network_id.network_id)
 
@@ -75,15 +75,15 @@ class CreateWithdrawal(APIView):
                 return Response(
                     {
                     "status": "ERROR",
-                    "message": "Error generating withdrawal"
-                    }, status=400)
+                    "message": "Error generating withdrawal, please contact support."
+                    }, status=503)
 
         else:
             return Response(
                 {
                 "status": "ERROR",
                 "message": "Withdrawals are not currently supported for this cryptocurrency"
-                }, status=400)
+                }, status=409)
         
             # cryptoapis_client.generate_coins_transaction_from_address(
             #     cryptocurrency_object.blockchain_id.blockchain_id,

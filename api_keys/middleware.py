@@ -46,7 +46,7 @@ class APIKeyVerification:
                     str({
                     "status": "ERROR",
                     "message": "X-Customer-Id not found"
-                    }), status=400)
+                    }), status=409)
 
             #VERIFY X-CUSTOMER-ID FORMAT
             try:
@@ -56,7 +56,7 @@ class APIKeyVerification:
                     str({
                     "status": "ERROR",
                     "message": "Invalid X-Customer-Id"
-                    }), status=400)
+                    }), status=409)
 
             #VERIFY X-CUSTOMER-ID ACCOUNT EXISTS
             if not Account.objects.filter(user_id = customer_id).exists():
@@ -64,7 +64,7 @@ class APIKeyVerification:
                     str({
                     "status": "ERROR",
                     "message": "Invalid X-Customer-Id"
-                    }), status=400)
+                    }), status=409)
                                 
             ### <------ X-CUSTOMER-ID VERIFICATION ------> ###
             ### <------ X-CUSTOMER-ID VERIFICATION ------> ###
@@ -79,7 +79,7 @@ class APIKeyVerification:
                     str({
                     "status": "ERROR",
                     "message": "Email or Password not found"
-                    }), status=400)
+                    }), status=409)
 
             user_object = auth.authenticate(
                 username = email,
@@ -91,7 +91,7 @@ class APIKeyVerification:
                     str({
                     "status": "ERROR",
                     "message": "Invalid credentials"
-                    }), status=400)
+                    }), status=409)
             
             account_object = Account.objects.get(email = user_object)
 
@@ -112,7 +112,7 @@ class APIKeyVerification:
                         str({
                         "status": "ERROR",
                         "message": "Invalid API Key type"
-                        }), status=400)
+                        }), status=409)
 
                 #VERIFY IF USER ALREADY HAS API KEY
                 if ApiKey.objects.filter(user_id = account_object, type = api_key_type).exists():
@@ -120,7 +120,7 @@ class APIKeyVerification:
                         str({
                         "status": "ERROR",
                         "message": "User already has an API Key"
-                        }), status=400)
+                        }), status=409)
 
                 #VERIFY BUSINESS_ID FORMAT
                 business_id = data.get("business_id", None)
@@ -132,7 +132,7 @@ class APIKeyVerification:
                             str({
                             "status": "ERROR",
                             "message": "Invalid business_id"
-                            }), status=400)
+                            }), status=409)
 
             elif "all/" in path_info:
                 pass
@@ -145,7 +145,7 @@ class APIKeyVerification:
                         str({
                         "status": "ERROR",
                         "message": "Invalid API Key"
-                        }), status=400)
+                        }), status=409)
 
             ### <------ ENDPOINTS ------> ###
             ### <------ ENDPOINTS ------> ###
@@ -210,6 +210,6 @@ class APIKeyVerification:
                 str({
                 "status": "ERROR",
                 "message": "Invalid API Key"
-                }), status=400)
+                }), status=409)
         else:
             return None
