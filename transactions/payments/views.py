@@ -280,7 +280,8 @@ class CancelTransaction(APIView):
                 "message": error
             }
 
-            return Response(response_object, status=200)
+            #MISSING TO LOG ERROR
+            return Response(response_object, status=503)
 
         transaction.state = "CANCELLED"
         transaction.status = "CANCELLED"
