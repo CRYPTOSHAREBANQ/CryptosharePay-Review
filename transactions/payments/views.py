@@ -22,7 +22,7 @@ from rest_framework import status
 
 from common_libraries.cryptoapis.cryptoapis_utils import CryptoApisUtils
 from common_libraries.object_responses.object_responses import GenericCORSResponse
-from common_libraries.constants.comissions import REAL_RECEIVING_PERCENTAGE
+from common_libraries.constants.cryptocurrency import CRYPTOCURRENCY_NETWORKS
 from common_libraries.transactions.transactions_utils import TransactionUtils
 
 
@@ -43,33 +43,6 @@ class CreateTransaction(APIView):
         withdrawal_address = data.get("withdrawal_address", None)
         customer_email = data.get("customer_email", None)
         customer_phone = data.get("customer_phone", None)
-
-        CRYPTOCURRENCY_NETWORKS = {
-            "TEST":{
-                "BTC": "testnet",
-                "BCH": "testnet",
-                "LTC": "testnet",
-                "DOGE": "testnet",
-                "DASH": "testnet",
-                "ETH": "goerli",
-                "ETC": "mordor",
-                "XRP": "testnet",
-                "ZEC": "testnet",
-                "TRX": "testnet",
-            },
-            "PRODUCTION": {
-                "BTC": "mainnet",
-                "BCH": "mainnet",
-                "LTC": "mainnet",
-                "DOGE": "mainnet",
-                "DASH": "mainnet",
-                "ETH": "mainnet",
-                "ETC": "mainnet",
-                "XRP": "mainnet",
-                "ZEC": "mainnet",
-                "TRX": "mainnet",
-            }
-        }
 
         """
             STEPS TO CREATE A TRANSACTION

@@ -6,8 +6,12 @@ from accounts.models import Account
 from api_keys.models import ApiKey
 from uuid import UUID
 
-from cryptocurrency.models import Blockchain, Cryptocurrency
+from cryptocurrency.models import Blockchain, Cryptocurrency, Network
 from digital_currency.models import DigitalCurrency
+
+from common_libraries.cryptoapis.cryptoapis import CryptoApis
+from common_libraries.constants.cryptocurrency import CRYPTOCURRENCY_NETWORKS
+
 
 import json
 
@@ -20,14 +24,7 @@ class TransactionVerification:
 
         headers = request.META
 
-        path_info = headers.get("PATH_INFO", None)
-
-        # try:
-        #     data = json.loads(request.body.decode("utf-8"))
-        #     data = data["data"]
-        # except:
-        #     data = None
-        
+        path_info = headers.get("PATH_INFO", None)        
 
         if "v1/transactions/" in path_info:
             try:
@@ -43,6 +40,7 @@ class TransactionVerification:
                 digital_currency_amount = data.get("digital_currency_amount", None)
                 cryptocurrency_code = data.get("cryptocurrency_code", None)
                 cryptocurrency_blockchain_id = data.get("cryptocurrency_blockchain_id", None)
+                withdrawal_address = data.get("withdrawal_address", None)
 
                 if description:
                     if len(description) > 100:
@@ -115,8 +113,19 @@ class TransactionVerification:
                             "message": "Invalid cryptocurrency_blockchain_id"
                             }), status=409)
 
+                if withdrawal_address:
+                    api_key = headers.get("HTTP_X_API_KEY", None)
+                    api_key_object = ApiKey.objects.get(api_key = api_key)
 
+                    network_object = Network.objects.get(network_id = CRYPTOCURRENCY_NETWORKS[api_key_object.type][cryptocurrency_code])
+                    cryptoapis_client = CryptoApis(network = network_object.network_id)
 
+                    if not cryptoapis_client.validate_address(cryptocurrency_blockchain_id, network_object.network_id, withdrawal_address):
+                        return HttpResponse(
+                            str({
+                            "status": "ERROR",
+                            "message": "Invalid withdrawal_address"
+                            }), status=409)
 
         response = self.get_response(request)
 
