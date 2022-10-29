@@ -243,6 +243,14 @@ class CancelTransaction(APIView):
 
         #     return Response(response_object, status=200)
 
+        if transaction.state != "PENDING":
+            response_object = {
+                "status": "ERROR",
+                "message": "Transaction not cancellable"
+            }
+
+            return Response(response_object, status=409)
+
         transaction_address_object = transaction.address_id
 
         cryptoapis_utils = CryptoApisUtils()

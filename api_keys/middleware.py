@@ -152,45 +152,14 @@ class APIKeyVerification:
 
         elif "v1/accounts/" in path_info:            
             pass
-        
-        # elif "v1/businesses/" in path_info:
-        #     api_key = headers.get("HTTP_X_API_KEY", None)
-        #     api_key_verification = self.verify_api_key(api_key)
-        #     if api_key_verification:
-        #         return api_key_verification
-        #     pass
-
-        # elif "v1/cryptocurrency/" in path_info:
-        #     api_key = headers.get("HTTP_X_API_KEY", None)
-        #     api_key_verification = self.verify_api_key(api_key)
-        #     if api_key_verification:
-        #         return api_key_verification
-        #     pass
-        
-        # elif "v1/digital-currency/" in path_info:
-        #     api_key = headers.get("HTTP_X_API_KEY", None)
-        #     api_key_verification = self.verify_api_key(api_key)
-        #     if api_key_verification:
-        #         return api_key_verification
-        #     pass
-
-        # elif "v1/transactions/" in path_info:
-        #     api_key = headers.get("HTTP_X_API_KEY", None)
-        #     api_key_verification = self.verify_api_key(api_key)
-        #     if api_key_verification:
-        #         return api_key_verification
 
         else:
-            print(path_info)
-            allowed_endpoints = ["ping/", "cryptoapisverifydomain/", "/webhooks/cryptoapis/subscriptions/ConfirmedCoinTransactions/"]
-            if path_info in allowed_endpoints:
+            allowed_endpoints = ["/ping/", "/cryptoapisverifydomain/", "/webhooks/cryptoapis/subscriptions/ConfirmedCoinTransactions/"]
+            if path_info not in allowed_endpoints:
                 api_key = headers.get("HTTP_X_API_KEY", None)
                 api_key_verification = self.verify_api_key(api_key)
                 if api_key_verification:
                     return api_key_verification
-            # print(path_info)        
-
-        # print(headers)
 
         ### DO NOT REMOVE ###
         ### DO NOT REMOVE ###
