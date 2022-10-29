@@ -234,6 +234,15 @@ class TransactionVerification:
                 if "transaction_id" in view_kwargs.keys():
                     transaction_id = view_kwargs["transaction_id"]
 
+                    try:
+                        uuid_obj = UUID(transaction_id, version=4)
+                    except ValueError:
+                        return HttpResponse(
+                            str({
+                            "status": "ERROR",
+                            "message": "Invalid transaction_id"
+                            }), status=409)
+
                     api_key = headers.get("HTTP_X_API_KEY", None)
                     api_key_object = ApiKey.objects.get(api_key = api_key)
 
