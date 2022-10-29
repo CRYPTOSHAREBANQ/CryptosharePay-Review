@@ -28,10 +28,9 @@ class GetCryptocurrencies(APIView):
         return Response(response_object, status=200)
 
 class GetCryptocurrency(APIView):
-    def get(self, request, code, network):
+    def get(self, request, cryptocurrency_code, network):
 
-        cryptocurrency = Cryptocurrency.objects.filter(symbol = code, network_id__network_id = network)
-        cryptocurrency = cryptocurrency.first()
+        cryptocurrency = Cryptocurrency.objects.get(symbol = cryptocurrency_code, network_id__network_id = network)
 
         if cryptocurrency:
             serializer = CryptocurrencySerializer(cryptocurrency)

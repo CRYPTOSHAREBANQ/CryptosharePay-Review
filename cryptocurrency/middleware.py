@@ -8,7 +8,7 @@ from uuid import UUID
 
 import json
 
-from cryptocurrency.models import Cryptocurrency
+from cryptocurrency.models import Cryptocurrency, Network
 
 class CryptocurrencyVerification:
     def __init__(self, get_response):
@@ -59,3 +59,29 @@ class CryptocurrencyVerification:
         ### DO NOT REMOVE ###
         ### DO NOT REMOVE ###
         ### DO NOT REMOVE ###
+
+    def process_view(self, request, view_func, view_args, view_kwargs):
+        headers = request.META
+
+        path_info = headers.get("PATH_INFO", None)
+
+        if "v1/cryptocurrency/" in path_info:
+            if "cryptocurrency_code" in view_kwargs.keys():
+                cryptocurrency_code = view_kwargs["cryptocurrency_code"]
+
+                if not cryptocurrency_code or not Cryptocurrency.objects.filter(symbol = cryptocurrency_code).exists():
+                    return HttpResponse(
+                        str({
+                        "status": "ERROR",
+                        "message": "Cryptocurrency code not found"
+                        }), status=409)
+                
+            if "network" in view_kwargs.keys():
+                network = view_kwargs["network"]
+
+                if not network or not Network.objects.filter(network_id = network).exists():
+                    return HttpResponse(
+                        str({
+                        "status": "ERROR",
+                        "message": "Cryptocurrency network not found"
+                        }), status=409)

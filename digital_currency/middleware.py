@@ -57,3 +57,19 @@ class DigitalCurrencyVerification:
         ### DO NOT REMOVE ###
         ### DO NOT REMOVE ###
         ### DO NOT REMOVE ###
+    
+    def process_view(self, request, view_func, view_args, view_kwargs):
+        headers = request.META
+
+        path_info = headers.get("PATH_INFO", None)
+
+        if "v1/digital-currency/" in path_info:
+            if "digital_currency_code" in view_kwargs.keys():
+                digital_currency_code = view_kwargs["digital_currency_code"]
+
+                if not digital_currency_code or not DigitalCurrency.objects.filter(digital_currency_id = digital_currency_code).exists():
+                    return HttpResponse(
+                        str({
+                        "status": "ERROR",
+                        "message": "Digital currency not found"
+                        }), status=409)

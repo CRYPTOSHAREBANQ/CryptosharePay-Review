@@ -27,9 +27,8 @@ class GetDigitalCurrencies(APIView):
         return Response(response_object, status=200)
 
 class GetDigitalCurrency(APIView):
-    def get(self, request, code):
-        digital_currency = DigitalCurrency.objects.filter(digital_currency_id = code)
-        digital_currency = digital_currency.first()
+    def get(self, request, digital_currency_code):
+        digital_currency = DigitalCurrency.objects.get(digital_currency_id = digital_currency_code)
 
         if digital_currency:
             serializer = DigitalCurrencySerializer(digital_currency)

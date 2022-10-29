@@ -164,6 +164,59 @@ class TransactionVerification:
                             "message": "Invalid filter type"
                             }), status=409)
                     
+            elif "withdrawals/" in path_info:
+
+                if "create/" in path_info:
+                    
+                    cryptocurrency_code = data.get("cryptocurrency_code", None)
+                    cryptocurrency_blockchain_id = data.get("cryptocurrency_blockchain_id", None)
+                    cryptocurrency_amount = data.get("cryptocurrency_amount", None)
+                    withdrawal_address = data.get("withdrawal_address", None)
+
+                    if not cryptocurrency_code or not Cryptocurrency.objects.filter(symbol = cryptocurrency_code).exists():
+                        return HttpResponse(
+                            str({
+                            "status": "ERROR",
+                            "message": "Invalid cryptocurrency_code"
+                            }), status=409)
+
+                    if not cryptocurrency_blockchain_id or not Blockchain.objects.filter(blockchain_id = cryptocurrency_blockchain_id).exists():
+                        return HttpResponse(
+                            str({
+                            "status": "ERROR",
+                            "message": "Invalid cryptocurrency_blockchain_id"
+                            }), status=409)
+
+
+                    if not cryptocurrency_amount:
+                        return HttpResponse(
+                            str({
+                            "status": "ERROR",
+                            "message": "Invalid cryptocurrency_amount"
+                            }), status=409)
+                    else:
+                        try:
+                            cryptocurrency_amount = Decimal(cryptocurrency_amount)
+                        except ValueError:
+                            return HttpResponse(
+                                str({
+                                "status": "ERROR",
+                                "message": "Invalid cryptocurrency_amount"
+                                }), status=409)
+
+                    if withdrawal_address:
+                        api_key = headers.get("HTTP_X_API_KEY", None)
+                        api_key_object = ApiKey.objects.get(api_key = api_key)
+
+                        network_object = Network.objects.get(network_id = CRYPTOCURRENCY_NETWORKS[api_key_object.type][cryptocurrency_code])
+                        cryptoapis_client = CryptoApis(network = network_object.network_id)
+
+                        if not cryptoapis_client.validate_address(cryptocurrency_blockchain_id, network_object.network_id, withdrawal_address):
+                            return HttpResponse(
+                                str({
+                                "status": "ERROR",
+                                "message": "Invalid withdrawal_address"
+                                }), status=409)
 
         response = self.get_response(request)
 

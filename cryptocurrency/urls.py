@@ -7,6 +7,6 @@ urlpatterns = [
     path("supported-cryptocurrencies/", views.GetCryptocurrencies.as_view(), name="GetAllCryptocurrencies"),
     path("supported-blockchains/", views.GetBlockchains.as_view(), name="GetAllBlockchains"),
     path("supported-networks/", views.GetNetworks.as_view(), name="GetAllNetworks"),
-    path("<str:code>/<str:network>/", views.GetCryptocurrency.as_view(), name="GetCryptocurrency"),
+    path("<str:cryptocurrency_code>/<str:network>/", views.GetCryptocurrency.as_view(), name="GetCryptocurrency"),
 
 ]
