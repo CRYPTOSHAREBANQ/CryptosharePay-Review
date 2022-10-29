@@ -221,3 +221,25 @@ class TransactionVerification:
         response = self.get_response(request)
 
         return response
+
+    def process_view(self, request, view_func, view_args, view_kwargs):
+        headers = request.META
+
+        path_info = headers.get("PATH_INFO", None)
+
+        if "v1/transactions/" in path_info:
+
+            if "payments/" in path_info:
+
+                if "transaction_id" in view_kwargs.keys():
+                    transaction_id = view_kwargs["transaction_id"]
+
+                    api_key = headers.get("HTTP_X_API_KEY", None)
+                    api_key_object = ApiKey.objects.get(api_key = api_key)
+
+                    if not transaction_id or not Transaction.objects.filter(api_key = api_key_object, transaction_id = transaction_id).exists():
+                        return HttpResponse(
+                            str({
+                            "status": "ERROR",
+                            "message": "Transaction not found"
+                            }), status=409)

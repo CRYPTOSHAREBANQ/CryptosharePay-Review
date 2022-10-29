@@ -175,16 +175,16 @@ class GetTransaction(APIView):
         api_key = headers.get("X-API-Key", None)
         api_key_object = ApiKey.objects.get(api_key = api_key)
 
-        transaction = Transaction.objects.filter(api_key = api_key_object, transaction_id = transaction_id)
+        transaction = Transaction.objects.get(api_key = api_key_object, transaction_id = transaction_id)
 
-        if not transaction.exists():
-            return Response(
-                {
-                "status": "ERROR",
-                "message": "Transaction not found"
-                }, status=409)
+        # if not transaction.exists():
+        #     return Response(
+        #         {
+        #         "status": "ERROR",
+        #         "message": "Transaction not found"
+        #         }, status=409)
 
-        serializer = TransactionSerializer(transaction.first())
+        serializer = TransactionSerializer(transaction)
 
         response_object = {
             "status": "SUCCESS",
