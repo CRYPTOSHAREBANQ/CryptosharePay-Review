@@ -42,14 +42,18 @@ class EmailHasAccount(APIView):
             account_object = Account.objects.get(email = user_object)
 
             response_object["data"]["type"] = account_object.type
+            
+            status = 409
 
         else:
             response_object["message"] = "Email is available"
             response_object["data"]["email_is_available"] = True
+            
+            status = 200
 
 
 
-        return Response(response_object, status=200)
+        return Response(response_object, status=status)
 
 class GetAPIKeyNoAccount(APIView):
     def get(self, request, type):
