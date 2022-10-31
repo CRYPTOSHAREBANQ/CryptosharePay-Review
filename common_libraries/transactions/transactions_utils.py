@@ -14,9 +14,8 @@ class TransactionUtils:
         ### TAX TAX TAX ###
         ### TAX TAX TAX ###
         
-        print("PRE G", transaction.cryptocurrency_amount_received)
         receiving_amount = transaction.cryptocurrency_amount_received * REAL_RECEIVING_PERCENTAGE
-        print("REAL G", receiving_amount)
+
         ### TAX TAX TAX ###
         ### TAX TAX TAX ###
 

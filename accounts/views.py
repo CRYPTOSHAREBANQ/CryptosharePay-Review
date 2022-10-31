@@ -23,40 +23,11 @@ import secrets
 class CreateAccount(APIView):
     def post(self, request):
         # print(request.data, request.headers)
+
         data = request.data["data"]
 
         customer_info = data["customer_info"]
         business_info = data.get("business_info", None)
-
-        if not Country.objects.filter(country_id = customer_info["country_id"]).exists():
-            return Response(
-                {
-                "status": "ERROR",
-                "message": "Country ID does not exist"
-                }, status=409)
-
-        if Country.objects.get(country_id = customer_info["country_id"]).status == "BLOCK":
-            return Response(
-                {
-                "status": "ERROR",
-                "message": "Your country doesnt need to create an account, please go to: [INSERT LINK HERE]"
-                }, status=409)
-
-        if User.objects.filter(email = customer_info["email"]).exists():
-            return Response(
-                {
-                "status": "ERROR",
-                "message": "Email already exists"
-                }, status=409)
-        
-        if customer_info["password"] != customer_info["confirm_password"]:
-            return Response(
-                {
-                "status": "ERROR",
-                "message": "Passwords do not match"
-                }, status=409)
-
-        
 
         new_user = User.objects.create_user(
             username = customer_info['email'], 
@@ -113,4 +84,4 @@ class CreateAccount(APIView):
             }
         }
 
-        return Response(response_object, status=status.HTTP_200_OK)
+        return Response(response_object, status=200)

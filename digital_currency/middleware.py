@@ -26,23 +26,6 @@ class DigitalCurrencyVerification:
 
 
         if "v1/digital-currency/" in path_info:
-
-            if "get-digital-currency/" in path_info:
-
-                # GET URL PARAMETERS FROM URL PATH
-                # ['v1', 'digital-currency', 'get-digital-currency', 'DIGITAL_CURRENCY_CODE']
-                url_path = path_info.split("/")[1:-1]
-                # print(path_info)
-                
-                digital_currency_code = url_path[3]
-
-                if not digital_currency_code or not DigitalCurrency.objects.filter(digital_currency_id = digital_currency_code).exists():
-                    return HttpResponse(
-                        str({
-                        "status": "ERROR",
-                        "message": "Digital currency not found"
-                        }), status=409)
-
             pass
         
 

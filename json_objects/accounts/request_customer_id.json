@@ -1,0 +1,29 @@
+// GET REQUEST CUSTOMER ID OBJECTS
+
+// REQUEST OBJECT
+{
+    "headers": {
+        "Content-Type": "application/json",
+        "X-Email": "YOUR-EMAIL",
+        "X-Password": "YOUR-PASSWORD"
+    }
+}
+
+// RESPONSE OBJECT
+
+{
+    "status": "SUCCESS",
+    "message": "API Key retrieved successfully",
+    "data": {
+        "customer_id": "YOUR-CUSTOMER-ID",
+        "api_keys": [
+            {
+                "api_key": "YOUR-API-KEY",
+                "business_id": "YOUR-BUSINESS-ID",
+                "type": "YOUR-KEY-TYPE",
+                "status": "YOUR-KEY-STATUS",
+            },
+            ...
+        ]
+    }
+}

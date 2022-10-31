@@ -63,6 +63,7 @@ MIDDLEWARE = [
     'corsheaders.middleware.CorsMiddleware',
     'protected.middleware.ProtectedVerification',
     'api_keys.middleware.APIKeyVerification',
+    'accounts.middleware.AccountVerification',
     'cryptocurrency.middleware.CryptocurrencyVerification',
     'digital_currency.middleware.DigitalCurrencyVerification',
     'transactions.middleware.TransactionVerification',

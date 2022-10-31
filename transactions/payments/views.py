@@ -24,6 +24,7 @@ from common_libraries.cryptoapis.cryptoapis_utils import CryptoApisUtils
 from common_libraries.object_responses.object_responses import GenericCORSResponse
 from common_libraries.constants.cryptocurrency import CRYPTOCURRENCY_NETWORKS
 from common_libraries.transactions.transactions_utils import TransactionUtils
+from common_libraries.emails.email_client import EmailClient
 
 
 class CreateTransaction(APIView):
@@ -224,23 +225,6 @@ class CancelTransaction(APIView):
         transaction_id = data["transaction_id"]
         
         transaction = Transaction.objects.get(api_key = api_key_object, transaction_id = transaction_id)
-        # transaction = Transaction.objects.filter(api_key = api_key_object, transaction_id = transaction_id)
-        
-        # if not transaction:
-        #     response_object = {
-        #         "status": "ERROR",
-        #         "message": "Transaction not found"
-        #     }
-
-        #     return Response(response_object, status=200)
-
-        if transaction.state != "PENDING":
-            response_object = {
-                "status": "ERROR",
-                "message": "Transaction not cancellable"
-            }
-
-            return Response(response_object, status=409)
 
         transaction_address_object = transaction.address_id
 
@@ -258,6 +242,9 @@ class CancelTransaction(APIView):
         transaction.state = "CANCELLED"
         transaction.status = "CANCELLED"
         transaction.save()
+
+        email_client = EmailClient()
+        email_client.cancel_transaction(transaction)
 
         response_object = {
             "status": "SUCCESS",

@@ -49,14 +49,14 @@ class EmailClient:
     
     def complete_transaction(self, transaction):
 
-        subject = f"Transaction completed"
+        subject = f"Transaction {transaction.transaction_id} completed"
 
         content = f"""
         <html>
             <body>
                 <h1> Hi there! </h1>
 
-                <p> You are receiving this email because a transaction has been completed. </p>
+                <p> You are receiving this email because a transaction has been <b>completed.</b> </p>
 
                 <p> Details of the transaction as follows: </p>
 
@@ -78,7 +78,35 @@ class EmailClient:
 
         self.send_html_email(subject, content, str(transaction.api_key.user_id.email))
 
+    def cancel_transaction(self, transaction):
+        subject = f"Transaction {transaction.transaction_id} cancelled"
 
+        content = f"""
+        <html>
+            <body>
+                <h1> Hi there! </h1>
+
+                <p> You are receiving this email because a transaction has been <b>cancelled.</b> </p>
+
+                <p> Details of the transaction as follows: </p>
+
+                <p> Transaction ID: {transaction.transaction_id} </p>
+
+                <p> Transaction description: {transaction.description} </p>
+
+                <p> Transaction type: {transaction.type} </p>
+                
+                <p>
+                    For further information, please make make use of API endpoint using your API key.
+
+                    https://api.cryptosharepay.com/v1/transactions/payments/{transaction.transaction_id}/
+
+                </p>
+            </body>
+        </html>
+        """
+
+        self.send_html_email(subject, content, str(transaction.api_key.user_id.email))
 
 
 

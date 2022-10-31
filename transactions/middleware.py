@@ -133,7 +133,20 @@ class TransactionVerification:
                             str({
                             "status": "ERROR",
                             "message": "Invalid transaction_id"
-                            }), status=409)               
+                            }), status=409)       
+
+
+
+                    if "cancel/" in path_info:
+                        transaction = Transaction.objects.get(api_key = api_key_object, transaction_id = transaction_id)
+
+                        if transaction.state != "PENDING":
+                            return HttpResponse(
+                                str({
+                                "status": "ERROR",
+                                "message": "Transaction not cancellable"
+                                }), status=409)
+
 
                 elif "all/" in path_info:
                     pass
