@@ -102,7 +102,7 @@ def cryptoapis_confirmed_coin_transactions(request):
                     "status": "ERROR",
                     "message": error
                 }
-                return Response(response_object, status=503)
+                return Response(response_object, status=500)
 
             # MISSING TO SEND THE CONFIRMATION EMAIL TO THE USER
     elif response_data["direction"] == "outgoing":

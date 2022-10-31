@@ -1,19 +1,22 @@
 from common_libraries.cryptoapis.cryptoapis_utils import CryptoApisUtils
 from common_libraries.constants.comissions import REAL_RECEIVING_PERCENTAGE
 
+from common_libraries.emails.email_client import EmailClient
+
 from assets.models import Asset
 
 
 class TransactionUtils:
-    def __init__(self, request):
+    def __init__(self):
         pass
 
     def complete_transaction(self, transaction, api_key_object):
         ### TAX TAX TAX ###
         ### TAX TAX TAX ###
         
+        print("PRE G", transaction.cryptocurrency_amount_received)
         receiving_amount = transaction.cryptocurrency_amount_received * REAL_RECEIVING_PERCENTAGE
-
+        print("REAL G", receiving_amount)
         ### TAX TAX TAX ###
         ### TAX TAX TAX ###
 
@@ -50,5 +53,9 @@ class TransactionUtils:
         transaction.state = "COMPLETE"
         transaction.status = "COMPLETED"
         transaction.save()
+
+        # SEND EMAIL
+        email_client = EmailClient()
+        email_client.complete_transaction(transaction)
 
         return None

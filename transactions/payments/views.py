@@ -63,7 +63,7 @@ class CreateTransaction(APIView):
         network_object = Network.objects.get(network_id = CRYPTOCURRENCY_NETWORKS[api_key_object.type][cryptocurrency_code])
         blockchain_object = Blockchain.objects.get(blockchain_id = cryptocurrency_blockchain_id)
 
-        cryptocurrency_object = Cryptocurrency.objects.filter(
+        cryptocurrency_object = Cryptocurrency.objects.get(
             blockchain_id = blockchain_object,
             network_id = network_object,
             symbol = cryptocurrency_code
@@ -75,16 +75,7 @@ class CreateTransaction(APIView):
                 {
                     "status": "ERROR",
                     "error": "Missing withdrawal address"
-                }, status = 400)
-
-        if not cryptocurrency_object.exists():
-            return Response(
-                {
-                    "status": "ERROR",
-                    "message": "Invalid cryptocurrency_code"
-                }, status=409)
-        else:
-            cryptocurrency_object = cryptocurrency_object.first()
+                }, status = 409)
 
         # print(cryptocurrency_object.__dict__)
         # GENERATE ADDRESS
@@ -294,7 +285,7 @@ class CompleteTransaction(APIView):
                 "status": "ERROR",
                 "message": error
             }
-            return Response(response_object, status=503)
+            return Response(response_object, status=500)
 
 
         response_object = {
