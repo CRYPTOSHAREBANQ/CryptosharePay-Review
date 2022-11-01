@@ -1,1 +1,3 @@
+'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token, x-csrftoken, X-API-Key, X-Customer-Id, X-Email, X-Password, X-Security-PIN'
+
 'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token, x-csrftoken, X-API-Key, X-Customer-Id, X-Email, X-Password'
