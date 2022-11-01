@@ -17,3 +17,4 @@ class Account(models.Model):
     first_name = models.CharField(max_length=30)
     last_name = models.CharField(max_length=30)
     country_id = models.ForeignKey(Country, on_delete=models.CASCADE)
+    security_pin = models.CharField(max_length=6, null=True)

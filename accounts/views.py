@@ -14,6 +14,9 @@ from rest_framework.decorators import api_view
 from rest_framework.response  import Response
 from rest_framework import status
 
+from common_libraries.general.general_utils import generate_pin
+from common_libraries.emails.email_client import EmailClient
+
 import secrets
 
 # Create your views here.
@@ -85,3 +88,59 @@ class CreateAccount(APIView):
         }
 
         return Response(response_object, status=200)
+
+class RequestCustomerID(APIView):
+    def post(self, request):
+        headers = request.headers
+
+        email = headers.get("X-Email", None)
+        password = headers.get("X-Password", None)
+
+        user_object = User.objects.get(email = email)
+
+        account_object = Account.objects.get(email = user_object)
+
+        new_pin = generate_pin()
+
+        account_object.security_pin = new_pin
+        account_object.save()
+
+        email_client = EmailClient()
+        email_client.request_customer_id(new_pin, email)
+
+        response_object = {
+            "status": "SUCCESS",
+            "message": "Customer ID requested successfully, please verify your email"
+        }
+
+        return Response(response_object, status=200)
+
+class GetAccountCustomerID(APIView):
+    def get(self, request):
+        headers = request.headers
+
+        email = headers.get("X-Email", None)
+
+        user_object = User.objects.get(email = email)
+        account_object = Account.objects.get(email = user_object)
+
+        response_object = {
+            "status": "SUCCESS",
+            "message": "Customer ID retrieved successfully",
+            "data": {
+                "customer_id": account_object.user_id
+            }
+        }
+
+        account_object.security_pin = None
+        account_object.save()
+
+        return Response(response_object, status=200)
+
+
+        
+        
+
+
+
+

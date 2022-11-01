@@ -1,5 +1,6 @@
 from decimal import Decimal
 from django.http import HttpResponse, Http404
+from django.contrib.auth.models import User
 from django.contrib import auth
 from accounts.models import Account
 from api_keys.models import ApiKey
@@ -32,79 +33,24 @@ class APIKeyVerification:
         ### API KEYS ###
         ### API KEYS ###
         ### API KEYS ###
-        if "v1/api-keys/" in path_info:
-            customer_id = headers.get("HTTP_X_CUSTOMER_ID", None)
-            email = headers.get("HTTP_X_EMAIL", None)
-            password = headers.get("HTTP_X_PASSWORD", None)
 
-            ### <------ X-CUSTOMER-ID VERIFICATION ------> ###
-            ### <------ X-CUSTOMER-ID VERIFICATION ------> ###
-
-            #VERIFY X-CUSTOMER-ID HEADER IS NOT EMPTY
-            if not customer_id:
-                return HttpResponse(
-                    str({
-                    "status": "ERROR",
-                    "message": "X-Customer-Id not found"
-                    }), status=409)
-
-            #VERIFY X-CUSTOMER-ID FORMAT
-            try:
-                uuid_obj = UUID(customer_id, version=4)
-            except ValueError:
-                return HttpResponse(
-                    str({
-                    "status": "ERROR",
-                    "message": "Invalid X-Customer-Id"
-                    }), status=409)
-
-            #VERIFY X-CUSTOMER-ID ACCOUNT EXISTS
-            if not Account.objects.filter(user_id = customer_id).exists():
-                return HttpResponse(
-                    str({
-                    "status": "ERROR",
-                    "message": "Invalid X-Customer-Id"
-                    }), status=409)
-                                
-            ### <------ X-CUSTOMER-ID VERIFICATION ------> ###
-            ### <------ X-CUSTOMER-ID VERIFICATION ------> ###
-
-
-            ### <------ CREDENTIALS VERIFICATION ------> ###
-            ### <------ CREDENTIALS VERIFICATION ------> ###
-
-            #VERIFY CREDENTIALS
-            if not email or not password:
-                return HttpResponse(
-                    str({
-                    "status": "ERROR",
-                    "message": "Email or Password not found"
-                    }), status=409)
-
-            user_object = auth.authenticate(
-                username = email,
-                password = password
-            )
-
-            if not user_object:
-                return HttpResponse(
-                    str({
-                    "status": "ERROR",
-                    "message": "Invalid credentials"
-                    }), status=409)
-            
-            account_object = Account.objects.get(email = user_object)
-
-            ### <------ CREDENTIALS VERIFICATION ------> ###
-            ### <------ CREDENTIALS VERIFICATION ------> ###
-
+        if "v1/accounts/" in path_info:            
+            pass
+        
+        elif "v1/api-keys/" in path_info:
 
             ### <------ ENDPOINTS ------> ###
             ### <------ ENDPOINTS ------> ###
 
             if "create/" in path_info:
+
+                email = headers.get("HTTP_X_EMAIL", None)
+
                 #VERIFY API-KEY TYPE
                 API_KEY_TYPES = {"TEST", "PRODUCTION"}
+
+                user_object = User.objects.get(email = email)
+                account_object = Account.objects.get(email = user_object)
 
                 api_key_type = data.get("type", None)
                 if not api_key_type in API_KEY_TYPES:
@@ -112,7 +58,7 @@ class APIKeyVerification:
                         str({
                         "status": "ERROR",
                         "message": "Invalid API Key type"
-                        }), status=409)
+                        }), status=400)
 
                 #VERIFY IF USER ALREADY HAS API KEY
                 if ApiKey.objects.filter(user_id = account_object, type = api_key_type).exists():
@@ -120,7 +66,7 @@ class APIKeyVerification:
                         str({
                         "status": "ERROR",
                         "message": "User already has an API Key"
-                        }), status=409)
+                        }), status=403)
 
                 #VERIFY BUSINESS_ID FORMAT
                 business_id = data.get("business_id", None)
@@ -132,7 +78,7 @@ class APIKeyVerification:
                             str({
                             "status": "ERROR",
                             "message": "Invalid business_id"
-                            }), status=409)
+                            }), status=400)
 
             elif "all/" in path_info:
                 pass
@@ -145,13 +91,10 @@ class APIKeyVerification:
                         str({
                         "status": "ERROR",
                         "message": "Invalid API Key"
-                        }), status=409)
+                        }), status=401)
 
             ### <------ ENDPOINTS ------> ###
             ### <------ ENDPOINTS ------> ###
-
-        elif "v1/accounts/" in path_info:            
-            pass
 
         else:
             allowed_endpoints = ["/ping/", "/cryptoapisverifydomain/", "/webhooks/cryptoapis/subscriptions/ConfirmedCoinTransactions/"]
@@ -179,6 +122,6 @@ class APIKeyVerification:
                 str({
                 "status": "ERROR",
                 "message": "Invalid API Key"
-                }), status=409)
+                }), status=401)
         else:
             return None
