@@ -95,7 +95,8 @@ class APIKeyVerification:
 
             ### <------ ENDPOINTS ------> ###
             ### <------ ENDPOINTS ------> ###
-
+        elif "v1/protected" in path_info:
+            pass
         else:
             allowed_endpoints = ["/ping/", "/cryptoapisverifydomain/", "/webhooks/cryptoapis/subscriptions/ConfirmedCoinTransactions/"]
             if path_info not in allowed_endpoints:
