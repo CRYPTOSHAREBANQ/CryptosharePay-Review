@@ -95,6 +95,38 @@ class AccountVerification:
                             "message": "Invalid description"
                             }), status=400)
         
+            elif "account-info/" in path_info:
+                email = headers.get("HTTP_X_EMAIL", None)
+                password = headers.get("HTTP_X_PASSWORD", None)
+
+                ### <------ CREDENTIALS VERIFICATION ------> ###
+                ### <------ CREDENTIALS VERIFICATION ------> ###
+
+                #VERIFY CREDENTIALS
+                if not email or not password:
+                    return HttpResponse(
+                        str({
+                        "status": "ERROR",
+                        "message": "Email or Password not found"
+                        }), status=400)
+
+                user_object = auth.authenticate(
+                    username = email,
+                    password = password
+                )
+
+                if not user_object:
+                    return HttpResponse(
+                        str({
+                        "status": "ERROR",
+                        "message": "Invalid credentials"
+                        }), status=401)
+                
+                ### <------ CREDENTIALS VERIFICATION ------> ###
+                ### <------ CREDENTIALS VERIFICATION ------> ###
+
+                pass
+
             elif "request-customer-id/" in path_info:
                 email = headers.get("HTTP_X_EMAIL", None)
                 password = headers.get("HTTP_X_PASSWORD", None)

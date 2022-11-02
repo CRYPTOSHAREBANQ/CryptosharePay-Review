@@ -17,6 +17,8 @@ from rest_framework import status
 from common_libraries.general.general_utils import generate_pin
 from common_libraries.emails.email_client import EmailClient
 
+from businesses.serializers import BusinessesSerializer
+
 import secrets
 
 # Create your views here.
@@ -137,7 +139,32 @@ class GetAccountCustomerID(APIView):
 
         return Response(response_object, status=200)
 
+class GetAccount(APIView):
+    def get(self, request):
+        headers = request.headers
 
+        email = headers.get("X-Email", None)
+
+        user_object = User.objects.get(email = email)
+        account_object = Account.objects.get(email = user_object)
+
+        businesses = Business.objects.filter(user_id = account_object)
+
+        serializer = BusinessesSerializer(businesses, many=True)
+
+        response_object = {
+            "status": "SUCCESS",
+            "message": "Account info retrieved successfully",
+            "data": {
+                "first_name": account_object.first_name,
+                "last_name": account_object.last_name,
+                "email": account_object.email.email,
+                "country_id": account_object.country_id.country_id,
+                "businesses": serializer.data if serializer else None
+            }
+        }
+
+        return Response(response_object, status=200)
         
         
 
