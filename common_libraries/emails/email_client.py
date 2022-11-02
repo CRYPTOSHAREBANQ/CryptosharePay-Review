@@ -6,19 +6,19 @@ from email.mime.text import MIMEText
 
 class EmailClient:
     def __init__(self) -> None:
-        # self.host = "email-smtp.us-east-1.amazonaws.com"
-        # self.sender = "no-reply@cryptosharepay.com"
-        # self.username = "AKIA2GA5YBIERCRQY6HA"
-        # self.password = "BP78z4AeWgcFI89WYoO8Wdcz2FA8suGBNWEqjLk3GVEh"
+        self.host = "email-smtp.us-east-1.amazonaws.com"
+        self.sender = "no-reply@cryptosharepay.com"
+        self.username = "AKIA2GA5YBIERCRQY6HA"
+        self.password = "BP78z4AeWgcFI89WYoO8Wdcz2FA8suGBNWEqjLk3GVEh"
 
-        # self.port = 2587
+        self.port = 2587
 
-        self.host = "mail.cryptoshareapp.com"
-        self.sender = "no-reply@cryptoshareapp.com"
-        self.username = "no-reply@cryptoshareapp.com"
-        self.password = "KkingCRYPTO$$21"
+        # self.host = "mail.cryptoshareapp.com"
+        # self.sender = "no-reply@cryptoshareapp.com"
+        # self.username = "no-reply@cryptoshareapp.com"
+        # self.password = "KkingCRYPTO$$21"
 
-        self.port = 587
+        # self.port = 587
 
     def send_html_email(self, subject, content, to_address):
 
