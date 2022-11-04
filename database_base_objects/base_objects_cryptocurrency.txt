@@ -301,7 +301,8 @@ Cryptocurrency.objects.create(
     name = "Basic Attention Token",
     coingecko_name = "basic-attention-token",
     symbol = "BAT",
-    exchange_rate = 0
+    exchange_rate = 0,
+    cryptoapis_type = "ADDRESS"
 )
 
 Cryptocurrency.objects.create(
@@ -311,5 +312,6 @@ Cryptocurrency.objects.create(
     name = "Basic Attention Token",
     coingecko_name = "basic-attention-token",
     symbol = "BAT",
-    exchange_rate = 0
+    exchange_rate = 0,
+    cryptoapis_type = "ADDRESS"
 )
