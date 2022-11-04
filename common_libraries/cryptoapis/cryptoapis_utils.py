@@ -66,7 +66,12 @@ class CryptoApisUtils:
             cryptoapis_client = CryptoApis(cryptocurrency_object.network_id.network_id)
 
             try:
-                new_subscription = cryptoapis_client.generate_coin_subscription(cryptocurrency_object.blockchain_id.blockchain_id, cryptocurrency_object.network_id.network_id, new_address.address)
+                if cryptocurrency_object.type == "ERC-20" or cryptocurrency_object.type == "TRC-20":
+                    new_subscription = cryptoapis_client.generate_token_subscription(self, cryptocurrency_object.blockchain_id.blockchain_id, cryptocurrency_object.network_id.network_id, new_address.address)
+                    
+                elif cryptocurrency_object.type == "COIN":
+                    new_subscription = cryptoapis_client.generate_coin_subscription(cryptocurrency_object.blockchain_id.blockchain_id, cryptocurrency_object.network_id.network_id, new_address.address)
+            
             except:
                 new_address.api_key = None
                 new_address.status = "AVAILABLE"

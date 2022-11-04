@@ -41,13 +41,14 @@ class TransactionUtils:
         if error is not None:
             return error
 
-        # IF WITHDRAWAL ADDRESS WAS SPECIFIED
-        error = cryptoapis_utils.withdraw_transaction_funds(transaction, cryptocurrency_object, receiving_amount)
-        if error is not None:
-            return error
-        else:
-            asset_object.amount -= receiving_amount
-            asset_object.save()
+        if cryptocurrency_object.type == "COIN":
+            # IF WITHDRAWAL ADDRESS WAS SPECIFIED
+            error = cryptoapis_utils.withdraw_transaction_funds(transaction, cryptocurrency_object, receiving_amount)
+            if error is not None:
+                return error
+            else:
+                asset_object.amount -= receiving_amount
+                asset_object.save()
 
         transaction.state = "COMPLETE"
         transaction.status = "COMPLETED"

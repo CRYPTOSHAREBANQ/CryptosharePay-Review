@@ -109,23 +109,23 @@ class CryptoApis:
         return request["data"]["item"]
 
 
-    # def generate_token_subscription(self, blockchain, network, address):
-    #     url = self.BASE +  f"/blockchain-events/{blockchain}/{network}/subscriptions/address-tokens-transactions-confirmed"
-    #     data = {
-    #             "context": "",
-    #             "data": {
-    #                 "item": {
-    #                     "address": address,
-    #                     "allowDuplicates": False,
-    #                     "callbackSecretKey": self.CALLBACK_SECRET_KEY,
-    #                     "callbackUrl": f"{self.CALLBACK_BASE_URL}/atm/ConfirmedTokenTransactions/",
-    #                     "receiveCallbackOn": self.RECEIVE_CALLBACK_ON
-    #                 }
-    #             }
-    #         }
-    #     request = requests.post(url, headers=self.HEADERS, json=data).json()
+    def generate_token_subscription(self, blockchain, network, address):
+        url = self.BASE +  f"/blockchain-events/{blockchain}/{network}/subscriptions/address-tokens-transactions-confirmed"
+        data = {
+                "context": "",
+                "data": {
+                    "item": {
+                        "address": address,
+                        "allowDuplicates": False,
+                        "callbackSecretKey": self.CALLBACK_SECRET_KEY,
+                        "callbackUrl": f"{self.CALLBACK_BASE_URL}/cryptoapis/subscriptions/ConfirmedTokenTransactions/",
+                        "receiveCallbackOn": self.RECEIVE_CALLBACK_ON
+                    }
+                }
+            }
+        request = requests.post(url, headers=self.HEADERS, json=data).json()
 
-    #     return request["data"]["item"]["referenceId"]
+        return request["data"]["item"]
     
     def generate_coins_transaction_from_wallet(self, blockchain, network, address, amount, data = ""):
         url = self.BASE + f"/wallet-as-a-service/wallets/{self.WALLET_ID}/{blockchain}/{network}/transaction-requests"
