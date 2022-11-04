@@ -14,6 +14,8 @@ from rest_framework.decorators import api_view
 from rest_framework.response  import Response
 from rest_framework import status
 
+from transactions.serializers import TransactionSerializer, TransactionsSerializer
+
 import json
 
 
@@ -106,3 +108,21 @@ class GetAPIKeyNoAccount(APIView):
         }
         
         return Response(response_object, status=200)
+
+class GetTransaction(APIView):
+    def get(self, request, transaction_id):
+        headers = request.headers
+
+        transaction = Transaction.objects.get(transaction_id = transaction_id)
+
+        serializer = TransactionSerializer(transaction)
+
+        response_object = {
+            "status": "SUCCESS",
+            "message": "Transaction retrieved successfully",
+            "data": {
+                "transaction": serializer.data
+            }
+        }
+
+        return Response(response_object, status = 200)
