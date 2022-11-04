@@ -292,3 +292,24 @@ Cryptocurrency.objects.create(
     symbol = "TRX",
     exchange_rate = 0
 )
+
+#CREATE BAT ERC-20
+Cryptocurrency.objects.create(
+    blockchain_id = Blockchain.objects.get(blockchain_id="ethereum"),
+    network_id = Network.objects.get(network_id="mainnet"),
+    type = "ERC-20",
+    name = "Basic Attention Token",
+    coingecko_name = "basic-attention-token",
+    symbol = "BAT",
+    exchange_rate = 0
+)
+
+Cryptocurrency.objects.create(
+    blockchain_id = Blockchain.objects.get(blockchain_id="ethereum"),
+    network_id = Network.objects.get(network_id="goerli"),
+    type = "ERC-20",
+    name = "Basic Attention Token",
+    coingecko_name = "basic-attention-token",
+    symbol = "BAT",
+    exchange_rate = 0
+)
