@@ -171,6 +171,9 @@ class CryptoApis:
         request = requests.post(url, headers=self.HEADERS, json=data).json()
 
         return request["data"]["item"]
+
+    def generate_token_transaction_from_address(self):
+        pass
         
                             
         

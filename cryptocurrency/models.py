@@ -23,6 +23,7 @@ class Cryptocurrency(models.Model):
     coingecko_name = models.CharField(max_length=50, null=True)
     symbol = models.CharField(max_length=10)
     exchange_rate = models.DecimalField(max_digits=20, decimal_places=8)
+    extra_data = models.CharField(max_length=50, null=True)
 
 class AddressSubscription(models.Model):
     subscription_id = models.CharField(max_length=36, primary_key=True)
