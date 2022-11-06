@@ -192,6 +192,26 @@ class CryptoApis:
         request = requests.post(url, headers=self.HEADERS, json=data).json()
 
         return request["data"]["item"]
+    
+    def generate_single_transaction_from_address_without_fee_priority(self, blockchain, network, sending_address, recipient_address, amount):
+        url = self.BASE + f"/wallet-as-a-service/wallets/{self.WALLET_ID}/{blockchain}/{network}/addresses/{sending_address}/feeless-transaction-requests"
+
+        data = {
+                "context": "",
+                "data": {
+                    "item": {
+                        "amount": amount,
+                        "callbackSecretKey": self.CALLBACK_SECRET_KEY,
+                        # "callbackUrl": f"{self.CALLBACK_BASE_URL}/cryptoapis/callbacks/ConfirmationsCoinTransactions",
+                        "note": "",
+                        "recipientAddress": recipient_address
+                    }
+                }
+            }
+        
+        request = requests.post(url, headers=self.HEADERS, json=data).json()
+
+        return request["data"]["item"]
         
                             
         

@@ -1,4 +1,5 @@
 # from atm_functions.models import Cryptocurrency, Address
+from crypt import crypt
 from cryptocurrency.models import Address, AddressSubscription, Cryptocurrency
 
 from django.utils import timezone
@@ -138,14 +139,23 @@ class CryptoApisUtils:
                     str(receiving_amount)
                 )
             elif transaction_cryptocurrency.cryptoapis_type == "ADDRESS":
-                transaction_response = cryptoapis_client.generate_coins_transaction_from_address(
-                    transaction_cryptocurrency.blockchain_id.blockchain_id, 
-                    transaction_cryptocurrency.network_id.network_id,
-                    transaction.address_id.address, 
-                    withdrawal_address, 
-                    str(receiving_amount)
-                )
 
+                if transaction_cryptocurrency.symbol == "TRX":
+                    transaction_response = cryptoapis_client.generate_single_transaction_from_address_without_fee_priority(
+                        transaction_cryptocurrency.blockchain_id.blockchain_id,
+                        transaction_cryptocurrency.network_id.network_id,
+                        transaction.address_id.address,
+                        withdrawal_address,
+                        str(receiving_amount)
+                    )
+                else:
+                    transaction_response = cryptoapis_client.generate_coins_transaction_from_address(
+                        transaction_cryptocurrency.blockchain_id.blockchain_id, 
+                        transaction_cryptocurrency.network_id.network_id,
+                        transaction.address_id.address, 
+                        withdrawal_address, 
+                        str(receiving_amount)
+                    )
         except:
             error = "Error generating withdrawal"
             return error
@@ -169,17 +179,7 @@ class CryptoApisUtils:
             error = "Error generating token withdrawal"
             return error
 
-        return None
-
-
-
-
-
-
-        pass
-
-
-                
+        return None             
 
 
 

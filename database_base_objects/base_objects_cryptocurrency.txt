@@ -1,3 +1,22 @@
+querystring_options ={
+                        "ETH": "ethereum",
+                        "LTC": "litecoin",
+                        "BCH": "bitcoin-cash",
+                        "DASH": "dash",
+                        "ZEC": "zcash",
+                        "USDC": "usd-coin",
+                        "USDT": "tether",
+                        "WBTC": "bitcoin",
+                        "BTC": "bitcoin",
+                        "XRP": "ripple",
+                        "DOGE": "dogecoin",
+                        "BAT": "basic-attention-token",
+                        "LINK": "chainlink",
+                        "SHIB": "shiba-inu",
+                        "MKR": "maker",
+                        "XAUT": "tether-gold",
+                        }
+
 
 from cryptocurrency.models import Cryptocurrency
 
@@ -305,14 +324,98 @@ Cryptocurrency.objects.create(
     cryptoapis_type = "ADDRESS"
 )
 
+#CREATE USDC ERC-20
+
+Cryptocurrency.objects.create(
+    blockchain_id = Blockchain.objects.get(blockchain_id="ethereum"),
+    network_id = Network.objects.get(network_id="mainnet"),
+    type = "ERC-20",
+    name = "USD Coin",
+    coingecko_name = "usd-coin",
+    symbol = "USDC",
+    exchange_rate = 1,
+    cryptoapis_type = "ADDRESS",
+    extra_data = "0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48"
+)
+
 Cryptocurrency.objects.create(
     blockchain_id = Blockchain.objects.get(blockchain_id="ethereum"),
     network_id = Network.objects.get(network_id="goerli"),
     type = "ERC-20",
-    name = "Basic Attention Token",
-    coingecko_name = "basic-attention-token",
-    symbol = "BAT",
+    name = "USD Coin",
+    coingecko_name = "usd-coin",
+    symbol = "USDC",
+    exchange_rate = 1,
+    cryptoapis_type = "ADDRESS",
+    extra_data = "0x07865c6e87b9f70255377e024ace6630c1eaa37f"
+)
+
+#CREATE LINK ERC-20
+
+Cryptocurrency.objects.create(
+    blockchain_id = Blockchain.objects.get(blockchain_id="ethereum"),
+    network_id = Network.objects.get(network_id="mainnet"),
+    type = "ERC-20",
+    name = "Chainlink",
+    coingecko_name = "chainlink",
+    symbol = "LINK",
     exchange_rate = 0,
-    cryptoapis_type = "ADDRESS"
-    extra_data = "0x0d8775f648430679a709e98d2b0cb6250d2887ef"
+    cryptoapis_type = "ADDRESS",
+    extra_data = "0x514910771af9ca656af840dff83e8264ecf986ca"
+)
+
+
+
+#CREATE SHIB ERC-20
+Cryptocurrency.objects.create(
+    blockchain_id = Blockchain.objects.get(blockchain_id="ethereum"),
+    network_id = Network.objects.get(network_id="mainnet"),
+    type = "ERC-20",
+    name = "Shiba Inu",
+    coingecko_name = "shiba-inu",
+    symbol = "SHIB",
+    exchange_rate = 0,
+    cryptoapis_type = "ADDRESS",
+    extra_data = "0x95ad61b0a150d79219dcf64e1e6cc01f0b64c4ce"
+)
+
+
+#CREATE MKR ERC-20
+Cryptocurrency.objects.create(
+    blockchain_id = Blockchain.objects.get(blockchain_id="ethereum"),
+    network_id = Network.objects.get(network_id="mainnet"),
+    type = "ERC-20",
+    name = "Maker",
+    coingecko_name = "maker",
+    symbol = "MKR",
+    exchange_rate = 0,
+    cryptoapis_type = "ADDRESS",
+    extra_data = "0x9f8f72aa9304c8b593d555f12ef6589cc3a579a2"
+)
+
+
+#CREATE WBTC ERC-20
+Cryptocurrency.objects.create(
+    blockchain_id = Blockchain.objects.get(blockchain_id="ethereum"),
+    network_id = Network.objects.get(network_id="mainnet"),
+    type = "ERC-20",
+    name = "Wrapped Bitcoin",
+    coingecko_name = "bitcoin",
+    symbol = "WBTC",
+    exchange_rate = 0,
+    cryptoapis_type = "ADDRESS",
+    extra_data = "0x2260fac5e5542a773aa44fbcfedf7c193bc2c599"
+)
+
+#CREATE USDT ERC-20
+Cryptocurrency.objects.create(
+    blockchain_id = Blockchain.objects.get(blockchain_id="ethereum"),
+    network_id = Network.objects.get(network_id="mainnet"),
+    type = "ERC-20",
+    name = "Tether",
+    coingecko_name = "tether",
+    symbol = "USDT",
+    exchange_rate = 1,
+    cryptoapis_type = "ADDRESS",
+    extra_data = "0xdac17f958d2ee523a2206206994597c13d831ec7"
 )
