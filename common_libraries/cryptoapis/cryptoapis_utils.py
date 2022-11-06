@@ -126,32 +126,59 @@ class CryptoApisUtils:
         
         return None
     
-    def withdraw_transaction_funds(self, main_transaction, transaction_cryptocurrency, receiving_amount):
-        if main_transaction.withdrawal_address:
-            cryptoapis_client = CryptoApis(network = transaction_cryptocurrency.network_id.network_id)
+    def withdraw_coin_transaction_funds(self, transaction, transaction_cryptocurrency, withdrawal_address, receiving_amount):
+        cryptoapis_client = CryptoApis(network = transaction_cryptocurrency.network_id.network_id)
 
-            try:
-                if transaction_cryptocurrency.cryptoapis_type == "WALLET":
-                    transaction_response = cryptoapis_client.generate_coins_transaction_from_wallet(
-                        transaction_cryptocurrency.blockchain_id.blockchain_id,
-                        transaction_cryptocurrency.network_id.network_id,
-                        main_transaction.withdrawal_address,
-                        main_transaction.cryptocurrency_amount
-                    )
-                elif transaction_cryptocurrency.cryptoapis_type == "ADDRESS":
-                    transaction_response = cryptoapis_client.generate_coins_transaction_from_address(
-                        transaction_cryptocurrency.blockchain_id.blockchain_id, 
-                        transaction_cryptocurrency.network_id.network_id,
-                        transaction_cryptocurrency.address_id.address, 
-                        main_transaction.withdrawal_address, 
-                        receiving_amount
-                    )
+        try:
+            if transaction_cryptocurrency.cryptoapis_type == "WALLET":
+                transaction_response = cryptoapis_client.generate_coins_transaction_from_wallet(
+                    transaction_cryptocurrency.blockchain_id.blockchain_id,
+                    transaction_cryptocurrency.network_id.network_id,
+                    withdrawal_address,
+                    str(receiving_amount)
+                )
+            elif transaction_cryptocurrency.cryptoapis_type == "ADDRESS":
+                transaction_response = cryptoapis_client.generate_coins_transaction_from_address(
+                    transaction_cryptocurrency.blockchain_id.blockchain_id, 
+                    transaction_cryptocurrency.network_id.network_id,
+                    transaction.address_id.address, 
+                    withdrawal_address, 
+                    str(receiving_amount)
+                )
 
-            except:
-                error = "Error generating withdrawal"
-                return error
+        except:
+            error = "Error generating withdrawal"
+            return error
         
         return None
+
+    def withdraw_token_transaction_funds(self, transaction, transaction_cryptocurrency, withdrawal_address, receiving_amount):
+        cryptoapis_client = CryptoApis(network = transaction_cryptocurrency.network_id.network_id)
+
+        try:
+            if transaction_cryptocurrency.type == "ERC-20":
+                transaction_response = cryptoapis_client.generate_token_transaction_from_address(
+                    transaction_cryptocurrency.blockchain_id.blockchain_id,
+                    transaction_cryptocurrency.network_id.network_id,
+                    transaction.address_id.address,
+                    transaction_cryptocurrency.extra_data,
+                    withdrawal_address,
+                    str(receiving_amount)
+                )
+        except:
+            error = "Error generating token withdrawal"
+            return error
+
+        return None
+
+
+
+
+
+
+        pass
+
+
                 
 
 
