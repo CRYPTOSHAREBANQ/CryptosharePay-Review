@@ -226,25 +226,17 @@ class CancelTransaction(APIView):
         
         transaction = Transaction.objects.get(api_key = api_key_object, transaction_id = transaction_id)
 
-        transaction_address_object = transaction.address_id
-
-        cryptoapis_utils = CryptoApisUtils()
-        error = cryptoapis_utils.release_address(transaction_address_object)
+        transaction_utils = TransactionUtils()
+        error = transaction_utils.cancel_transaction(transaction)
         if error is not None:
             response_object = {
                 "status": "ERROR",
                 "message": error
             }
-
-            #MISSING TO LOG ERROR
             return Response(response_object, status=503)
 
-        transaction.state = "CANCELLED"
-        transaction.status = "CANCELLED"
-        transaction.save()
-
         email_client = EmailClient()
-        email_client.cancel_transaction(transaction)
+        email_client.cancel_transaction(transaction, str(transaction.api_key.user_id.email))
 
         response_object = {
             "status": "SUCCESS",

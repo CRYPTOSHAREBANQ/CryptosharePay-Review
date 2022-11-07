@@ -11,4 +11,6 @@ urlpatterns = [
     path("api-keys/api-key-no-account/<str:type>/", views.GetAPIKeyNoAccount.as_view(), name="ApiKeyNoAccount"),
 
     path("cryptocurrency/automated/update-exchange-rates/", views.UpdateExchangeRates.as_view(), name="UpdateExchangeRates"),
+
+    path("transactions/automated/cancel-expired-transactions/", views.CancelExpiredTransactions.as_view(), name="CancelExpiredTransactions"),
 ]

@@ -12,7 +12,7 @@ from datetime import datetime, timedelta
 
 class Transaction(models.Model):
     def set_expiration_datetime():
-        return timezone.now()+timedelta(days=2)
+        return timezone.now()+timedelta(days=1)
 
     transaction_id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     api_key = models.ForeignKey(ApiKey, on_delete=models.CASCADE)

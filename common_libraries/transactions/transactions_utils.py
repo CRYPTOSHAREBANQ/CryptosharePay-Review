@@ -59,10 +59,41 @@ class TransactionUtils:
 
         transaction.state = "COMPLETE"
         transaction.status = "COMPLETED"
+        transaction.expiration_datetime = None
         transaction.save()
 
         # SEND EMAIL
         email_client = EmailClient()
-        email_client.complete_transaction(transaction)
+        email_client.complete_transaction(transaction, str(transaction.api_key.user_id.email))
+
+        return None
+
+    def cancel_transaction(self, transaction):
+        transaction_address_object = transaction.address_id
+
+        cryptoapis_utils = CryptoApisUtils()
+        error = cryptoapis_utils.release_address(transaction_address_object)
+        if error is not None:
+            return error
+
+        transaction.state = "CANCELLED"
+        transaction.status = "CANCELLED"
+        transaction.expiration_datetime = None
+        transaction.save()
+
+        return None
+
+    def expired_transaction(self, transaction):
+        transaction_address_object = transaction.address_id
+
+        cryptoapis_utils = CryptoApisUtils()
+        error = cryptoapis_utils.release_address(transaction_address_object)
+        if error is not None:
+            return error
+
+        transaction.state = "CANCELED"
+        transaction.status = "EXPIRED"
+        transaction.expiration_datetime = None
+        transaction.save()
 
         return None

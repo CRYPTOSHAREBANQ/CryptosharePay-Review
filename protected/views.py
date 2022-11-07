@@ -1,6 +1,8 @@
 from django.http import HttpResponse
 from django.shortcuts import render
 from django.contrib.auth.models import User
+from django.utils import timezone
+
 
 from transactions.models import Transaction, TransactionBook ,TransactionIns
 from cryptocurrency.models import Address, Blockchain, Cryptocurrency, Network
@@ -15,6 +17,8 @@ from rest_framework.response  import Response
 from rest_framework import status
 
 from transactions.serializers import TransactionSerializer, TransactionsSerializer
+from common_libraries.emails.email_client import EmailClient
+from common_libraries.transactions.transactions_utils import TransactionUtils
 
 import json
 import requests
@@ -156,4 +160,26 @@ class UpdateExchangeRates(APIView):
                 print(f"{coingecko_id} not found in coingecko")
         
 
+        return Response(status = 200)
+
+        # to_delete_addresses = Address.objects.filter(expiration_datetime__date__lte=timezone.now().date())
+class CancelExpiredTransactions(APIView):
+    def get(self, request):
+
+        to_cancel_transactions = Transaction.objects.filter(expiration_datetime__lte=timezone.now(), status = "PENDING")
+
+        for transaction in to_cancel_transactions:
+
+            transaction_utils = TransactionUtils()
+            error = transaction_utils.expired_transaction(transaction)
+            if error is not None:
+                response_object = {
+                    "status": "ERROR",
+                    "message": error
+                }
+                return Response(response_object, status=503)
+
+            email_client = EmailClient()
+            email_client.cancel_expired_transaction(transaction, str(transaction.api_key.user_id.email))
+        
         return Response(status = 200)

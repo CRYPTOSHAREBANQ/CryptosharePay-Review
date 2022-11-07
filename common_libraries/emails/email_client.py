@@ -47,7 +47,7 @@ class EmailClient:
         return
 
     
-    def complete_transaction(self, transaction):
+    def complete_transaction(self, transaction, email):
 
         subject = f"Transaction {transaction.transaction_id} completed"
 
@@ -76,9 +76,9 @@ class EmailClient:
         </html>
         """
 
-        self.send_html_email(subject, content, str(transaction.api_key.user_id.email))
+        self.send_html_email(subject, content, email)
 
-    def cancel_transaction(self, transaction):
+    def cancel_transaction(self, transaction, email):
         subject = f"Transaction {transaction.transaction_id} cancelled"
 
         content = f"""
@@ -106,7 +106,7 @@ class EmailClient:
         </html>
         """
 
-        self.send_html_email(subject, content, str(transaction.api_key.user_id.email))
+        self.send_html_email(subject, content, email)
 
     def request_customer_id(self, security_pin, email):
         subject = f"Customer ID request"
@@ -133,6 +133,31 @@ class EmailClient:
 
         self.send_html_email(subject, content, email)
 
+    def cancel_expired_transaction(self, transaction, email):
+        subject = f"Transaction {transaction.transaction_id} cancelled"
 
+        content = f"""
+        <html>
+            <body>
+                <h3> Hi there! </h3>
 
+                <p> You are receiving this email because your transaction {transaction.transaction_id} has expired therefore it has been cancelled</p>
 
+                <p> Details of the transaction as follows: </p>
+
+                <p> Transaction ID: {transaction.transaction_id} </p>
+
+                <p> Transaction description: {transaction.description} </p>
+
+                <p> Transaction type: {transaction.type} </p>
+                
+                <p>
+                    Please remember transactions are only valid for 24 hours, after which they expire.
+                </p>
+
+                <p> If you still wish to complete this transaction, please create a new one via our API.</p>
+            </body>
+        </html>
+        """
+
+        self.send_html_email(subject, content, email)
