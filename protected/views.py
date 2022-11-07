@@ -17,6 +17,7 @@ from rest_framework import status
 from transactions.serializers import TransactionSerializer, TransactionsSerializer
 
 import json
+import requests
 
 
 class EmailHasAccount(APIView):
@@ -126,3 +127,33 @@ class GetTransaction(APIView):
         }
 
         return Response(response_object, status = 200)
+
+class UpdateExchangeRates(APIView):
+    def get(self, request):
+
+        ids = []
+
+        currencies = Cryptocurrency.objects.all()
+
+        for currency in currencies:
+            ids.append(currency.coingecko_name)
+
+        url = f"https://api.coingecko.com/api/v3/simple/price?ids={','.join(ids)}&vs_currencies=usd&include_market_cap=false&include_24hr_vol=false&include_24hr_change=false&include_last_updated_at=false"
+        # ids = 'ethereum,litecoin,bitcoin-cash,dash,zcash,usd-coin,tether,bitcoin,bitcoin,ripple,dogecoin'
+        # url = f"https://api.coingecko.com/api/v3/simple/price?ids={ids}&vs_currencies=usd&include_market_cap=false&include_24hr_vol=false&include_24hr_change=false&include_last_updated_at=false"
+
+        response = requests.get(url).json()
+
+        for currency in currencies:
+            
+            try:
+                coingecko_id = currency.coingecko_name
+
+                exchange_rate = response[coingecko_id]["usd"]
+                currency.exchange_rate = exchange_rate
+                currency.save()
+            except:
+                print(f"{coingecko_id} not found in coingecko")
+        
+
+        return Response(status = 200)

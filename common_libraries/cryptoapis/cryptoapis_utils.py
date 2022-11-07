@@ -1,5 +1,4 @@
 # from atm_functions.models import Cryptocurrency, Address
-from crypt import crypt
 from cryptocurrency.models import Address, AddressSubscription, Cryptocurrency
 
 from django.utils import timezone

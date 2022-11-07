@@ -8,5 +8,7 @@ urlpatterns = [
 
     path("transactions/payments/<str:transaction_id>/", views.GetTransaction.as_view(), name="GetTransaction"),
 
-    path("api-keys/api-key-no-account/<str:type>", views.GetAPIKeyNoAccount.as_view(), name="ApiKeyNoAccount"),
+    path("api-keys/api-key-no-account/<str:type>/", views.GetAPIKeyNoAccount.as_view(), name="ApiKeyNoAccount"),
+
+    path("cryptocurrency/automated/update-exchange-rates/", views.UpdateExchangeRates.as_view(), name="UpdateExchangeRates"),
 ]
