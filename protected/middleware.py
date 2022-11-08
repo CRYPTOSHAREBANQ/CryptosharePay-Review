@@ -53,7 +53,7 @@ class ProtectedVerification:
         ### DO NOT REMOVE ###
         ### DO NOT REMOVE ###
 
-def process_view(self, request, view_func, view_args, view_kwargs):
+    def process_view(self, request, view_func, view_args, view_kwargs):
         headers = request.META
 
         path_info = headers.get("PATH_INFO", None)
