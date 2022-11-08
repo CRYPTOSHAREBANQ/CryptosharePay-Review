@@ -74,10 +74,7 @@ class ProtectedVerification:
                             "message": "Invalid transaction_id"
                             }), status=409)
 
-                    api_key = headers.get("HTTP_X_API_KEY", None)
-                    api_key_object = ApiKey.objects.get(api_key = api_key)
-
-                    if not transaction_id or not Transaction.objects.filter(api_key = api_key_object, transaction_id = transaction_id).exists():
+                    if not transaction_id or not Transaction.objects.filter(transaction_id = transaction_id).exists():
                         return HttpResponse(
                             str({
                             "status": "ERROR",
