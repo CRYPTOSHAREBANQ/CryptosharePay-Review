@@ -127,7 +127,7 @@ class CreateTransaction(APIView):
                 "deposit_crypto_amount": cryptocurrency_amount,
                 "expiration_timestamp": new_transaction.expiration_datetime.timestamp(),
                 "creation_timestamp": new_transaction.creation_datetime.timestamp(),
-                "payment_url": "NOT_AVAILABLE"
+                "payment_url": f"https://cryptosharepay.com/transactions/payments/{new_transaction.transaction_id}"
             }
         }
 
