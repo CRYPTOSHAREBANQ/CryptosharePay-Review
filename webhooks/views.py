@@ -104,7 +104,6 @@ def cryptoapis_confirmed_coin_transactions(request):
                 }
                 return Response(response_object, status=500)
 
-            # MISSING TO SEND THE CONFIRMATION EMAIL TO THE USER
     elif response_data["direction"] == "outgoing":
         new_transaction_in = TransactionOuts.objects.create(
             external_transaction_id = response_data["transactionId"],

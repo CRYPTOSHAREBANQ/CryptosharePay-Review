@@ -17,4 +17,7 @@ class Account(models.Model):
     first_name = models.CharField(max_length=30)
     last_name = models.CharField(max_length=30)
     country_id = models.ForeignKey(Country, on_delete=models.CASCADE)
+    cryptosharecredit_linked = models.BooleanField(default=False)
+    cryptosharecredit_email = models.EmailField(max_length = 254, null=True)
+    cryptosharecredit_username = models.CharField(max_length=30, null=True)
     security_pin = models.CharField(max_length=6, null=True)

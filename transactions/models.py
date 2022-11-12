@@ -18,6 +18,16 @@ class AutomatedTransaction(models.Model):
     type = models.CharField(max_length=12)
     frecuency = models.CharField(max_length=7)
     scheduled_day = models.CharField(max_length=12)
+
+    funds_source_type = models.CharField(max_length=30, default="DEPOSIT_ADDRESS")
+    funds_source_address = models.CharField(max_length=100, null=True)
+    funds_source_address_object = models.ForeignKey(Address, on_delete=models.PROTECT, null=True)
+
+    digital_currency_id = models.ForeignKey(DigitalCurrency, on_delete=models.PROTECT, null=True)
+    digital_currency_amount = models.DecimalField(max_digits=14, decimal_places=2, null=True)
+    cryptocurrency_id = models.ForeignKey(Cryptocurrency, on_delete=models.SET_NULL, null=True)
+    
+
     creation_datetime = models.DateTimeField(auto_now_add=True)
     last_event_datetime = models.DateTimeField(null = True)
     next_event_datetime = models.DateTimeField(null = True)

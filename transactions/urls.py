@@ -11,7 +11,7 @@ urlpatterns = [
     ### <----- PAYMENTS -----> ###
     ### <----- PAYMENTS -----> ###
 
-    path("payments/create/", payments_views.CreateTransaction.as_view(), name="CreateTransaction"),
+    path("payments/create/", payments_views.CreateTransactionDigitalToCrypto.as_view(), name="CreateTransaction"),
     path("payments/create/digital-to-crypto/", payments_views.CreateTransactionDigitalToCrypto.as_view(), name="CreateTransactionDigitalToCrypto"),
     # path("payments/create/crypto/", payments_views.CreateTransaction.as_view(), name="CreateTransaction"),
     path("payments/cancel/", payments_views.CancelTransaction.as_view(), name="CancelTransaction"),
