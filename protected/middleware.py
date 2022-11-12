@@ -33,6 +33,15 @@ class ProtectedVerification:
                 pass
 
             elif "api-keys/api-key-no-account/" in path_info:
+                email = headers.get("HTTP_X_EMAIL", None)
+
+                if not email:
+                    return HttpResponse(
+                        str({
+                        "status": "ERROR",
+                        "message": "Missing email header"
+                        }), status=409)
+
                 pass
             
             elif "transactions/payments/" in path_info:
