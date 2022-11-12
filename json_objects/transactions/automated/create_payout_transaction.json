@@ -1,0 +1,42 @@
+// CREATE TRANSACTION OBJECTS
+
+// REQUEST OBJECT
+{
+    "headers": {
+        "Content-Type": "application/json",
+        "X-API-Key": "YOUR-API-KEY",
+    },
+    "data": {
+        "description": "YOUR-TRANSACTION-DESCRIPTION",
+        "frecuency": "YOUR-TRANSACTION-FRECUENCY",
+        "scheduled_day": "YOUR-TRANSACTION-SCHEDULED-DAY",
+        "transaction-data": {
+            
+        },
+
+        "digital_currency_code": "DIGITAL-CURRENCY-CODE",
+        "digital_currency_amount": "DIGITAL-CURRENCY-AMOUNT",
+        "cryptocurrency_code": "CRYPTOCURRENCY-CODE",
+        "cryptocurrency_blockchain_id": "CRYPTOCURRENCY-BLOCKCHAIN-ID",
+        "withdrawal_address": "WITHDRAWAL-ADDRESS", //MANDATORY FOR ETH AND TRX BLOCKCHAINS, OPTIONAL FOR OTHERS.
+        "customer_email": "CUSTOMER-EMAIL", //OPTIONAL
+        "customer_phone": "CUSTOMER-PHONE", //OPTIONAL
+    }
+}
+
+// RESPONSE OBJECT
+
+{
+    "status": "SUCCESS",
+    "message": "Transaction created successfully",
+    "data": {
+        "transaction_id": "YOUR-TRANSACTION-ID",
+        "cryptocurrency_code": "CRYPTOCURRENCY-CODE",
+        "cryptocurrency_amount": "CRYPTOCURRENCY-AMOUNT",
+        "deposit_crypto_address": "DEPOSIT-CRYPTO-ADDRESS",
+        "deposit_crypto_amount": "DEPOSIT-CRYPTO-AMOUNT",
+        "expiration_timestamp": "DEPOSIT-EXPIRATION-DATE",
+        "creation_timestamp": "CREATION-TIMESTAMP",
+        "payment_url": "PAYMENT-URL",
+    }
+}

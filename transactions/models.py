@@ -10,6 +10,18 @@ from datetime import datetime, timedelta
 # Create your models here.
 
 
+class AutomatedTransaction(models.Model):
+    transaction_id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    api_key = models.ForeignKey(ApiKey, on_delete=models.CASCADE)
+    status = models.CharField(max_length=15)
+    description = models.CharField(max_length=100, null=True)
+    type = models.CharField(max_length=12)
+    frecuency = models.CharField(max_length=7)
+    scheduled_day = models.CharField(max_length=12)
+    creation_datetime = models.DateTimeField(auto_now_add=True)
+    last_event_datetime = models.DateTimeField(null = True)
+    next_event_datetime = models.DateTimeField(null = True)
+
 class Transaction(models.Model):
     def set_expiration_datetime():
         return timezone.now()+timedelta(days=1)
