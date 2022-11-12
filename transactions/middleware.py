@@ -98,7 +98,7 @@ class TransactionVerification:
                         network_object = Network.objects.get(network_id = CRYPTOCURRENCY_NETWORKS[api_key_object.type][cryptocurrency_code])
                         cryptoapis_client = CryptoApis(network = network_object.network_id)
 
-                        if not cryptoapis_client.validate_address(cryptocurrency_blockchain_id, network_object.network_id, withdrawal_address):
+                        if not cryptoapis_client.is_valid_address(cryptocurrency_blockchain_id, network_object.network_id, withdrawal_address):
                             return HttpResponse(
                                 str({
                                 "status": "ERROR",
@@ -224,7 +224,7 @@ class TransactionVerification:
                         network_object = Network.objects.get(network_id = CRYPTOCURRENCY_NETWORKS[api_key_object.type][cryptocurrency_code])
                         cryptoapis_client = CryptoApis(network = network_object.network_id)
 
-                        if not cryptoapis_client.validate_address(cryptocurrency_blockchain_id, network_object.network_id, withdrawal_address):
+                        if not cryptoapis_client.is_valid_address(cryptocurrency_blockchain_id, network_object.network_id, withdrawal_address):
                             return HttpResponse(
                                 str({
                                 "status": "ERROR",
