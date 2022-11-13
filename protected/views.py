@@ -206,7 +206,7 @@ class ExecuteAutomatedTransactions(APIView):
     """
     Cron job to execute automated transactions
 
-    Frecuency: Every day at 00:01
+    Frecuency: Every day at 00:02
     """
     def get(self, request):
         
@@ -238,6 +238,7 @@ class ExecuteAutomatedTransactions(APIView):
                 transaction_utils = TransactionUtils()
                 error = transaction_utils.create_transaction_withdrawal(transaction.api_key, transaction.cryptocurrency_id, transaction.receiver_address, cryptocurrency_amount, funds_source_address)
                 if error is not None:
+                    print(f"DEACTIVATED AUTOMATED TRANSACTION {transaction.transaction_id}")
                     transaction.status = "DEACTIVATED"
                     transaction.save()
                 else:
