@@ -15,7 +15,7 @@ class AutomatedTransaction(models.Model):
     api_key = models.ForeignKey(ApiKey, on_delete=models.CASCADE)
     status = models.CharField(max_length=15)
     description = models.CharField(max_length=100, null=True)
-    type = models.CharField(max_length=12)
+    type = models.CharField(max_length=30)
     frecuency = models.CharField(max_length=7)
     scheduled_day = models.CharField(max_length=12)
 

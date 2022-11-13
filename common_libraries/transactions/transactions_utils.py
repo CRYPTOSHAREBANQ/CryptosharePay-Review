@@ -101,3 +101,24 @@ class TransactionUtils:
         transaction.save()
 
         return None
+    
+    def cancel_automated_transaction(self, transaction):
+
+        if transaction.funds_source_type == "DEPOSIT_ADDRESS":
+            transaction_static_address_object = transaction.funds_source_address_object
+            transaction_address_object = transaction_static_address_object.address_id
+
+            # cryptoapis_utils = CryptoApisUtils()
+            # error = cryptoapis_utils.release_address(transaction_address_object)
+            # if error is not None:
+            #     return error
+            transaction.funds_source_address = transaction.funds_source_address_object.address_id.address
+            transaction.funds_source_address_object = None
+            transaction.save()
+            
+            transaction_static_address_object.delete()
+
+        transaction.status = "CANCELLED"
+        transaction.save()
+
+        return None

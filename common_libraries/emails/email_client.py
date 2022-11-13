@@ -108,6 +108,33 @@ class EmailClient:
 
         self.send_html_email(subject, content, email)
 
+    def cancel_automated_transaction(self, transaction, email):
+        subject = f"Transaction {transaction.transaction_id} cancelled"
+
+        content = f"""
+        <html>
+            <body>
+                <h3> Hi there! </h3>
+
+                <p> You are receiving this email because a automated transaction has been <b>cancelled.</b> </p>
+
+                <p> Details of the transaction as follows: </p>
+
+                <p> Transaction ID: {transaction.transaction_id} </p>
+
+                <p> Transaction description: {transaction.description} </p>
+
+                <p> Transaction type: {transaction.type} </p>
+                
+                <p>
+                    For further information, please contact support.
+                </p>
+            </body>
+        </html>
+        """
+
+        self.send_html_email(subject, content, email)
+
     def request_customer_id(self, security_pin, email):
         subject = f"Customer ID request"
 
