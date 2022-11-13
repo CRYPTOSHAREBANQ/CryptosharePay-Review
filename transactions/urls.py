@@ -27,8 +27,8 @@ urlpatterns = [
 
     ### <----- AUTOMATED -----> ###
     ### <----- AUTOMATED -----> ###
-
+    path("automated/payout-transactions/create/digital-to-crypto/", automated_views.CreateAutomatedPayoutDigitalToCrypto.as_view(), name="CreateAutomatedPayoutDigitalToCrypto"),
+    # path("automated/cryptosharecredit/payout-transactions/create/digital-to-crypto/", automated_views.CreateAutomatedPayoutDigitalToCrypto.as_view(), name="CreateAutomatedPayoutDigitalToCrypto"),
     # path("automated/payout-transactions/create/crypto/", )
-    # path("automated/payout-transactions/create/digital-to-crypto/", )
 
 ]

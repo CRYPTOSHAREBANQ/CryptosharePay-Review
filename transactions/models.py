@@ -2,7 +2,7 @@ from django.db import models
 
 import uuid
 from api_keys.models import ApiKey
-from cryptocurrency.models import Cryptocurrency, Address
+from cryptocurrency.models import Cryptocurrency, Address, StaticAddress
 from digital_currency.models import DigitalCurrency
 
 from django.utils import timezone
@@ -21,12 +21,16 @@ class AutomatedTransaction(models.Model):
 
     funds_source_type = models.CharField(max_length=30, default="DEPOSIT_ADDRESS")
     funds_source_address = models.CharField(max_length=100, null=True)
-    funds_source_address_object = models.ForeignKey(Address, on_delete=models.PROTECT, null=True)
+    funds_source_address_object = models.ForeignKey(StaticAddress, on_delete=models.PROTECT, null=True)
 
     digital_currency_id = models.ForeignKey(DigitalCurrency, on_delete=models.PROTECT, null=True)
     digital_currency_amount = models.DecimalField(max_digits=14, decimal_places=2, null=True)
     cryptocurrency_id = models.ForeignKey(Cryptocurrency, on_delete=models.SET_NULL, null=True)
+    cryptocurrency_id_amount = models.DecimalField(max_digits=14, decimal_places=2, null=True)
     
+    receiver_address = models.CharField(max_length=100, null=True)
+    client_email = models.EmailField(max_length = 254, null=True)
+    client_phone = models.CharField(max_length=20, null=True)
 
     creation_datetime = models.DateTimeField(auto_now_add=True)
     last_event_datetime = models.DateTimeField(null = True)

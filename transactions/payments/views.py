@@ -32,8 +32,6 @@ class CreateTransactionDigitalToCrypto(APIView):
         data = request.data["data"]
         headers = request.headers
 
-        #MISSING TO VERIFY ALL THIS INPUTS INTO MIDDLEWARE
-
         api_key = headers.get("X-API-Key", None)
 
         description = data["description"]

@@ -40,4 +40,10 @@ class Address(models.Model):
     cryptocurrency_id = models.ForeignKey(Cryptocurrency, on_delete=models.SET_NULL, null=True)
     subscription_id = models.ForeignKey(AddressSubscription, on_delete=models.SET_NULL, null=True)
     status = models.CharField(max_length=15)
-    
+
+class StaticAddress(models.Model):
+    static_address_id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    address_id = models.ForeignKey(Address, on_delete=models.PROTECT)
+    type = models.CharField(max_length=10)
+    status = models.CharField(max_length=15)
+

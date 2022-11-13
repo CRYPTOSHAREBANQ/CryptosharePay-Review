@@ -5,12 +5,14 @@ from django.views.decorators.csrf import csrf_exempt
 from django.utils.decorators import method_decorator
 from django.http import HttpRequest
 from decimal import Decimal
+import datetime
+from dateutil.relativedelta import relativedelta
 
 from accounts.models import Account, Country
 from businesses.models import Business
 from api_keys.models import ApiKey
-from cryptocurrency.models import Cryptocurrency, Blockchain, Network
-from transactions.models import Transaction, TransactionBook, TransactionIns, TransactionOuts
+from cryptocurrency.models import Cryptocurrency, Blockchain, Network, StaticAddress
+from transactions.models import Transaction, TransactionBook, TransactionIns, TransactionOuts, AutomatedTransaction
 from digital_currency.models import DigitalCurrency
 
 from transactions.serializers import TransactionSerializer, TransactionsSerializer
@@ -26,6 +28,9 @@ from common_libraries.object_responses.object_responses import GenericCORSRespon
 from common_libraries.constants.cryptocurrency import CRYPTOCURRENCY_NETWORKS
 from common_libraries.transactions.transactions_utils import TransactionUtils
 from common_libraries.emails.email_client import EmailClient
+from common_libraries.general.general_utils import date_for_weekday
+from common_libraries.constants.automated import AVAILABLE_FRECUENCIES, AVAILABLE_SHEDULED_DAYS
+from common_libraries.general.general_objects import CustomHttpRequest
 
 
 class CreateAutomatedPayoutDigitalToCrypto(APIView):
@@ -33,28 +38,62 @@ class CreateAutomatedPayoutDigitalToCrypto(APIView):
         data = request.data["data"]
         headers = request.headers
 
+
         #MISSING TO VERIFY ALL THIS INPUTS INTO MIDDLEWARE
 
         api_key = headers.get("X-API-Key", None)
 
         description = data["description"]
+        frecuency = data["frecuency"]
+        scheduled_day = data["scheduled_day"]
+
         digital_currency_code = data["digital_currency_code"]
         digital_currency_amount = data["digital_currency_amount"]
         cryptocurrency_code = data["cryptocurrency_code"]
         cryptocurrency_blockchain_id = data["cryptocurrency_blockchain_id"]
-        withdrawal_address = data.get("withdrawal_address", None)
+
+        funds_source_type = data.get("funds_source_type", "DEPOSIT_ADDRESS")
+
+        receiver_address = data["receiver_address"]
+
         customer_email = data.get("customer_email", None)
         customer_phone = data.get("customer_phone", None)
 
+
+        if funds_source_type != "DEPOSIT_ADDRESS":
+            return Response(
+                {
+                    "status": "ERROR",
+                    "error": "This funds source type is currently not supported yet"
+                }, status = 409)
+
+        
+        if funds_source_type == "DEPOSIT_ADDRESS":
+            # GENERATE ADDRESS
+            cryptoapis_utils = CryptoApisUtils()
+            address_object, error = cryptoapis_utils.generate_address(cryptocurrency_object, api_key_object)
+            if error is not None:
+                return GenericCORSResponse(
+                    response = {
+                        "status": "ERROR",
+                        "message": error
+                        },
+                    status = 400).get_response()
+
+            funds_source_address_object = StaticAddress.objects.create(
+                address_id = address_object,
+                type = "DEPOSIT_ADDRESS",
+                status = "ACTIVE"
+            )
+
         """
-            STEPS TO CREATE A TRANSACTION
+            STEPS TO CREATE A AUTOMATED PAYOUT TRANSACTION
 
             GET API KEY OBJECT
             GET DIGITAL CURRENCY OBJECT
             DEFINE TRANSACTION TYPE
             GENERATE ADDRESS
-            CREATE TRANSACTION
-        
+            CREATE TRANSACTION      
         """
 
         api_key_object = ApiKey.objects.get(api_key = api_key)
@@ -71,64 +110,55 @@ class CreateAutomatedPayoutDigitalToCrypto(APIView):
             symbol = cryptocurrency_code
         )
 
-        if cryptocurrency_object.cryptoapis_type == "ADDRESS":
-            if not withdrawal_address:
-                return Response(
-                {
-                    "status": "ERROR",
-                    "error": "Missing withdrawal address"
-                }, status = 409)
+        now_datetime = datetime.datetime.now()
 
-        # print(cryptocurrency_object.__dict__)
-        # GENERATE ADDRESS
-        cryptoapis_utils = CryptoApisUtils()
-        address_object, error = cryptoapis_utils.generate_address(cryptocurrency_object, api_key_object)
-        if error is not None:
-            return GenericCORSResponse(
-                response = {
-                    "status": "ERROR",
-                    "message": error
-                    },
-                status = 400).get_response()
+        if frecuency == "WEEKLY":
+            current_weekday_datetime = date_for_weekday(AVAILABLE_SHEDULED_DAYS["WEEKLY"][scheduled_day])
 
+            if now_datetime > current_weekday_datetime:
+                next_event_datetime = current_weekday_datetime + relativedelta(weeks = 1)
+            else:
+                next_event_datetime = current_weekday_datetime
+        elif frecuency == "MONTHLY":
+            month_day_datetime = datetime.datetime.now().replace(day = scheduled_day)
 
-        """
-        TRANSACTION TYPES
+            if now_datetime > month_day_datetime:
+                next_event_datetime = month_day_datetime + relativedelta(months = 1)
+            else:
+                next_event_datetime = month_day_datetime
+            
+        
+        next_event_datetime = next_event_datetime.replace(hour=0, minute=0, second=0, microsecond=0)
 
-        - PAYMENT_REQUEST
-        """
+        next_event_datetime = None
 
-        digital_currency_amount_usd = Decimal(digital_currency_amount) / digital_currency_object.exchange_rate 
-
-        cryptocurrency_amount = digital_currency_amount_usd / cryptocurrency_object.exchange_rate
-        # cryptocurrency_amount = digital_currency_amount_usd / Decimal(41.44)
-
-        # MISSING REFUND ADDRESS
-        new_transaction = Transaction.objects.create(
+        new_transaction = AutomatedTransaction.objects.create(
             api_key = api_key_object,
-            type = "PAYMENT_REQUEST",
+            status = "ACTIVE",
             description = description,
+            type = "PAYOUT_DIGITAL_TO_CRYPTO",
+            frecuency = frecuency,
+            scheduled_day = scheduled_day,
+            funds_source_type = funds_source_type,
+            funds_source_address_object = funds_source_address_object,
             digital_currency_id = digital_currency_object,
             digital_currency_amount = digital_currency_amount,
-            cryptocurrency_amount = cryptocurrency_amount,
-            address_id = address_object,
-            client_email = customer_email if customer_email else None,
-            client_phone = customer_phone if customer_phone else None,
-            state = "PENDING",
-            status = "WAITING_FOR_DEPOSIT"
+            cryptocurrency_id = cryptocurrency_object,
+            receiver_address = receiver_address,
+            customer_email = customer_email,
+            customer_phone = customer_phone,
+            next_event_datetime = next_event_datetime
         )
 
         response_object = {
             "status": "SUCCESS",
-            "message": "Transaction created successfully",
+            "message": "Automated Transaction created successfully",
             "data": {
                 "transaction_id": new_transaction.transaction_id,
-                "cryptocurrency_code": cryptocurrency_code,
-                "deposit_crypto_address": address_object.address,
-                "deposit_crypto_amount": cryptocurrency_amount,
-                "expiration_timestamp": new_transaction.expiration_datetime.timestamp(),
+                "funds_source_address": funds_source_address_object.address_id.address,
+                "next_event_datetime": new_transaction.next_event_datetime,
                 "creation_timestamp": new_transaction.creation_datetime.timestamp(),
-                "payment_url": f"https://cryptosharepay.com/transactions/payments/{new_transaction.transaction_id}"
+                "next_event_datetime_timestamp": new_transaction.next_event_datetime.timestamp(),
             }
         }
 
