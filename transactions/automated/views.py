@@ -132,7 +132,7 @@ class CreateAutomatedPayoutDigitalToCrypto(APIView):
             "message": "Automated Transaction created successfully",
             "data": {
                 "transaction_id": new_transaction.transaction_id,
-                "funds_source_address": funds_source_address_object.address_id.address,
+                "funds_source_address": funds_source_address_object.address_id.address if funds_source_type == "DEPOSIT_ADDRESS" else None,
                 "next_event_datetime": new_transaction.next_event_datetime,
                 "creation_timestamp": new_transaction.creation_datetime.timestamp(),
                 "next_event_datetime_timestamp": new_transaction.next_event_datetime.timestamp(),
