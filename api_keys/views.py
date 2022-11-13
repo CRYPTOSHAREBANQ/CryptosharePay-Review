@@ -124,7 +124,7 @@ class ActivateApiKey(APIView):
             "data": {
                 "customer_id": customer_id,
                 "api_key": api_key_object.api_key,
-                "business_id": api_key_object.business_id.business_id,
+                "business_id": api_key_object.business_id.business_id if api_key_object.business_id else None,
                 "type": api_key_object.type,
                 "status": api_key_object.status
             }
@@ -159,7 +159,7 @@ class DeactivateApiKey(APIView):
             "data": {
                 "customer_id": customer_id,
                 "api_key": api_key_object.api_key,
-                "business_id": api_key_object.business_id.business_id,
+                "business_id": api_key_object.business_id.business_id if api_key_object.business_id else None,
                 "type": api_key_object.type,
                 "status": api_key_object.status
             }

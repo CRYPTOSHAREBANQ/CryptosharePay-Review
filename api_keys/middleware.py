@@ -84,6 +84,11 @@ class APIKeyVerification:
                 pass
                 
             else:
+                email = headers.get("HTTP_X_EMAIL", None)
+
+                user_object = User.objects.get(email = email)
+                account_object = Account.objects.get(email = user_object)
+                
                 api_key = data.get("api_key", None)
 
                 if not api_key or not ApiKey.objects.filter(api_key = api_key, user_id = account_object).exists():
