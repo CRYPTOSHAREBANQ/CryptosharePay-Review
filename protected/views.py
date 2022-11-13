@@ -4,11 +4,14 @@ from django.contrib.auth.models import User
 from django.utils import timezone
 
 
-from transactions.models import Transaction, TransactionBook ,TransactionIns
+from transactions.models import Transaction, TransactionBook ,TransactionIns, AutomatedTransaction
 from cryptocurrency.models import Address, Blockchain, Cryptocurrency, Network
 
 from accounts.models import Account
 from api_keys.models import ApiKey
+
+from transactions.payments import views as payments_views
+
 
 # from rest_framework import Response
 from rest_framework.views import APIView
@@ -19,9 +22,14 @@ from rest_framework import status
 from transactions.serializers import TransactionSerializer, TransactionsSerializer
 from common_libraries.emails.email_client import EmailClient
 from common_libraries.transactions.transactions_utils import TransactionUtils
+from common_libraries.general.general_objects import CustomHttpRequest
+from common_libraries.general.general_utils import get_next_event_datetime
+
 
 import json
 import requests
+from decimal import Decimal
+
 
 
 class EmailHasAccount(APIView):
@@ -133,6 +141,11 @@ class GetTransaction(APIView):
         return Response(response_object, status = 200)
 
 class UpdateExchangeRates(APIView):
+    """
+    Cron job to update the exchange rates of the cryptocurrencies
+
+    Frecuency: Every 1 minute
+    """
     def get(self, request):
 
         ids = []
@@ -164,6 +177,11 @@ class UpdateExchangeRates(APIView):
 
         # to_delete_addresses = Address.objects.filter(expiration_datetime__date__lte=timezone.now().date())
 class CancelExpiredTransactions(APIView):
+    """
+    Cron job to cancel expired transactions
+
+    Frecuency: Every 30 minutes
+    """
     def get(self, request):
 
         to_cancel_transactions = Transaction.objects.filter(expiration_datetime__lte=timezone.now(), status = "PENDING")
@@ -183,3 +201,52 @@ class CancelExpiredTransactions(APIView):
             email_client.cancel_expired_transaction(transaction, str(transaction.api_key.user_id.email))
         
         return Response(status = 200)
+
+class ExecuteAutomatedTransactions(APIView):
+    """
+    Cron job to execute automated transactions
+
+    Frecuency: Every day at 00:01
+    """
+    def get(self, request):
+        
+        to_execute_transactions = AutomatedTransaction.objects.filter(status = "ACTIVE", next_event_datetime__lte=timezone.now())
+
+        for transaction in to_execute_transactions:
+            if transaction.type == "PAYOUT_DIGITAL_TO_CRYPTO":
+
+                # transaction_data = {
+                #     "data": {
+                #         "description": f"AUTOMATED PAYOUT {transaction.transaction_id}",
+                #         "digital_currency_code": transaction.digital_currency_id.digital_currency_id,
+                #         "digital_currency_amount": transaction.digital_currency_amount,
+                #         "cryptocurrency_code": transaction.cryptocurrency_id.cryptocurrency_id,
+                #         "cryptocurrency_blockchain_id": transaction.cryptocurrency_id.blockchain_id.blockchain_id,
+                #         "withdrawal_address": transaction.receiver_address,
+                #         "customer_email": transaction.client_email,
+                #         "customer_phone": transaction.client_phone
+                #     }
+                # }
+
+                digital_currency_amount_usd = Decimal(transaction.digital_currency_amount) / transaction.digital_currency_id.exchange_rate 
+
+                cryptocurrency_amount = digital_currency_amount_usd / transaction.cryptocurrency_id.exchange_rate
+
+                if transaction.funds_source_type == "DEPOSIT_ADDRESS":
+                    funds_source_address = transaction.funds_source_address_object.address_id.address
+
+                transaction_utils = TransactionUtils()
+                error = transaction_utils.create_transaction_withdrawal(transaction.api_key, transaction.cryptocurrency_id, transaction.receiver_address, cryptocurrency_amount, funds_source_address)
+                if error is not None:
+                    transaction.status = "DEACTIVATED"
+                    transaction.save()
+                else:
+                    transaction.next_event_datetime = get_next_event_datetime(transaction.frecuency, transaction.scheduled_day)
+                    transaction.save()
+
+            # response_object = transaction_utils.create_transaction_digital_to_crypto(transaction.api_key.api_key, transaction_data)
+            # if response_object["status"] == "ERROR":
+            #     transaction.status = "DEACTIVATED"
+            #     transaction.save()
+
+        return Response(status=200)

@@ -8,7 +8,7 @@ from decimal import Decimal
 
 
 from transactions.models import Transaction, TransactionBook ,TransactionIns, TransactionOuts
-from cryptocurrency.models import Address, Blockchain, Cryptocurrency, Network
+from cryptocurrency.models import Address, Blockchain, Cryptocurrency, Network, StaticAddress
 from assets.models import Asset
 
 from common_libraries.cryptoapis.cryptoapis_utils import CryptoApisUtils
@@ -68,6 +68,10 @@ def cryptoapis_confirmed_coin_transactions(request):
             status = "CONFIRMED",
         )
 
+        ### CAN BE OPTIMIZED ###
+        ### CAN BE OPTIMIZED ###
+        ### CAN BE OPTIMIZED ###
+
         try:
             main_transaction = Transaction.objects.get(
                 address_id = transaction_address_object,
@@ -75,9 +79,31 @@ def cryptoapis_confirmed_coin_transactions(request):
                 status = "WAITING_FOR_DEPOSIT"
             )
         except:
-            #MISSING TO SET UP AN ERROR LOG
+            try:
+                static_address_object = StaticAddress.objects.get(
+                    address_id = transaction_address_object,
+                    type = "DEPOSIT_ADDRESS",
+                    status = "ACTIVE"
+                )
 
-            return HttpResponse(status=200)
+                main_transaction = Transaction.objects.create(
+                    api_key = transaction_address_object.api_key,
+                    type = "STATIC_DEPOSIT",
+                    description = "Deposit to static address",
+                    cryptocurrency_amount = response_data["amount"],
+                    address_id = static_address_object.address_id,
+                    expiration_datetime = None,
+                    state = "COMPLETED",
+                    status = "COMPLETED",
+                )
+            except:
+                return HttpResponse(status=200)
+
+            #MISSING TO SET UP AN ERROR LOG
+        
+        ### CAN BE OPTIMIZED ###
+        ### CAN BE OPTIMIZED ###
+        ### CAN BE OPTIMIZED ###
 
         main_transaction.cryptocurrency_amount_received += Decimal(response_data["amount"])
         main_transaction.save()

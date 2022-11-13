@@ -126,7 +126,7 @@ class CryptoApisUtils:
         
         return None
     
-    def withdraw_coin_transaction_funds(self, transaction, transaction_cryptocurrency, withdrawal_address, receiving_amount):
+    def withdraw_coin_transaction_funds(self, transaction_cryptocurrency, withdrawal_address, receiving_amount, source_address = None):
         cryptoapis_client = CryptoApis(network = transaction_cryptocurrency.network_id.network_id)
 
         try:
@@ -143,7 +143,7 @@ class CryptoApisUtils:
                     transaction_response = cryptoapis_client.generate_single_transaction_from_address_without_fee_priority(
                         transaction_cryptocurrency.blockchain_id.blockchain_id,
                         transaction_cryptocurrency.network_id.network_id,
-                        transaction.address_id.address,
+                        source_address,
                         withdrawal_address,
                         str(receiving_amount)
                     )
@@ -151,7 +151,7 @@ class CryptoApisUtils:
                     transaction_response = cryptoapis_client.generate_coins_transaction_from_address(
                         transaction_cryptocurrency.blockchain_id.blockchain_id, 
                         transaction_cryptocurrency.network_id.network_id,
-                        transaction.address_id.address, 
+                        source_address, 
                         withdrawal_address, 
                         str(receiving_amount)
                     )
@@ -161,7 +161,7 @@ class CryptoApisUtils:
         
         return None
 
-    def withdraw_token_transaction_funds(self, transaction, transaction_cryptocurrency, withdrawal_address, receiving_amount):
+    def withdraw_token_transaction_funds(self, source_address, transaction_cryptocurrency, withdrawal_address, receiving_amount):
         cryptoapis_client = CryptoApis(network = transaction_cryptocurrency.network_id.network_id)
 
         try:
@@ -169,7 +169,7 @@ class CryptoApisUtils:
                 transaction_response = cryptoapis_client.generate_token_transaction_from_address(
                     transaction_cryptocurrency.blockchain_id.blockchain_id,
                     transaction_cryptocurrency.network_id.network_id,
-                    transaction.address_id.address,
+                    source_address,
                     transaction_cryptocurrency.extra_data,
                     withdrawal_address,
                     str(receiving_amount)

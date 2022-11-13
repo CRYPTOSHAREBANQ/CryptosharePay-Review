@@ -9,13 +9,11 @@ import datetime
 from dateutil.relativedelta import relativedelta
 
 from accounts.models import Account, Country
-from businesses.models import Business
 from api_keys.models import ApiKey
 from cryptocurrency.models import Cryptocurrency, Blockchain, Network, StaticAddress
-from transactions.models import Transaction, TransactionBook, TransactionIns, TransactionOuts, AutomatedTransaction
+from transactions.models import AutomatedTransaction
 from digital_currency.models import DigitalCurrency
 
-from transactions.serializers import TransactionSerializer, TransactionsSerializer
 
 # from rest_framework import Response
 from rest_framework.views import APIView
@@ -28,9 +26,7 @@ from common_libraries.object_responses.object_responses import GenericCORSRespon
 from common_libraries.constants.cryptocurrency import CRYPTOCURRENCY_NETWORKS
 from common_libraries.transactions.transactions_utils import TransactionUtils
 from common_libraries.emails.email_client import EmailClient
-from common_libraries.general.general_utils import date_for_weekday
-from common_libraries.constants.automated import AVAILABLE_FRECUENCIES, AVAILABLE_SHEDULED_DAYS
-from common_libraries.general.general_objects import CustomHttpRequest
+from common_libraries.general.general_utils import get_next_event_datetime
 
 
 class CreateAutomatedPayoutDigitalToCrypto(APIView):
@@ -109,23 +105,7 @@ class CreateAutomatedPayoutDigitalToCrypto(APIView):
                 status = "ACTIVE"
             )
 
-        now_datetime = datetime.datetime.now()
-
-        if frecuency == "WEEKLY":
-            current_weekday_datetime = date_for_weekday(AVAILABLE_SHEDULED_DAYS["WEEKLY"][scheduled_day])
-
-            if now_datetime > current_weekday_datetime:
-                next_event_datetime = current_weekday_datetime + relativedelta(weeks = 1)
-            else:
-                next_event_datetime = current_weekday_datetime
-        elif frecuency == "MONTHLY":
-            month_day_datetime = datetime.datetime.now().replace(day = scheduled_day)
-
-            if now_datetime > month_day_datetime:
-                next_event_datetime = month_day_datetime + relativedelta(months = 1)
-            else:
-                next_event_datetime = month_day_datetime
-            
+        next_event_datetime = get_next_event_datetime(frecuency, scheduled_day)            
         
         next_event_datetime = next_event_datetime.replace(hour=0, minute=0, second=0, microsecond=0)
 
