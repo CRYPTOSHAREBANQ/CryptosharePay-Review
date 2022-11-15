@@ -111,18 +111,19 @@ class CryptoApisUtils:
 
         address_subscription = address_object.subscription_id
 
-        try:
-            cryptoapis_client = CryptoApis(network = address_subscription.network_id.network_id)
-            cryptoapis_client.delete_blockchain_subscription(
-                    address_subscription.blockchain_id.blockchain_id,
-                    address_subscription.network_id.network_id,
-                    address_subscription.subscription_id
-                )
+        if address_subscription is not None:
+            try:
+                cryptoapis_client = CryptoApis(network = address_subscription.network_id.network_id)
+                cryptoapis_client.delete_blockchain_subscription(
+                        address_subscription.blockchain_id.blockchain_id,
+                        address_subscription.network_id.network_id,
+                        address_subscription.subscription_id
+                    )
 
-            address_subscription.delete()
-        except:
-            error = "Error releasing address. Please try again later."
-            return error
+                address_subscription.delete()
+            except Exception as e:
+                error = "Error releasing address. Please try again later."
+                return error
         
         return None
     

@@ -187,7 +187,6 @@ class CancelExpiredTransactions(APIView):
         to_cancel_transactions = Transaction.objects.filter(expiration_datetime__lte=timezone.now(), state = "PENDING")
 
         for transaction in to_cancel_transactions:
-
             transaction_utils = TransactionUtils()
             error = transaction_utils.expired_transaction(transaction)
             if error is not None:
