@@ -234,6 +234,8 @@ class ExecuteAutomatedTransactions(APIView):
 
                 if transaction.funds_source_type == "DEPOSIT_ADDRESS":
                     funds_source_address = transaction.funds_source_address_object.address_id.address
+                else:
+                    funds_source_address = None
 
                 transaction_utils = TransactionUtils()
                 error = transaction_utils.create_transaction_withdrawal(transaction.api_key, transaction.cryptocurrency_id, transaction.receiver_address, cryptocurrency_amount, funds_source_address)
