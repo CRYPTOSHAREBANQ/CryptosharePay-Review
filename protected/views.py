@@ -184,7 +184,7 @@ class CancelExpiredTransactions(APIView):
     """
     def get(self, request):
 
-        to_cancel_transactions = Transaction.objects.filter(expiration_datetime__lte=timezone.now(), status = "PENDING")
+        to_cancel_transactions = Transaction.objects.filter(expiration_datetime__lte=timezone.now(), state = "PENDING")
 
         for transaction in to_cancel_transactions:
 
