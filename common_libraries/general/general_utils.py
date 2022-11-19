@@ -7,8 +7,11 @@ import random
 import string
 import datetime
 
-def generate_pin(lenght = 6):
-    return ''.join(random.choice(string.digits) for i in range(lenght))
+def generate_pin(length = 6):
+    return ''.join(random.choice(string.digits) for i in range(length))
+
+def generate_password(length = 12):
+    return ''.join(random.choice(string.ascii_letters + string.digits) for _ in range(length))
 
 def date_for_weekday(day: int):
     today = datetime.datetime.today()

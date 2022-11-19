@@ -2,6 +2,7 @@ from decimal import Decimal
 from importlib.resources import path
 from django.http import HttpResponse, Http404
 from django.contrib import auth
+from django.contrib.auth.models import User
 
 from uuid import UUID
 
@@ -28,9 +29,70 @@ class ProtectedVerification:
 
 
         if "protected/" in path_info:
+            
+            if "accounts/" in path_info:
+                if "email-has-account/" in path_info:
+                    pass
+                
+                elif "request-login-dashboard" in path_info:
+                    email = headers.get("HTTP_X_EMAIL", None)
 
-            if "accounts/email-has-account/" in path_info:
-                pass
+                    if not email:
+                        return HttpResponse(
+                            str({
+                            "status": "ERROR",
+                            "message": "Invalid email"
+                            }), status=400)
+
+                    #VERIFY CREDENTIALS
+                    user_object = User.objects.filter(email = email)
+
+                    if not user_object:
+                        return HttpResponse(
+                            str({
+                            "status": "ERROR",
+                            "message": "Invalid credentials"
+                            }), status=401)
+
+                elif "login-dashboard/" in path_info:
+                    email = headers.get("HTTP_X_EMAIL", None)
+                    security_password = headers.get("HTTP_X_SECURITY_PASSWORD", None)
+                    # security_pin = headers.get("HTTP_X_SECURITY_PIN", None)
+
+                    if not email or not security_password:
+                        return HttpResponse(
+                            str({
+                            "status": "ERROR",
+                            "message": "Invalid email or password"
+                            }), status=400)
+
+                    #VERIFY CREDENTIALS
+                    user_object = User.objects.filter(email = email)
+
+                    if not user_object:
+                        return HttpResponse(
+                            str({
+                            "status": "ERROR",
+                            "message": "Invalid credentials"
+                            }), status=401)
+                    else:
+                        user_object = user_object.first()
+
+                    account_object = Account.objects.get(email = user_object)
+            
+                    if account_object.random_password is None:
+                        return HttpResponse(
+                            str({
+                            "status": "ERROR",
+                            "message": "Login not requested"
+                            }), status=409)
+
+                    if not security_password or account_object.random_password != security_password:
+                        return HttpResponse(
+                            str({
+                            "status": "ERROR",
+                            "message": "Invalid security password"
+                            }), status=401)
 
             elif "api-keys/api-key-no-account/" in path_info:
                 email = headers.get("HTTP_X_EMAIL", None)

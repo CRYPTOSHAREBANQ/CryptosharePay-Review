@@ -188,3 +188,28 @@ class EmailClient:
         """
 
         self.send_html_email(subject, content, email)
+
+    def request_dashboard_login(self, random_password, email):
+        subject = f"Dashboard Login request"
+
+        content = f"""
+        <html>
+            <body>
+                <h3> Hi there! </h3>
+
+                <p> You are receiving this email because you requested to login into Cryptoshare Pay </p>
+
+                <em><p> Please do not share this information with anyone. </p><em>
+
+                <p> Your one-time randomized password is: </p>
+
+                <h1> {random_password} </h1>
+                
+                <p>
+                    If you didn't request this information, please secure your account immediately.
+                </p>
+            </body>
+        </html>
+        """
+
+        self.send_html_email(subject, content, email)

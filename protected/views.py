@@ -23,7 +23,8 @@ from transactions.serializers import TransactionSerializer, TransactionsSerializ
 from common_libraries.emails.email_client import EmailClient
 from common_libraries.transactions.transactions_utils import TransactionUtils
 from common_libraries.general.general_objects import CustomHttpRequest
-from common_libraries.general.general_utils import get_next_event_datetime
+from common_libraries.general.general_utils import get_next_event_datetime, generate_pin, generate_password
+
 
 
 import json
@@ -252,3 +253,50 @@ class ExecuteAutomatedTransactions(APIView):
             #     transaction.save()
 
         return Response(status=200)
+
+class RequestLoginDashboard(APIView):
+    def post(self, request):
+        headers = request.headers
+
+        email = headers.get("X-Email", None)
+
+        user_object = User.objects.get(email = email)
+
+        account_object = Account.objects.get(email = user_object)
+
+        new_random_password = generate_password()
+
+        account_object.random_password = new_random_password
+        account_object.save()
+
+        email_client = EmailClient()
+        email_client.request_dashboard_login(new_random_password, email)
+
+        response_object = {
+            "status": "SUCCESS",
+            "message": "Dashboard login requested successfully, please verify your email"
+        }
+
+        return Response(response_object, status=200)
+
+class LoginDashboard(APIView):
+    def get(self, request):
+        headers = request.headers
+
+        email = headers.get("X-Email", None)
+
+        user_object = User.objects.get(email = email)
+        account_object = Account.objects.get(email = user_object)
+
+        response_object = {
+            "status": "SUCCESS",
+            "message": "Login successfully",
+            "data": {
+                "customer_id": account_object.user_id
+            }
+        }
+
+        account_object.random_password = None
+        account_object.save()
+
+        return Response(response_object, status=200)

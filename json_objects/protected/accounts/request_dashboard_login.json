@@ -5,7 +5,8 @@
     "headers": {
         "Content-Type": "application/json",
         "X-Email": "YOUR-EMAIL",
-        "X-Password": "YOUR-PASSWORD"
+        "X-Security-Password": "RANDOMIZED-PASSWORD"
+
     }
 }
 
@@ -13,5 +14,5 @@
 
 {
     "status": "SUCCESS",
-    "message": "Customer ID requested successfully, please verify your email"
+    "message": "Dashboard login requested successfully, please verify your email"
 }
