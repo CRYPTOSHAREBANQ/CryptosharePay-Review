@@ -90,6 +90,13 @@ class TransactionVerification:
                             "status": "ERROR",
                             "message": "Invalid cryptocurrency_blockchain_id"
                             }), status=409)
+                    
+                    if not Cryptocurrency.objects.filter(symbol = cryptocurrency_code, blockchain__blockchain_id = cryptocurrency_blockchain_id).exists():
+                        return HttpResponse(
+                            str({
+                            "status": "ERROR",
+                            "message": "Invalid cryptocurrency_code and cryptocurrency_blockchain_id combination"
+                            }), status=409)
 
                     if withdrawal_address:
                         api_key = headers.get("HTTP_X_API_KEY", None)

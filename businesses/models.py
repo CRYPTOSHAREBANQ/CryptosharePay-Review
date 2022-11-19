@@ -9,3 +9,6 @@ class Business(models.Model):
     user_id = models.ForeignKey(Account, on_delete=models.CASCADE)
     name = models.CharField(max_length=57)
     description = models.CharField(max_length=32)
+    address = models.CharField(max_length=255, null=True)
+    email = models.EmailField(max_length=255, null=True)
+    is_main = models.BooleanField(default=False)

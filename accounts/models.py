@@ -22,3 +22,4 @@ class Account(models.Model):
     cryptosharecredit_username = models.CharField(max_length=30, null=True)
     security_pin = models.CharField(max_length=6, null=True)
     random_password = models.CharField(max_length=16, null=True)
+    status = models.CharField(max_length=15, default="ACTIVE")
