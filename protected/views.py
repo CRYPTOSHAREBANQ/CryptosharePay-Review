@@ -49,11 +49,11 @@ class EmailHasAccount(APIView):
 
 
 
-        if User.objects.filter(email = data["email"]).exists():
+        if User.objects.filter(email = data["email"].lower()).exists():
             response_object["message"] = "Email already exists"
             response_object["data"]["email_is_available"] = False
 
-            user_object = User.objects.get(email = data["email"])
+            user_object = User.objects.get(email = data["email"].lower())
 
             account_object = Account.objects.get(email = user_object)
 

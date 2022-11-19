@@ -37,7 +37,7 @@ class CreateAccount(APIView):
         new_user = User.objects.create_user(
             username = customer_info['email'], 
             password = customer_info['password'], 
-            email = customer_info['email'],
+            email = customer_info['email'].lower(),
             first_name = customer_info['first_name'],
             last_name = customer_info['last_name']
         )
