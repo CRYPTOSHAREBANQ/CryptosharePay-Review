@@ -64,6 +64,7 @@ MIDDLEWARE = [
     'protected.middleware.ProtectedVerification',
     'accounts.middleware.AccountVerification',
     'api_keys.middleware.APIKeyVerification',
+    'businesses.middleware.BusinessVerification',
     'cryptocurrency.middleware.CryptocurrencyVerification',
     'digital_currency.middleware.DigitalCurrencyVerification',
     'transactions.middleware.TransactionVerification',

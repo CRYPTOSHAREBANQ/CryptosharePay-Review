@@ -11,6 +11,8 @@ from api_keys.models import ApiKey
 from accounts.models import Account
 from businesses.models import Business
 
+from api_keys.serializers import ApiKeysSerializer
+
 import secrets
 
 class CreateApiKey(APIView):
@@ -96,6 +98,45 @@ class GetApiKeys(APIView):
         }
 
         return Response(response_object, status=200)
+
+class GetApiKey(APIView):
+    def get(self, request):
+        headers = request.headers
+
+        customer_id = headers.get("X-Customer-Id", None)
+        email = headers.get("X-Email", None)
+        business_id = headers.get("X-Business-Id", None)
+
+        user_object = User.objects.get(
+            username = email
+        )
+
+        account_object = Account.objects.get(email = user_object)
+        business_object = Business.objects.get(business_id = business_id)
+
+        api_key_object = ApiKey.objects.get(
+            user_id = account_object,
+            business_id = business_object
+        )
+
+        serializer = ApiKeysSerializer(api_key_object)
+
+        response_object = {
+            "status": "SUCCESS",
+            "message": "API Key retrieved successfully",
+            "data": {
+                "api_key": serializer.data if serializer else None
+            }
+        }
+
+        return Response(response_object, status=200)
+
+
+
+
+
+
+
 
 class ActivateApiKey(APIView):
     def post(self, request):

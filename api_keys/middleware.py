@@ -2,9 +2,13 @@ from decimal import Decimal
 from django.http import HttpResponse, Http404
 from django.contrib.auth.models import User
 from django.contrib import auth
+
 from accounts.models import Account
 from api_keys.models import ApiKey
+from businesses.models import Business
+
 from uuid import UUID
+from common_libraries.constants.api_keys import API_KEY_TYPES
 
 import json
 
@@ -47,7 +51,7 @@ class APIKeyVerification:
                 email = headers.get("HTTP_X_EMAIL", None)
 
                 #VERIFY API-KEY TYPE
-                API_KEY_TYPES = {"TEST", "PRODUCTION"}
+                # API_KEY_TYPES = {"TEST", "PRODUCTION"}
 
                 user_object = User.objects.get(email = email)
                 account_object = Account.objects.get(email = user_object)
@@ -82,7 +86,16 @@ class APIKeyVerification:
 
             elif "all/" in path_info:
                 pass
-                
+            
+            elif "get-by-business-id/" in path_info:
+                api_key_type = request.GET.get("type", None)
+                if not api_key_type or api_key_type not in API_KEY_TYPES:
+                    return HttpResponse(
+                        str({
+                        "status": "ERROR",
+                        "message": "Invalid API Key type"
+                        }), status=400)
+
             else:
                 email = headers.get("HTTP_X_EMAIL", None)
 

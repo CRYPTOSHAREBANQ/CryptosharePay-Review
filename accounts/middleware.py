@@ -197,6 +197,13 @@ class AccountVerification:
             email = headers.get("HTTP_X_EMAIL", None)
             password = headers.get("HTTP_X_PASSWORD", None)
 
+            if not email:
+                return HttpResponse(
+                    str({
+                    "status": "ERROR",
+                    "message": "X-Email not found"
+                    }), status=400)
+
             ### <------ X-CUSTOMER-ID VERIFICATION ------> ###
             ### <------ X-CUSTOMER-ID VERIFICATION ------> ###
 
@@ -232,25 +239,26 @@ class AccountVerification:
             ### <------ CREDENTIALS VERIFICATION ------> ###
             ### <------ CREDENTIALS VERIFICATION ------> ###
 
-            #VERIFY CREDENTIALS
-            if not email or not password:
-                return HttpResponse(
-                    str({
-                    "status": "ERROR",
-                    "message": "Email or Password not found"
-                    }), status=400)
+            if "get-by-business-id/" not in path_info:
+                #VERIFY CREDENTIALS
+                if not email or not password:
+                    return HttpResponse(
+                        str({
+                        "status": "ERROR",
+                        "message": "Email or Password not found"
+                        }), status=400)
 
-            user_object = auth.authenticate(
-                username = email,
-                password = password
-            )
+                user_object = auth.authenticate(
+                    username = email,
+                    password = password
+                )
 
-            if not user_object:
-                return HttpResponse(
-                    str({
-                    "status": "ERROR",
-                    "message": "Invalid credentials"
-                    }), status=401)
+                if not user_object:
+                    return HttpResponse(
+                        str({
+                        "status": "ERROR",
+                        "message": "Invalid credentials"
+                        }), status=401)
             
             ### <------ CREDENTIALS VERIFICATION ------> ###
             ### <------ CREDENTIALS VERIFICATION ------> ###
