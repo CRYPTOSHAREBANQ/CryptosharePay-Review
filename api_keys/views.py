@@ -106,6 +106,8 @@ class GetApiKey(APIView):
         customer_id = headers.get("X-Customer-Id", None)
         email = headers.get("X-Email", None)
         business_id = headers.get("X-Business-Id", None)
+        api_key_type = request.GET.get("type", None)
+
 
         user_object = User.objects.get(
             username = email
@@ -114,12 +116,16 @@ class GetApiKey(APIView):
         account_object = Account.objects.get(email = user_object)
         business_object = Business.objects.get(business_id = business_id)
 
-        api_key_object = ApiKey.objects.get(
+        api_key_object = ApiKey.objects.filter(
             user_id = account_object,
-            business_id = business_object
+            business_id = business_object,
+            type = api_key_type
         )
 
-        serializer = ApiKeysSerializer(api_key_object)
+        if api_key_object.exists():
+            serializer = ApiKeysSerializer(api_key_object.first())
+        else:
+            serializer = None
 
         response_object = {
             "status": "SUCCESS",
