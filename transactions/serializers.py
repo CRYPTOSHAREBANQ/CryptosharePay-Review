@@ -20,7 +20,7 @@ class TransactionsSerializer(serializers.ModelSerializer):
             "client_email": instance.client_email,
             "client_phone": instance.client_phone,
             "creation_datetime": instance.creation_datetime.timestamp(),
-            "expiration_datetime": instance.expiration_datetime.timestamp() if instance.creation_datetime else None,
+            "expiration_datetime": instance.expiration_datetime.timestamp() if instance.expiration_datetime else None,
             "status": instance.status
         }
 
@@ -43,6 +43,6 @@ class TransactionSerializer(serializers.ModelSerializer):
             "client_email": instance.client_email,
             "client_phone": instance.client_phone,
             "creation_datetime": instance.creation_datetime.timestamp(),
-            "expiration_datetime": instance.expiration_datetime.timestamp() if instance.creation_datetime else None,
+            "expiration_datetime": instance.expiration_datetime.timestamp() if instance.expiration_datetime else None,
             "status": instance.status
         }
