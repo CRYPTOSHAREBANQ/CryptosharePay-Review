@@ -91,7 +91,7 @@ class TransactionVerification:
                             "message": "Invalid cryptocurrency_blockchain_id"
                             }), status=409)
                     
-                    if not Cryptocurrency.objects.filter(symbol = cryptocurrency_code, blockchain__blockchain_id = cryptocurrency_blockchain_id).exists():
+                    if not Cryptocurrency.objects.filter(symbol = cryptocurrency_code, blockchain_id__blockchain_id = cryptocurrency_blockchain_id).exists():
                         return HttpResponse(
                             str({
                             "status": "ERROR",
