@@ -37,16 +37,19 @@ class GetAsset(APIView):
 
         api_key = headers.get("X-API-Key", None)
         api_key_object = ApiKey.objects.get(api_key = api_key)
+        
+        try:
+            asset = Asset.objects.get(api_key = api_key_object, cryptocurrency_id__symbol = cryptocurrency_code)
 
-        asset = Asset.objects.get(api_key = api_key_object, cryptocurrency_id__symbol = cryptocurrency_code)
-
-        serializer = AssetSerializer(asset)
+            serializer = AssetSerializer(asset)
+        except:
+            pass
 
         response_object = {
             "status": "SUCCESS",
             "message": "Asset retrieved successfully",
             "data": {
-                "asset": serializer.data
+                "asset": serializer.data if "serializer" not in locals() else []
             }
         }
 
