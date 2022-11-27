@@ -49,7 +49,7 @@ class GetAsset(APIView):
             "status": "SUCCESS",
             "message": "Asset retrieved successfully",
             "data": {
-                "asset": serializer.data if "serializer" not in locals() else []
+                "asset": serializer.data if "serializer" in locals() else []
             }
         }
 
