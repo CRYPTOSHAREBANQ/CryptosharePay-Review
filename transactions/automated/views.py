@@ -87,6 +87,9 @@ class CreateAutomatedPayoutDigitalToCrypto(APIView):
             symbol = cryptocurrency_code
         )
 
+        #TODO MISSING TO VERIFY IF A STATIC ADDRESS IS ALREADY AVAILABLE FOR THIS CRYPTOCURRENCY AND API KEY
+
+
         if funds_source_type == "DEPOSIT_ADDRESS":
             # GENERATE ADDRESS
             cryptoapis_utils = CryptoApisUtils()

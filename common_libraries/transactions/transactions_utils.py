@@ -144,6 +144,9 @@ class TransactionUtils:
             error = cryptoapis_utils.withdraw_token_transaction_funds(source_address, cryptocurrency_object, withdrawal_address, cryptocurrency_amount)
             if error is not None:
                 return error
+        else:
+            error = "Withdrawals are not currently supported for this cryptocurrency" # 409
+
 
         asset.amount -= Decimal(cryptocurrency_amount)
         asset.save()
@@ -252,10 +255,11 @@ class TransactionUtils:
             transaction_static_address_object = transaction.funds_source_address_object
             transaction_address_object = transaction_static_address_object.address_id
 
-            # cryptoapis_utils = CryptoApisUtils()
-            # error = cryptoapis_utils.release_address(transaction_address_object)
-            # if error is not None:
-            #     return error
+            cryptoapis_utils = CryptoApisUtils()
+            error = cryptoapis_utils.release_address(transaction_address_object)
+            if error is not None:
+                return error
+
             transaction.funds_source_address = transaction.funds_source_address_object.address_id.address
             transaction.funds_source_address_object = None
             transaction.save()
