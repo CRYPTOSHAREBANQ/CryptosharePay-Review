@@ -61,9 +61,13 @@ class CreateAccount(APIView):
 
         new_generated_key = secrets.token_hex(16)
 
-        api_key_prefix = "tsk_"
-        api_key_type = "TEST"
-        api_key_status = "INACTIVE"
+        # api_key_prefix = "tsk_"
+        # api_key_type = "TEST"
+        # api_key_status = "INACTIVE"
+
+        api_key_prefix = "psk_"
+        api_key_type = "PRODUCTION"
+        api_key_status = "ACTIVE"
 
         if customer_info["type"] == "NO_ACCOUNT":
             api_key_prefix = "psk_"
