@@ -12,6 +12,7 @@ from common_libraries.constants.accounts import ACCOUNT_TYPES, NO_ACCOUNT_REDIRE
 from uuid import UUID
 
 import json
+from datetime import datetime
 
 from digital_currency.models import DigitalCurrency
 
@@ -85,6 +86,15 @@ class AccountVerification:
                         str({
                         "status": "ERROR",
                         "message": "Invalid type"
+                        }), status=400)
+
+                try:
+                    datetime.strptime(customer_info["birthdate"], '%Y-%m-%d')
+                except:
+                    return HttpResponse(
+                        str({
+                        "status": "ERROR",
+                        "message": "Invalid birthdate"
                         }), status=400)
 
                 if business_info:

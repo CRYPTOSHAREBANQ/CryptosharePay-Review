@@ -17,9 +17,16 @@ class Account(models.Model):
     first_name = models.CharField(max_length=30)
     last_name = models.CharField(max_length=30)
     country_id = models.ForeignKey(Country, on_delete=models.CASCADE)
+    birthdate = models.DateField(null=True)
     cryptosharecredit_linked = models.BooleanField(default=False)
     cryptosharecredit_email = models.EmailField(max_length = 254, null=True)
     cryptosharecredit_username = models.CharField(max_length=30, null=True)
     security_pin = models.CharField(max_length=6, null=True)
     random_password = models.CharField(max_length=16, null=True)
     status = models.CharField(max_length=15, default="ACTIVE")
+
+class Document(models.Model):
+    user_id = models.ForeignKey(Account, on_delete=models.CASCADE)
+    name = models.CharField(max_length=254)
+    type = models.CharField(max_length=25)
+    s3_url = models.CharField(max_length=254)

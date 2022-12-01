@@ -20,7 +20,7 @@ from common_libraries.emails.email_client import EmailClient
 from businesses.serializers import BusinessesSerializer
 
 import secrets
-
+from datetime import datetime
 # Create your views here.
 
 # @csrf_exempt
@@ -39,7 +39,7 @@ class CreateAccount(APIView):
             password = customer_info['password'], 
             email = customer_info['email'].lower(),
             first_name = customer_info['first_name'],
-            last_name = customer_info['last_name']
+            last_name = customer_info['last_name'],
         )
 
         new_account = Account.objects.create(
@@ -47,6 +47,7 @@ class CreateAccount(APIView):
             email = new_user, 
             first_name = customer_info['first_name'], 
             last_name = customer_info['last_name'], 
+            birthdate = datetime.strptime(customer_info['birthdate'], '%Y-%m-%d'),
             country_id = Country.objects.get(
                 country_id=customer_info['country_id']
                 )
