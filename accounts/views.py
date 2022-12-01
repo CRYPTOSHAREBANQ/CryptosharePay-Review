@@ -47,7 +47,7 @@ class CreateAccount(APIView):
             email = new_user, 
             first_name = customer_info['first_name'], 
             last_name = customer_info['last_name'], 
-            birthdate = datetime.strptime(customer_info['birthdate'], '%Y/%m/%d'),
+            birthdate = datetime.strptime(customer_info['birthdate'], "%m/%d/%Y"),
             country_id = Country.objects.get(
                 country_id=customer_info['country_id']
                 )
