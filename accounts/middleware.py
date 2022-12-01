@@ -89,7 +89,7 @@ class AccountVerification:
                         }), status=400)
 
                 try:
-                    datetime.strptime(customer_info["birthdate"], '%Y-%m-%d')
+                    datetime.strptime(customer_info["birthdate"], "%m/%d/%Y")
                 except:
                     return HttpResponse(
                         str({
