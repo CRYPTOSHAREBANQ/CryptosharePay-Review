@@ -91,6 +91,7 @@ class AccountVerification:
                 try:
                     datetime.strptime(customer_info["birthdate"], "%m/%d/%Y")
                 except:
+                    print(customer_info["birthdate"])
                     return HttpResponse(
                         str({
                         "status": "ERROR",
