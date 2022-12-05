@@ -59,16 +59,16 @@ class TransactionUtils:
             symbol = cryptocurrency_code
         )
 
+        cryptoapis_utils = CryptoApisUtils()
+
         if cryptocurrency_object.cryptoapis_type == "ADDRESS":
             if not withdrawal_address:
-                response_object = {
-                    "status": "ERROR",
-                    "error": "Missing withdrawal address"
-                }
+                static_address_object, error = cryptoapis_utils.generate_static_address(cryptocurrency_object, api_key_object)
+                withdrawal_address = static_address_object.address_id.address
 
         # print(cryptocurrency_object.__dict__)
         # GENERATE ADDRESS
-        cryptoapis_utils = CryptoApisUtils()
+        # cryptoapis_utils = CryptoApisUtils()
         address_object, error = cryptoapis_utils.generate_address(cryptocurrency_object, api_key_object)
         if error is not None:
             response_object = {
@@ -97,6 +97,7 @@ class TransactionUtils:
             digital_currency_amount = digital_currency_amount,
             cryptocurrency_amount = cryptocurrency_amount,
             address_id = address_object,
+            withdrawal_address = withdrawal_address if withdrawal_address else None,
             client_email = customer_email if customer_email else None,
             client_phone = customer_phone if customer_phone else None,
             state = "PENDING",
@@ -121,16 +122,24 @@ class TransactionUtils:
 
     def create_transaction_withdrawal(self, api_key_object, cryptocurrency_object, withdrawal_address, cryptocurrency_amount, source_address = None):
 
-        asset = Asset.objects.get(
-            api_key = api_key_object,
-            cryptocurrency_id = cryptocurrency_object
-        )
+        try: 
+            asset = Asset.objects.get(
+                api_key = api_key_object,
+                cryptocurrency_id = cryptocurrency_object
+            )
+        except:
+            return "Asset not found, insufficient funds" # 402
 
         if asset.amount < cryptocurrency_amount:
             return "Insufficient funds" # 402
 
         cryptoapis_utils = CryptoApisUtils()
         
+        if cryptocurrency_object.cryptoapis_type == "ADDRESS":
+            if not source_address:
+                static_address_object, error = cryptoapis_utils.generate_static_address(cryptocurrency_object, api_key_object)
+                source_address = static_address_object.address_id.address
+
         if cryptocurrency_object.type == "COIN":
             error = cryptoapis_utils.withdraw_coin_transaction_funds(cryptocurrency_object, withdrawal_address, cryptocurrency_amount, source_address = source_address)
             if error is not None:

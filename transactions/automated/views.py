@@ -51,6 +51,7 @@ class CreateAutomatedPayoutDigitalToCrypto(APIView):
         funds_source_type = data.get("funds_source_type", "DEPOSIT_ADDRESS")
 
         receiver_address = data["receiver_address"]
+        unique_deposit_address = data.get("unique_deposit_address", False)
 
         customer_email = data.get("customer_email", None)
         customer_phone = data.get("customer_phone", None)
@@ -88,12 +89,15 @@ class CreateAutomatedPayoutDigitalToCrypto(APIView):
         )
 
         #TODO MISSING TO VERIFY IF A STATIC ADDRESS IS ALREADY AVAILABLE FOR THIS CRYPTOCURRENCY AND API KEY
-
+        if unique_deposit_address:
+            type = "AUTOMATED_FUNDS_SOURCE"
+        else:
+            type = "GENERIC_STATIC"
 
         if funds_source_type == "DEPOSIT_ADDRESS":
             # GENERATE ADDRESS
             cryptoapis_utils = CryptoApisUtils()
-            address_object, error = cryptoapis_utils.generate_address(cryptocurrency_object, api_key_object)
+            static_address_object, error = cryptoapis_utils.generate_static_address(cryptocurrency_object, api_key_object, unique = unique_deposit_address, type = type)
             if error is not None:
                 return GenericCORSResponse(
                     response = {
@@ -101,12 +105,6 @@ class CreateAutomatedPayoutDigitalToCrypto(APIView):
                         "message": error
                         },
                     status = 400).get_response()
-
-            funds_source_address_object = StaticAddress.objects.create(
-                address_id = address_object,
-                type = "DEPOSIT_ADDRESS",
-                status = "ACTIVE"
-            )
 
         next_event_datetime = get_next_event_datetime(frecuency, scheduled_day)            
         
@@ -120,7 +118,7 @@ class CreateAutomatedPayoutDigitalToCrypto(APIView):
             frecuency = frecuency,
             scheduled_day = scheduled_day,
             funds_source_type = funds_source_type,
-            funds_source_address_object = funds_source_address_object,
+            funds_source_address_object = static_address_object,
             digital_currency_id = digital_currency_object,
             digital_currency_amount = digital_currency_amount,
             cryptocurrency_id = cryptocurrency_object,
@@ -135,7 +133,7 @@ class CreateAutomatedPayoutDigitalToCrypto(APIView):
             "message": "Automated Transaction created successfully",
             "data": {
                 "transaction_id": new_transaction.transaction_id,
-                "funds_source_address": funds_source_address_object.address_id.address if funds_source_type == "DEPOSIT_ADDRESS" else None,
+                "funds_source_address": static_address_object.address_id.address if funds_source_type == "DEPOSIT_ADDRESS" else None,
                 "next_event_datetime": new_transaction.next_event_datetime,
                 "creation_timestamp": new_transaction.creation_datetime.timestamp(),
                 "next_event_datetime_timestamp": new_transaction.next_event_datetime.timestamp(),

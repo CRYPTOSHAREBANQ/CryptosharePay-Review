@@ -44,6 +44,6 @@ class Address(models.Model):
 class StaticAddress(models.Model):
     static_address_id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     address_id = models.ForeignKey(Address, on_delete=models.PROTECT)
-    type = models.CharField(max_length=20)
+    type = models.CharField(max_length=25)
     status = models.CharField(max_length=15)
 

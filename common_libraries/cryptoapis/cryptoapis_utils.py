@@ -1,5 +1,5 @@
 # from atm_functions.models import Cryptocurrency, Address
-from cryptocurrency.models import Address, AddressSubscription, Cryptocurrency
+from cryptocurrency.models import Address, AddressSubscription, Cryptocurrency, StaticAddress
 
 from django.utils import timezone
 from datetime import timedelta
@@ -126,6 +126,51 @@ class CryptoApisUtils:
                 return error
         
         return None
+
+    def generate_static_address(self, cryptocurrency_object, api_key_object, unique = False, type = "GENERIC_STATIC"):
+        
+        if not unique:
+            available_addresses = StaticAddress.objects.filter(
+                address_id__cryptocurrency_id = cryptocurrency_object,
+                address_id__api_key = api_key_object,
+                type = type,
+                status = "IN_USE"
+            )
+
+            if available_addresses.count() != 0:
+                new_static_address = available_addresses.first()
+                new_static_address.type = type
+                new_static_address.save()
+                unique = True
+        
+        if unique:
+            cryptoapis_utils = CryptoApisUtils()
+            address_object, error = cryptoapis_utils.generate_address(cryptocurrency_object, api_key_object)
+            if error is not None:
+                return None, error
+            
+            new_static_address = StaticAddress.objects.create(
+                address_id = address_object,
+                type = type,
+                status = "IN_USE"
+            )
+        
+        return new_static_address, error
+    
+    def release_static_address(self, static_address_object):
+        dynamic_address_object = static_address_object.address_id
+
+        error = self.release_address(dynamic_address_object)
+        if error is not None:
+            return error
+
+        try:
+            static_address_object.delete()
+        except Exception as error:
+            return error
+        
+        return None
+
     
     def withdraw_coin_transaction_funds(self, transaction_cryptocurrency, withdrawal_address, receiving_amount, source_address = None):
         cryptoapis_client = CryptoApis(network = transaction_cryptocurrency.network_id.network_id)

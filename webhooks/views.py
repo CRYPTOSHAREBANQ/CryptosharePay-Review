@@ -83,7 +83,7 @@ def cryptoapis_confirmed_coin_transactions(request):
                 static_address_object = StaticAddress.objects.get(
                     address_id = transaction_address_object,
                     type = "DEPOSIT_ADDRESS",
-                    status = "ACTIVE"
+                    status = "IN_USE"
                 )
 
                 main_transaction = Transaction.objects.create(
@@ -97,9 +97,9 @@ def cryptoapis_confirmed_coin_transactions(request):
                     status = "COMPLETED",
                 )
             except:
-                return HttpResponse(status=200)
+                #MISSING TO SET UP AN ERROR LOG
+                return HttpResponse(status=500)
 
-            #MISSING TO SET UP AN ERROR LOG
         
         ### CAN BE OPTIMIZED ###
         ### CAN BE OPTIMIZED ###

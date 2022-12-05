@@ -241,7 +241,7 @@ class ExecuteAutomatedTransactions(APIView):
                 error = transaction_utils.create_transaction_withdrawal(transaction.api_key, transaction.cryptocurrency_id, transaction.receiver_address, cryptocurrency_amount, funds_source_address)
                 if error is not None:
                     print(f"DEACTIVATED AUTOMATED TRANSACTION {transaction.transaction_id}")
-                    transaction.status = "DEACTIVATED"
+                    transaction.status = "INACTIVE"
                     transaction.save()
                 else:
                     transaction.next_event_datetime = get_next_event_datetime(transaction.frecuency, transaction.scheduled_day)
