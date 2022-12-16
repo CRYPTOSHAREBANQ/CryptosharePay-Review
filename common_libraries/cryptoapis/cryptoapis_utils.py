@@ -141,6 +141,7 @@ class CryptoApisUtils:
                 new_static_address = available_addresses.first()
                 new_static_address.type = type
                 new_static_address.save()
+            else:
                 unique = True
         
         if unique:
