@@ -129,6 +129,8 @@ class CryptoApisUtils:
 
     def generate_static_address(self, cryptocurrency_object, api_key_object, unique = False, type = "GENERIC_STATIC"):
         
+        error = None
+        
         if not unique:
             available_addresses = StaticAddress.objects.filter(
                 address_id__cryptocurrency_id = cryptocurrency_object,
