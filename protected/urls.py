@@ -7,7 +7,10 @@ urlpatterns = [
     path("accounts/email-has-account/", views.EmailHasAccount.as_view(), name="EmailHasAccount"),
 
     path("accounts/request-login-dashboard/", views.RequestLoginDashboard.as_view(), name="RequestLoginDashboard"),
+    path("accounts/request-login-dashboard-individual/", views.IndividualRequestLoginDashboard.as_view(), name="IndividualRequestLoginDashboard"),
+    # path("accounts/request-individual-login-dashboard/", views.RequestIndividualLoginDashboard, name="RequestIndividualLoginDashboard"),
     path("accounts/login-dashboard/", views.LoginDashboard.as_view(), name="LoginDashboard"),
+    path("accounts/login-dashboard-individual/", views.LoginIndividualDashboard.as_view(), name="LoginDashboardIndividual"), 
 
     #SAME ENDPOINT
     path("api-keys/api-key-no-account/<str:type>", views.GetAPIKeyNoAccount.as_view(), name="ApiKeyNoAccount"),
