@@ -7,7 +7,7 @@ from django.utils import timezone
 from transactions.models import Transaction, TransactionBook ,TransactionIns, AutomatedTransaction
 from cryptocurrency.models import Address, Blockchain, Cryptocurrency, Network
 
-from accounts.models import Account
+from accounts.models import Account,Insividual_Account
 from api_keys.models import ApiKey
 
 from transactions.payments import views as payments_views
@@ -279,8 +279,41 @@ class RequestLoginDashboard(APIView):
 
         return Response(response_object, status=200)
 
+
+
+
+
+class IndividualRequestLoginDashboard(APIView):
+    def post(self, request):
+        headers = request.headers
+
+        email = headers.get("X-Email", None)
+
+        user_object = User.objects.get(email = email)
+
+        account_object = Insividual_Account.objects.get(email = user_object)
+
+        new_random_password = generate_password()
+
+        account_object.random_password = new_random_password
+        account_object.save()
+
+        email_client = EmailClient()
+        email_client.request_dashboard_login(new_random_password, email)
+
+        response_object = {
+            "status": "SUCCESS",
+            "message": "Dashboard login requested successfully, please verify your email"
+        }
+
+        return Response(response_object, status=200)
+
+
+
 class LoginDashboard(APIView):
     def get(self, request):
+        
+        print('inside login request')
         headers = request.headers
 
         email = headers.get("X-Email", None)
@@ -300,3 +333,30 @@ class LoginDashboard(APIView):
         account_object.save()
 
         return Response(response_object, status=200)
+    
+    
+class LoginIndividualDashboard(APIView):
+    def get(self, request):
+        headers = request.headers
+
+        email = headers.get("X-Email", None)
+        
+        
+
+        user_object = User.objects.get(email = email)
+        
+        
+        account_object = Insividual_Account.objects.get(email = user_object)
+
+        response_object = {
+            "status": "SUCCESS",
+            "message": "Login successfully",
+            "data": {
+                "customer_id": account_object.user_id
+            }
+        }
+
+        account_object.random_password = None
+        account_object.save()
+
+        return Response(response_object, status=200)    

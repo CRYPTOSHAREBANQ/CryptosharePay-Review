@@ -4,9 +4,9 @@ from django.views import View
 from django.views.decorators.csrf import csrf_exempt
 from django.utils.decorators import method_decorator
 
-from accounts.models import Account, Country
+from accounts.models import Account, Country,Insividual_Account
 from businesses.models import Business
-from api_keys.models import ApiKey
+from api_keys.models import ApiKey,ApiKey_individual
 
 # from rest_framework import Response
 from rest_framework.views import APIView
@@ -95,6 +95,90 @@ class CreateAccount(APIView):
         }
 
         return Response(response_object, status=200)
+
+
+class Create_Individual_Account(APIView):
+    def post(self, request):
+        # print(request.data, request.headers)
+
+        data = request.data["data"]
+
+        # customer_info = data["data"]
+        business_info = data["business_info"]
+
+        new_user = User.objects.create_user(
+            username = data['email'], 
+            password = data['password'], 
+            email = data['email'].lower(),
+            first_name = data['full_name'],
+            
+        )
+
+        new_account = Insividual_Account.objects.create(
+            
+            email = new_user, 
+            full_name = data['full_name'], 
+            cadula = data['cedula'], 
+            birthdate = datetime.strptime(data['birthdate'], "%m/%d/%Y"),
+            country_id = Country.objects.get(
+                country_id=data['country_id']
+            ),
+            phone = data['phone'],
+            identity = data['identity']
+        )
+
+        if business_info:
+            new_business = Business.objects.create(
+                user_id = new_account, 
+                name = business_info['name'], 
+                description = business_info['description']
+                )
+
+        new_generated_key = secrets.token_hex(16)
+
+        # api_key_prefix = "tsk_"
+        # api_key_type = "TEST"
+        # api_key_status = "INACTIVE"
+
+        api_key_prefix = "psk_"
+        api_key_type = "PRODUCTION"
+        api_key_status = "ACTIVE"
+
+        if data["type"] == "NO_ACCOUNT":
+            api_key_prefix = "psk_"
+            api_key_type = "PRODUCTION"
+            api_key_status = "ACTIVE"
+
+        new_api_key = ApiKey_individual.objects.create(
+            api_key = api_key_prefix + new_generated_key,
+            user_id = new_account,
+            business_id = new_business if business_info else None,
+            type = api_key_type,
+            status = api_key_status
+        )
+
+        
+        response_object = {
+            "status": "SUCCESS",
+            "message": "Customer created successfully",
+            "data": {
+                "api_key": new_api_key.api_key,
+                "customer_id": new_account.user_id,
+                "business_id": new_business.business_id if business_info else None
+            }
+        }
+
+        return Response(response_object, status=200)
+
+
+
+
+
+
+
+
+
+
 
 class RequestCustomerID(APIView):
     def post(self, request):
