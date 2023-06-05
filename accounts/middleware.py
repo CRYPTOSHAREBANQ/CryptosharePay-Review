@@ -4,7 +4,7 @@ from django.contrib.auth.models import User
 from django.http import HttpResponse, Http404
 from django.contrib import auth
 
-from accounts.models import Account, Country
+from accounts.models import Account, Country,Insividual_Account
 from businesses.models import Business
 from api_keys.models import ApiKey
 
@@ -239,11 +239,12 @@ class AccountVerification:
 
             #VERIFY X-CUSTOMER-ID ACCOUNT EXISTS
             if not Account.objects.filter(user_id = customer_id).exists():
-                return HttpResponse(
-                    str({
-                    "status": "ERROR",
-                    "message": "Invalid X-Customer-Id"
-                    }), status=400)
+                if not Insividual_Account.objects.filter(user_id = customer_id).exists():
+                    return HttpResponse(
+                        str({
+                        "status": "ERROR",
+                        "message": "Invalid X-Customer-Id"
+                        }), status=400)
                                 
             ### <------ X-CUSTOMER-ID VERIFICATION ------> ###
             ### <------ X-CUSTOMER-ID VERIFICATION ------> ###
@@ -251,7 +252,7 @@ class AccountVerification:
             ### <------ CREDENTIALS VERIFICATION ------> ###
             ### <------ CREDENTIALS VERIFICATION ------> ###
 
-            if "get-by-business-id/" not in path_info:
+            if "get-by-business-id/" not in path_info or "get-by-user-id/" not in path_info:
                 #VERIFY CREDENTIALS
                 if not email or not password:
                     return HttpResponse(

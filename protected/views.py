@@ -8,7 +8,7 @@ from transactions.models import Transaction, TransactionBook ,TransactionIns, Au
 from cryptocurrency.models import Address, Blockchain, Cryptocurrency, Network
 
 from accounts.models import Account,Insividual_Account
-from api_keys.models import ApiKey
+from api_keys.models import ApiKey , ApiKey_individual
 
 from transactions.payments import views as payments_views
 
@@ -290,13 +290,15 @@ class IndividualRequestLoginDashboard(APIView):
         email = headers.get("X-Email", None)
 
         user_object = User.objects.get(email = email)
+        
 
         account_object = Insividual_Account.objects.get(email = user_object)
-
+       
+        
         new_random_password = generate_password()
 
-        account_object.random_password = new_random_password
-        account_object.save()
+        # account_object.random_password = new_random_password
+        # account_object.save()
 
         email_client = EmailClient()
         email_client.request_dashboard_login(new_random_password, email)
