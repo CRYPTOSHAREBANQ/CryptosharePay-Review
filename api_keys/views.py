@@ -151,8 +151,9 @@ class GetApiKeys(APIView):
 
 class GetApiKey(APIView):
     def get(self, request):
+        
         headers = request.headers
-
+        print(headers)
         customer_id = headers.get("X-Customer-Id", None)
         email = headers.get("X-Email", None)
         business_id = headers.get("X-Business-Id", None)
@@ -194,45 +195,52 @@ class GetApiKey(APIView):
 class Get_individual_ApiKey(APIView):
     def get(self, request):
         print('inside method Get_individual_ApiKey')
-        headers = request.headers
+        # headers = request.headers
 
-        customer_id = headers.get("X-Customer-Id", None)
-        email = headers.get("X-Email", None)
+        # customer_id = headers.get("X-Customer-Id", None)
+        # email = headers.get("X-Email", None)
         # business_id = headers.get("X-Business-Id", None)
         api_key_type = request.GET.get("type", None)
-        print('email')
-        print(email)
+        print(api_key_type)
         
-        user_object = User.objects.get(
-            username = email
-        )
+        # user_object = User.objects.get(
+        #     username = email
+        # )
 
-        account_object = Insividual_Account.objects.get(user_id = customer_id)
-        # business_object = Business.objects.get(business_id = business_id)
+        # account_object = Insividual_Account.objects.get(email = user_object)
+        # # business_object = Business.objects.get(business_id = business_id)
 
-        api_key_object = ApiKey_individual.objects.filter(
-            user_id = account_object,
-            # business_id = business_object,
-            type = api_key_type
-        )
+        # api_key_object = ApiKey_individual.objects.filter(
+        #     user_id = account_object,
+        #     # business_id = business_object,
+        #     type = api_key_type,
+            
+        # )
         
 
-        if api_key_object.exists():
-            serializer = ApiKeysSerializer(api_key_object.first())
-        else:
-            serializer = None
+        # if api_key_object.exists():
+        #     serializer = ApiKeysSerializer(api_key_object.first())
+        # else:
+        #     serializer = None
 
         response_object = {
             "status": "SUCCESS",
             "message": "API Key retrieved successfully",
             "data": {
-                "api_key": serializer.data if serializer else None
+                "api_key": 'serializer.data if serializer else None'
             }
         }
 
         return Response(response_object, status=200)
+from rest_framework.decorators import api_view
+@api_view(['POST'])
+def get_request_test(request):
+    headers = request.headers
 
-
+    # customer_id = headers.get("X-Customer-Id", None)
+    email = headers.get("X-Email", None)
+    customer_id = headers.get("X-Customer-Id", None)
+    return Response("this is a test request")
 
 
 
